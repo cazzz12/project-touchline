@@ -49,24 +49,27 @@ export function simulate({ seed = 12345, homeTactics = {}, awayTactics = {}, clu
   const active = team => team.slice(1);
   const opponent = i => 1-i;
   const sample = (team) => pick(active(team),random);
+  const fit = (player,role) => player.position===role?1:groups[player.position]===groups[role]?.93:.78;
   for (let minute=startMinute; minute<=endMinute; minute++) {
     const h = avg(teams[0],'passing') + 2 + tactics[0].pressing*.09;
     const a = avg(teams[1],'passing') + tactics[1].pressing*.09;
     const side = random() < h/(h+a) ? 0 : 1;
     const other = opponent(side), atk = sample(teams[side]), def = sample(teams[other]);
     const t = tactics[side], dt = tactics[other], s = stats[side];
+    const attackFit=fit(atk,formations[t.formation][teams[side].indexOf(atk)]);
+    const defenseFit=fit(def,formations[dt.formation][teams[other].indexOf(def)]);
     s.possessions++;
     const steps = 2 + Math.floor(random()*5);
     let retained = true;
     for (let step=0; step<steps; step++) {
       s.passes++;
-      const chance = clamp(.66 + (atk.passing-def.defending)*.003 + (atk.morale-70)*.001 + (atk.fitness-70)*.001 - t.tempo*.0011 - dt.pressing*.0011, .3,.91);
+      const chance = clamp(.66 + (atk.passing*attackFit-def.defending*defenseFit)*.003 + (atk.morale-70)*.001 + (atk.fitness-70)*.001 - t.tempo*.0011 - dt.pressing*.0011, .3,.91);
       if (random() < chance) s.completed++;
       else { retained = false; if (random()<.13) stats[other].fouls++; break; }
     }
     if (!retained) continue;
     const pressure = (t.mentality-50)*.003 + (t.tempo-50)*.0015 - (dt.pressing-50)*.0012;
-    const create = clamp(.17 + pressure + (atk.attack-def.defending)*.002 + (atk.fitness-70)*.001, .03,.49);
+    const create = clamp(.17 + pressure + (atk.attack*attackFit-def.defending*defenseFit)*.002 + (atk.fitness-70)*.001, .03,.49);
     if (random() >= create) continue;
     s.shots++;
     const xg = clamp(.06 + random()*.29 + (atk.finishing-65)*.001 + (t.mentality-50)*.0004 - (dt.pressing-50)*.0005, .02,.65);
