@@ -10,6 +10,14 @@ Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als
 
 Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers zijn compacte prototypes met credits. Verwijderde browsergegevens wissen je voortgang. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
 
+## Voortgang en backups
+
+Open **Voortgang** in het menu om je carrière als JSON-bestand te downloaden. Via **Backup kiezen** controleer je een bestand voordat je het terugzet. Je ziet de club, het seizoen, de clubkas en een eventuele lopende wedstrijd. Pas na bevestiging wordt de carrière vervangen. Met **Vorige save terugzetten** kun je de laatste vervanging ongedaan maken; er wordt één vorige carrière bewaard.
+
+Backups zijn lokaal en bevatten geen account of wallet. Een wedstrijd wordt na import gepauzeerd hervat, inclusief gespeelde minuten en wissels. Oudere saves (versie 2–5) worden via de bestaande migratie geopend. Onleesbare of niet-ondersteunde bestanden overschrijven geen carrière. Een onleesbare browser-save blijft beschikbaar als download in het herstelscherm.
+
+Als browseropslag vol of geblokkeerd is, toont Touchline een melding en pauzeert de wedstrijd. Je kunt de voortgang uit het huidige scherm downloaden of opnieuw proberen op te slaan. Sluit het scherm pas nadat een van beide gelukt is. De gewone save-sleutel en het interne saveformaat blijven hetzelfde.
+
 ## Simulation model
 
 Zes bestaande Nederlandse clubs spelen een **niet-officiële fictieve minicompetitie** met heen- en terugwedstrijden. Spelersnamen en globale posities komen uit [openfootball/players](https://github.com/openfootball/players) (CC0 1.0). Clubnamen zijn ook opgenomen in [openfootball/clubs](https://github.com/openfootball/clubs) (CC0 1.0). De selecties zijn voor het spel samengesteld: zij vertegenwoordigen **niet** de echte huidige clubselecties. Leeftijd is afgeleid van geboortejaar voor 2026; ratings, conditie, prestaties, transferprijzen en overige attributen zijn gegenereerde spelwaarden. Er zijn geen officiële foto's, clublogo's of kits gebruikt. Het bronbestand `public/real-players.js` is een momentopname; gegevens kunnen verouderen.

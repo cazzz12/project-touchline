@@ -38,6 +38,30 @@ README.md en docs/concept.md zijn vooraf gelezen. De latere keuzes blijven leide
 
 ## Grenzen van deze controle
 
-Dit is een handmatige controle in één Chromium-browser, geen volledige browser- of toegankelijkheidsaudit. Echte Android/iOS-apparaten, Firefox en Safari zijn niet getest. Oudere gebruikerssaves zijn niet uit een persoonlijke browser opgehaald; migratiecompatibiliteit is met de bestaande automatische fixtures gecontroleerd. Browseropslag blijft gebonden aan browser en adres en heeft nog geen exportfunctie.
+Dit is een handmatige controle in één Chromium-browser, geen volledige browser- of toegankelijkheidsaudit. Echte Android/iOS-apparaten, Firefox en Safari zijn niet getest. Oudere gebruikerssaves zijn niet uit een persoonlijke browser opgehaald; migratiecompatibiliteit is met de bestaande automatische fixtures gecontroleerd. Browseropslag blijft gebonden aan browser en adres. De later toegevoegde exportfunctie staat hieronder beschreven.
 
 De oorspronkelijke visie in docs/concept.md is behouden. Er zijn geen actuele officiële selecties toegevoegd.
+
+## Vervolg: backups en herstel (0.3.0)
+
+Het scherm **Voortgang** bevat export, import met een voorbeeld en expliciete bevestiging, en herstel van de vorige carrière. Opstarten schrijft niet meer meteen naar browseropslag. Een opslagfout laat de carrière in het geheugen staan en pauzeert de wedstrijd; een onleesbare save opent een herstelscherm in plaats van een nieuwe carrière aan te bieden.
+
+Alle **28 automatische tests** slagen. De 14 extra tests controleren onder andere:
+
+- Export/import van een lopende wedstrijd met wissel, met dezelfde uiteindelijke uitslag en credits.
+- Migratie van saveversies 2–5, inclusief de oude rustweergave.
+- Afwijzen van beschadigde JSON, onbekende versies, ongeldige spelgegevens en te grote bestanden.
+- Behoud van de oorspronkelijke bytes bij leesproblemen of mislukte opslag.
+- Bevestigen, annuleren, ongedaan maken en overlappende bestandskeuzes via de UI.
+- Pauzeren bij een mislukte autosave, opnieuw opslaan en behoud van nog niet opgeslagen voortgang in de herstelkopie.
+
+Browsercontrole uitgevoerd op een apart lokaal adres met een nieuwe testcarrière; de bestaande carrière op poort 3000 is niet gebruikt voor importtests:
+
+1. Een echte JSON-download gemaakt en dat gedownloade bestand via de bestandskiezer weer geopend; annuleren behield Ajax.
+2. Een beschadigd bestand afgewezen zonder wijziging van de carrière.
+3. Een AZ-backup met een wedstrijd op minuut 32 en één uitgevoerde wissel bekeken en bevestigd.
+4. Na herladen dezelfde minuut, score, wissel en aanvoerder teruggezien; hervat tot de automatische rust op minuut 45.
+5. Via **Vorige save terugzetten** terug naar de eerdere Ajax-carrière; ook na herladen behouden.
+6. Het voortgangsscherm en de bevestigingsknoppen op mobiel formaat (390 × 844) gecontroleerd: geen horizontale overloop. Geen consolefouten waargenomen.
+
+Opslagquota en geblokkeerde opslag zijn met automatische foutsimulatie getest; de browserinstellingen van de gebruiker zijn daarvoor niet aangepast. Er is één herstelkopie, geen volledige versiegeschiedenis of serverbackup.
