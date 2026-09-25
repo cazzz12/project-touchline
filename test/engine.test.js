@@ -20,7 +20,7 @@ test('events and aggregate statistics stay consistent',()=>{
       const s=result.stats[side];
       assert.equal(s.shots,result.events.filter(e=>e.side===side).length);
       assert.equal(s.goals,result.events.filter(e=>e.side===side&&e.type==='goal').length);
-      assert.ok(s.onTarget<=s.shots && s.goals<=s.shots);
+      assert.ok(s.onTarget<=s.shots && s.goals<=s.onTarget);
     }
   }
 });

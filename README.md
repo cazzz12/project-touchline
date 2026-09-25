@@ -14,7 +14,11 @@ Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er 
 
 Zes bestaande Nederlandse clubs spelen een **niet-officiële fictieve minicompetitie** met heen- en terugwedstrijden. Spelersnamen en globale posities komen uit [openfootball/players](https://github.com/openfootball/players) (CC0 1.0). Clubnamen zijn ook opgenomen in [openfootball/clubs](https://github.com/openfootball/clubs) (CC0 1.0). De selecties zijn voor het spel samengesteld: zij vertegenwoordigen **niet** de echte huidige clubselecties. Leeftijd is afgeleid van geboortejaar voor 2026; ratings, conditie, prestaties, transferprijzen en overige attributen zijn gegenereerde spelwaarden. Er zijn geen officiële foto's, clublogo's of kits gebruikt. Het bronbestand `public/real-players.js` is een momentopname; gegevens kunnen verouderen.
 
-Je kiest handmatig elf spelers voor de formatie. De wedstrijd toont een tijdlijn tot de rust; dan kun je maximaal drie wissels doen en mentaliteit, pressing of tempo wijzigen voor de tweede helft. De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare seed. Schoten krijgen xG. Het model is illustratief en niet gekalibreerd op echte voetbaldata.
+Je kiest handmatig elf basisspelers, zeven wisselspelers en een aanvoerder. De aanvoerdersband is zichtbaar maar geeft nog geen statistiekbonus. Tijdens de wedstrijd kun je op elk moment pauzeren, maximaal drie spelers wisselen en formatie, mentaliteit, pressing of tempo aanpassen. Een gewisselde speler kan niet terugkeren. De nieuwe instructies gelden vanaf de volgende minuut; de wedstrijd wordt niet vooraf volledig berekend. Conditie daalt op basis van werkelijk gespeelde minuten en uithoudingsvermogen.
+
+Bij rust stopt de klok automatisch. Je kiest tussen 1×, 2× en 4× snelheid. Iedere gespeelde minuut wordt lokaal opgeslagen; na het vernieuwen van de pagina hervat je gepauzeerd vanaf die minuut. De uitslag en credits worden pas bij het laatste fluitsignaal verwerkt. Het laatste wedstrijdverslag blijft beschikbaar op het overzicht. Oudere saves krijgen automatisch een wisselbank en aanvoerder; club, credits en uitslagen blijven behouden.
+
+De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare seed. Schoten krijgen xG. Het model is illustratief en niet gekalibreerd op echte voetbaldata. De geautomatiseerde tests omvatten simulatielogica, save-migratie, wisselregels, hervatten en de bediening via een lichte DOM-adapter. Dit vervangt geen visuele browsertest.
 
 ## Next milestones
 

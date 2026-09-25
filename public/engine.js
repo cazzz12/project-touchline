@@ -63,20 +63,22 @@ export function simulate({ seed = 12345, homeTactics = {}, awayTactics = {}, clu
     let retained = true;
     for (let step=0; step<steps; step++) {
       s.passes++;
-      const chance = clamp(.66 + (atk.passing*attackFit-def.defending*defenseFit)*.003 + (atk.morale-70)*.001 + (atk.fitness-70)*.001 - t.tempo*.0011 - dt.pressing*.0011, .3,.91);
+      const chance = clamp(.87 + (atk.passing*attackFit-def.defending*defenseFit)*.003 + (atk.morale-70)*.001 + (atk.fitness-70)*.001 - t.tempo*.0006 - dt.pressing*.0006, .3,.95);
       if (random() < chance) s.completed++;
       else { retained = false; if (random()<.13) stats[other].fouls++; break; }
     }
     if (!retained) continue;
     const pressure = (t.mentality-50)*.003 + (t.tempo-50)*.0015 - (dt.pressing-50)*.0012;
-    const create = clamp(.17 + pressure + (atk.attack*attackFit-def.defending*defenseFit)*.002 + (atk.fitness-70)*.001, .03,.49);
+    const create = clamp(.36 + pressure + (atk.attack*attackFit-def.defending*defenseFit)*.002 + (atk.fitness-70)*.001, .03,.65);
     if (random() >= create) continue;
     s.shots++;
     const xg = clamp(.06 + random()*.29 + (atk.finishing-65)*.001 + (t.mentality-50)*.0004 - (dt.pressing-50)*.0005, .02,.65);
     s.xg += xg;
-    const onTarget = random() < clamp(.43 + (atk.composure-60)*.003, .25,.72);
+    const targetChance = clamp(.43 + (atk.composure-60)*.003, .25,.72);
+    const onTarget = random() < targetChance;
     if (onTarget) s.onTarget++;
-    const goal = random() < xg * (onTarget ? 1.9 : .12);
+    const shotRoll = random();
+    const goal = onTarget && shotRoll < clamp(xg / targetChance,0,1);
     if (goal) s.goals++;
     events.push({ minute, side, player: atk.name, type: goal ? 'goal' : onTarget ? 'save' : 'miss', xg: Number(xg.toFixed(2)), score: stats.map(st=>st.goals) });
   }
