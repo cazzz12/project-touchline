@@ -20,6 +20,12 @@ Bij rust stopt de klok automatisch. Je kiest tussen 1×, 2× en 4× snelheid. Ie
 
 De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare seed. Schoten krijgen xG. Het model is illustratief en niet gekalibreerd op echte voetbaldata. De geautomatiseerde tests omvatten simulatielogica, save-migratie, wisselregels, hervatten en de bediening via een lichte DOM-adapter. Dit vervangt geen visuele browsertest.
 
+## Interfacecontrole (0.2.1)
+
+De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen nu de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. Het saveformaat en de simulatie zijn ongewijzigd.
+
+Zie [het controleverslag](docs/browser-check.md) voor de geteste flows en beperkingen. Gebruik voor bestaande saves dezelfde browser en hetzelfde adres als voorheen: `localhost` en `127.0.0.1` hebben elk hun eigen browseropslag.
+
 ## Next milestones
 
 Volgende stappen: geverifieerde huidige clubselecties via een geschikte databron, betrouwbaardere serveropslag en accounts, een privéruimte voor eigen clubs met vrienden, spelerloopbanen, multiplayer en anti misbruik. Wallets en rewards vereisen daarna een duurzame economie en juridische toetsing.
