@@ -1,19 +1,19 @@
 # Project Touchline
 
-An initial, playable **Phase A simulation prototype** based on the attached product brief. It has 100 fictional players across two clubs, tactical controls, a seeded possession based match engine, match statistics and a chronological event feed. It runs locally with Node.js 20+ and has no third party dependencies.
+Een speelbare **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Creëer je club, beheer je selectie, stel je tactiek in, train spelers, scout en koop talent, speel een seizoen van tien speeldagen en klim op de ranglijst. De clubs en spelers zijn fictief. Resultaten, clubkas en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
 ```
 
-Open http://localhost:3000. Run `npm test` for deterministic replay and tactical behaviour checks. Match seeds and the full input configuration can be copied from the interface to reproduce a result.
+Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als `npm.ps1` wordt geblokkeerd. Run `npm test` voor controles van de simulatie en seizoensvoortgang. Node.js 20+ is vereist; externe pakketten zijn niet nodig.
 
-This is an offline prototype. Accounts, multiplayer leagues, persistence, transfers, wallet connection, SOL purchases and rewards are **not implemented**. No real money or blockchain transactions occur. The original Dutch concept is preserved in `docs/concept.md`.
+Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers zijn compacte prototypes met credits. Verwijderde browsergegevens wissen je voortgang.
 
 ## Simulation model
 
-Each team has a seeded 50 player pool and fields a best fit starting XI for a selected formation. Possessions pass through build up, progression, chance creation, and shooting. The model uses relevant player attributes, fitness, morale and tactical choices plus seeded randomness. The engine emits xG per shot and computes possession, shots, shots on target, passing and fouls. Tactical settings influence chance volume and risk; the model is illustrative rather than calibrated against real football data.
+Zes clubs spelen thuis en uit. Elke club heeft een spelerspool en stelt voor een gekozen formatie automatisch de beste elf op. Balbezit verloopt via opbouw, progressie, kans en schot. De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare seed. Schoten krijgen xG; de statistieken tonen onder meer balbezit en passnauwkeurigheid. Het model is illustratief en niet gekalibreerd op echte voetbaldata.
 
 ## Next milestones
 
-Persistent clubs and manager accounts; scheduled leagues; training and player progression; scouting and transfers; server authoritative simulation and anti abuse. Wallets and rewards should follow a game economy and legal review, as the concept proposes.
+Volgende stappen: betrouwbare serveropslag en accounts, handmatige opstellingen en wissels, een rijkere match feed, spelerloopbanen, competities met andere managers en anti misbruik. Wallets en rewards vereisen daarna een duurzame economie en juridische toetsing.
