@@ -33,17 +33,23 @@ export function lineUp(club, formation = '4-3-3') {
     return remaining.splice(0,1)[0];
   });
 }
-export function simulate({ seed = 12345, homeTactics = {}, awayTactics = {}, clubs = createClubs(42) } = {}) {
+export function simulate({ seed = 12345, homeTactics = {}, awayTactics = {}, clubs = createClubs(42), homeSelection, awaySelection, startMinute = 1, endMinute = 90 } = {}) {
   const random = rng(Number(seed));
   const tactics = [homeTactics,awayTactics].map(t => ({ formation: t.formation || '4-3-3', mentality: clamp(Number(t.mentality ?? 50),0,100), pressing: clamp(Number(t.pressing ?? 50),0,100), tempo: clamp(Number(t.tempo ?? 50),0,100) }));
-  const teams = clubs.map((club,i) => lineUp(club,tactics[i].formation));
+  const teams = clubs.map((club,i) => {
+    const ids=i===0?homeSelection:awaySelection;
+    if(!ids)return lineUp(club,tactics[i].formation);
+    const selected=ids.map(id=>club.players.find(p=>p.id===id));
+    if(selected.length!==11||selected.some(p=>!p)||new Set(ids).size!==11)throw new Error('Invalid starting XI');
+    return selected;
+  });
   const stats = clubs.map(() => ({ goals:0, shots:0, onTarget:0, xg:0, passes:0, completed:0, possessions:0, fouls:0 }));
   const events = [];
   const avg = (team,key) => team.reduce((n,p)=>n+p[key],0)/team.length;
   const active = team => team.slice(1);
   const opponent = i => 1-i;
   const sample = (team) => pick(active(team),random);
-  for (let minute=1; minute<=90; minute++) {
+  for (let minute=startMinute; minute<=endMinute; minute++) {
     const h = avg(teams[0],'passing') + 2 + tactics[0].pressing*.09;
     const a = avg(teams[1],'passing') + tactics[1].pressing*.09;
     const side = random() < h/(h+a) ? 0 : 1;
@@ -71,6 +77,6 @@ export function simulate({ seed = 12345, homeTactics = {}, awayTactics = {}, clu
     if (goal) s.goals++;
     events.push({ minute, side, player: atk.name, type: goal ? 'goal' : onTarget ? 'save' : 'miss', xg: Number(xg.toFixed(2)), score: stats.map(st=>st.goals) });
   }
-  stats.forEach(s => { s.xg = Number(s.xg.toFixed(2)); s.possession = Math.round(100*s.possessions/90); s.passAccuracy = s.passes ? Math.round(100*s.completed/s.passes) : 0; });
+  stats.forEach(s => { s.xg = Number(s.xg.toFixed(2)); s.possession = Math.round(100*s.possessions/(endMinute-startMinute+1)); s.passAccuracy = s.passes ? Math.round(100*s.completed/s.passes) : 0; });
   return { seed:Number(seed), clubs:clubs.map(c=>c.name), tactics, teams, stats, events };
 }
