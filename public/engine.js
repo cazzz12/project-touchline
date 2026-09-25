@@ -6,7 +6,22 @@ const first = ['Mateo','Jules','Amir','Luca','Dario','Noah','Ibrahim','Rafael','
 const last = ['Reyes','Navarro','Diallo','Costa','Mendes','Bakker','Silva','Ortega','Okafor','Vega','Moretti','Khan','Mercier','Santos','Idris','Volkov','Jansen','Park','Alvarez','Rossi'];
 const roles = ['GK','RB','CB','CB','LB','CDM','CM','CM','RW','LW','ST'];
 export const formations = { '4-3-3': roles, '4-4-2': ['GK','RB','CB','CB','LB','RM','CM','CM','LM','ST','ST'], '4-2-3-1': ['GK','RB','CB','CB','LB','CDM','CDM','RW','CAM','LW','ST'] };
+Object.assign(formations,{
+  '4-1-4-1':['GK','RB','CB','CB','LB','CDM','RM','CM','CM','LM','ST'],
+  '4-3-2-1':['GK','RB','CB','CB','LB','CM','CDM','CM','CAM','CAM','ST'],
+  '4-2-2-2':['GK','RB','CB','CB','LB','CDM','CDM','CAM','CAM','ST','ST'],
+  '3-4-3':['GK','CB','CB','CB','RM','CM','CM','LM','RW','ST','LW'],
+  '3-5-2':['GK','CB','CB','CB','RM','CM','CDM','CM','LM','ST','ST'],
+  '5-3-2':['GK','RB','CB','CB','CB','LB','CM','CDM','CM','ST','ST'],
+  '5-2-3':['GK','RB','CB','CB','CB','LB','CM','CM','RW','ST','LW']
+});
 const groups = { GK:'GK',RB:'DEF',CB:'DEF',LB:'DEF',CDM:'MID',CM:'MID',CAM:'MID',RM:'WING',LM:'WING',RW:'WING',LW:'WING',ST:'ST' };
+// Official squad pages only specify broad roles. Do not invent a preferred side.
+export function positionFit(position,role){
+  if(position===role)return 1;
+  if((position==='DEF'&&groups[role]==='DEF')||(position==='MID'&&['CDM','CM','CAM','LM','RM'].includes(role))||(position==='ATT'&&['RW','LW','ST'].includes(role)))return 1;
+  return groups[position]&&groups[position]===groups[role]?.93:.78;
+}
 const clamp = (n,a,b) => Math.max(a,Math.min(b,n));
 const pick = (array, random) => array[Math.floor(random() * array.length)];
 export function createClubs(seed = 42) {
@@ -21,7 +36,7 @@ export function createClubs(seed = 42) {
   }));
 }
 function fit(player, role) {
-  const group = groups[role], same = player.position === role ? 20 : groups[player.position] === group ? 8 : -12;
+  const group = groups[role], suitability=positionFit(player.position,role),same=suitability===1?20:suitability===.93?8:-12;
   const primary = group === 'GK' ? (player.defending + player.composure)/2 : group === 'DEF' ? player.defending : group === 'ST' ? (player.finishing + player.attack)/2 : (player.attack + player.passing)/2;
   return same + primary*.65 + player.fitness*.12 + player.morale*.08;
 }
@@ -49,7 +64,7 @@ export function simulate({ seed = 12345, homeTactics = {}, awayTactics = {}, clu
   const active = team => team.slice(1);
   const opponent = i => 1-i;
   const sample = (team) => pick(active(team),random);
-  const fit = (player,role) => player.position===role?1:groups[player.position]===groups[role]?.93:.78;
+  const fit = (player,role) => positionFit(player.position,role);
   for (let minute=startMinute; minute<=endMinute; minute++) {
     const h = avg(teams[0],'passing') + 2 + tactics[0].pressing*.09;
     const a = avg(teams[1],'passing') + tactics[1].pressing*.09;
@@ -80,7 +95,7 @@ export function simulate({ seed = 12345, homeTactics = {}, awayTactics = {}, clu
     const shotRoll = random();
     const goal = onTarget && shotRoll < clamp(xg / targetChance,0,1);
     if (goal) s.goals++;
-    events.push({ minute, side, player: atk.name, type: goal ? 'goal' : onTarget ? 'save' : 'miss', xg: Number(xg.toFixed(2)), score: stats.map(st=>st.goals) });
+    events.push({ minute, side, player: atk.name, playerId:atk.id, type: goal ? 'goal' : onTarget ? 'save' : 'miss', xg: Number(xg.toFixed(2)), score: stats.map(st=>st.goals) });
   }
   stats.forEach(s => { s.xg = Number(s.xg.toFixed(2)); s.possession = Math.round(100*s.possessions/(endMinute-startMinute+1)); s.passAccuracy = s.passes ? Math.round(100*s.completed/s.passes) : 0; });
   return { seed:Number(seed), clubs:clubs.map(c=>c.name), tactics, teams, stats, events };

@@ -1,6 +1,6 @@
 # Project Touchline
 
-Een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, stel je eigen basiself op, pas tijdens de rust tactiek en spelers aan, train en scout, en speel een fictieve minicompetitie van tien speeldagen. Resultaten, clubkas en voortgang worden lokaal in je browser opgeslagen.
+Versie **0.5.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
@@ -8,7 +8,19 @@ npm start
 
 Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als `npm.ps1` wordt geblokkeerd. Run `npm test` voor controles van de simulatie en seizoensvoortgang. Node.js 20+ is vereist; externe pakketten zijn niet nodig.
 
-Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers zijn compacte prototypes met credits. Verwijderde browsergegevens wissen je voortgang. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
+Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers gebruiken spelcredits. Verwijderde browsergegevens wissen je voortgang. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
+
+## Nieuw: clubbeheer en carrière
+
+- **Clubzaken:** inkomsten en uitgaven, salarissen, contracten verlengen, spelers verkopen aan een andere club, faciliteiten, trainers, scouts en drie sponsorcontracten.
+- **Training:** een individuele ontwikkelsessie naast de bestaande teamtraining; faciliteiten en trainers verbeteren het effect.
+- **Voorbeschouwing:** tegenstander, vorm, eerdere ontmoetingen, vergelijking van de basiself en vooraf instelbare automatische wedstrijdinstructies.
+- **Tactiek:** tien formaties en vier snelle speelstijlen. Automatisch een voorsprong bewaken, aanvallen bij een achterstand of vermoeide spelers wisselen is optioneel.
+- **Carrière:** managernaam, XP, mijlpalen, trofeeënkast, blijvende seizoenshistorie en goals/speelminuten per speler.
+
+Alle bedragen, contracten, sponsorvoorwaarden, niveaus en spelerwaarderingen zijn spelregels, geen echte financiële of contractgegevens. Automatische instructies werken alleen terwijl de wedstrijd in de geopende browser loopt. Lees [de spelregels van clubbeheer](docs/management.md) voor de bedragen en effecten.
+
+Bestaande saves houden hun clubkas, uitslagen, spelers en eventuele lopende wedstrijd. Nieuwe onderdelen worden met beginwaarden toegevoegd; er worden geen kosten achteraf afgeschreven. Opgeslagen uitslagen tellen mee in je carrière. Spelersstatistieken beginnen bij de eerste wedstrijd die je met deze versie afrondt; eerder verdwenen seizoenen kunnen niet worden teruggehaald.
 
 ## Voortgang en backups
 
@@ -20,7 +32,9 @@ Als browseropslag vol of geblokkeerd is, toont Touchline een melding en pauzeert
 
 ## Simulation model
 
-Zes bestaande Nederlandse clubs spelen een **niet-officiële fictieve minicompetitie** met heen- en terugwedstrijden. Spelersnamen en globale posities komen uit [openfootball/players](https://github.com/openfootball/players) (CC0 1.0). Clubnamen zijn ook opgenomen in [openfootball/clubs](https://github.com/openfootball/clubs) (CC0 1.0). De selecties zijn voor het spel samengesteld: zij vertegenwoordigen **niet** de echte huidige clubselecties. Leeftijd is afgeleid van geboortejaar voor 2026; ratings, conditie, prestaties, transferprijzen en overige attributen zijn gegenereerde spelwaarden. Er zijn geen officiële foto's, clublogo's of kits gebruikt. Het bronbestand `public/real-players.js` is een momentopname; gegevens kunnen verouderen.
+Zes bestaande Nederlandse clubs spelen een **niet-officiële fictieve minicompetitie** met heen- en terugwedstrijden. Nieuwe carrières gebruiken 167 spelers uit de officiële selectiepagina’s van Ajax, Feyenoord, PSV, AZ, FC Utrecht en FC Twente, gecontroleerd op **25 september 2026**. Namen, rugnummers en brede posities komen uit die bronnen. Ratings, conditie, prestaties en transferprijzen blijven gegenereerde spelwaarden. De gegevens zijn een momentopname en worden niet live bijgewerkt. Leeftijd wordt alleen getoond als die beschikbaar is; bij de nieuwe selecties ontbreekt die nog. De scoutingspool gebruikt de oudere CC0-namenlijst en fictieve transferbeschikbaarheid.
+
+Het menu **Clubs** toont alle zes clubs met hun logo, selectie, zoekfunctie en positiefilter. Open een speler voor zijn spelwaarden. Bestaande carrières houden hun spelers totdat je via **Voortgang → Selecties bijwerken** kiest voor vervanging. Je oude carrière wordt dan als vorige save bewaard; credits, uitslagen en seizoen blijven behouden. Dat kan alleen buiten een lopende wedstrijd. Lees [de databronnen en updatewerking](docs/club-data.md) voor de herkomst, beperkingen en gevolgen voor opstellingen en transfers.
 
 Je kiest handmatig elf basisspelers, zeven wisselspelers en een aanvoerder. De aanvoerdersband is zichtbaar maar geeft nog geen statistiekbonus. Tijdens de wedstrijd kun je op elk moment pauzeren, maximaal drie spelers wisselen en formatie, mentaliteit, pressing of tempo aanpassen. Een gewisselde speler kan niet terugkeren. De nieuwe instructies gelden vanaf de volgende minuut; de wedstrijd wordt niet vooraf volledig berekend. Conditie daalt op basis van werkelijk gespeelde minuten en uithoudingsvermogen.
 
@@ -28,12 +42,12 @@ Bij rust stopt de klok automatisch. Je kiest tussen 1×, 2× en 4× snelheid. Ie
 
 De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare seed. Schoten krijgen xG. Het model is illustratief en niet gekalibreerd op echte voetbaldata. De geautomatiseerde tests omvatten simulatielogica, save-migratie, wisselregels, hervatten en de bediening via een lichte DOM-adapter. Dit vervangt geen visuele browsertest.
 
-## Interfacecontrole (0.2.1)
+## Interfacecontrole
 
-De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen nu de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. Het saveformaat en de simulatie zijn ongewijzigd.
+De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 50 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, automatische instructies en 52 opeenvolgende seizoenen.
 
 Zie [het controleverslag](docs/browser-check.md) voor de geteste flows en beperkingen. Gebruik voor bestaande saves dezelfde browser en hetzelfde adres als voorheen: `localhost` en `127.0.0.1` hebben elk hun eigen browseropslag.
 
 ## Next milestones
 
-Volgende stappen: geverifieerde huidige clubselecties via een geschikte databron, betrouwbaardere serveropslag en accounts, een privéruimte voor eigen clubs met vrienden, spelerloopbanen, multiplayer en anti misbruik. Wallets en rewards vereisen daarna een duurzame economie en juridische toetsing.
+De oorspronkelijke visie is behouden in `docs/concept.md`. [De actuele roadmap](docs/roadmap.md) onderscheidt wat al werkt, wat nog een prototype is en wat later volgt: verdere spelerontwikkeling en spelbalans, accounts en serveropslag, multiplayer en privéruimtes met vrienden. Wallets en rewards zijn een aparte latere fase.

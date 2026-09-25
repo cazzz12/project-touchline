@@ -65,3 +65,37 @@ Browsercontrole uitgevoerd op een apart lokaal adres met een nieuwe testcarrièr
 6. Het voortgangsscherm en de bevestigingsknoppen op mobiel formaat (390 × 844) gecontroleerd: geen horizontale overloop. Geen consolefouten waargenomen.
 
 Opslagquota en geblokkeerde opslag zijn met automatische foutsimulatie getest; de browserinstellingen van de gebruiker zijn daarvoor niet aangepast. Er is één herstelkopie, geen volledige versiegeschiedenis of serverbackup.
+# Aanvulling 0.4.0 — clubselecties (25 september 2026)
+
+- Alle zes clubs geopend: Ajax 27, Feyenoord 28, PSV 28, AZ 28, FC Utrecht 30 en FC Twente 26 spelers. Bronlinks, rugnummers en brede rollen gecontroleerd. Alle zes lokale logo's laden.
+- Desktop 1440 × 900 en mobiel 390 × 844 visueel bekeken. Clubkaarten, spelerslijst en filters passen binnen het scherm; geen horizontale pagina-overloop. Zoeken naar Weghorst, profiel uitklappen, combineren met keeperfilter (geen resultaten) en zoekveld leegmaken (vier Twente-keepers) werken.
+- Een bestaande carrière via de expliciete updateknop bijgewerkt. Uitslagen, seizoen en credits bleven staan; de oude selectie was zichtbaar in de herstelpreview. Annuleren van die preview hield de nieuwe selectie actief. Herladen behield de nieuwe selectie.
+- Een aparte testcarrière gestart als PSV. PSV kreeg de juiste 28 spelers. PSV–FC Twente uitgespeeld: 1–1, 18.000 credits beloning. Rust op minuut 45, wissel Paul Wanner → Noah Fernandez en formatie 4-2-3-1 bleven na herladen bewaard. Het verslag bleef beschikbaar na minuut 90. Geen consolefouten in deze test.
+- `npm.cmd test`: 34 tests geslaagd. Nieuwe controles omvatten alle clubkeuzes en formaties, zes volledige seizoenen, uitsluiten van dubbele scoutingnamen, een echte versie-5-testfixture, expliciete update, blokkade tijdens een wedstrijd, herstelkopie en opslagfouten.
+
+Beperkingen: Chromium op desktop/mobiel formaat; geen apart fysiek iOS- of Androidtoestel getest. Clubdata is een vaste momentopname; ratings en transferbeschikbaarheid zijn geen officiële sportgegevens. Geautomatiseerde opslagtests gebruiken een geheugenadapter; de browsercontrole verifieert aanvullend het werkelijk opslaan en herladen.
+
+# Aanvulling 0.5.0 — clubbeheer en carrière
+
+Gecontroleerd in dezelfde ingebouwde Chromium-browser, desktop 1440 × 900 en mobiel 390 × 844. Alle financiële en seizoentests zijn uitgevoerd in een aparte testcarrière op poort 43129. De browser met de eigen carrière is alleen vernieuwd om compatibiliteit te controleren; de lopende wedstrijd bleef gepauzeerd en hervatbaar.
+
+| Onderdeel | Uitgevoerde controle |
+| --- | --- |
+| Financiën | Nieuwe FC Utrecht-carrière met 120.000 credits. Trainer niveau 1 kostte 16.000, trainingscomplex niveau 2 kostte 28.000. Geldstromen en saldi klopten. |
+| Sponsors | Zekerheid gekozen. Eén contract actief; bij de wedstrijd werd 6.000 bijgeschreven. |
+| Ontwikkeling | Extra ontwikkelpunten door staf en faciliteit zichtbaar; individuele passingtraining gevolgd door teamtraining werkte. Tweede individuele sessie geblokkeerd. |
+| Verkopen | Noah Ohio aangeboden aan AZ. Annuleren hield de clubkas gelijk; bevestigen leverde één betaling van 136.097 op. Speler uit eigen selectie, 29 spelers over. |
+| Tactiek | 3-5-2 en preset Balbezit gekozen. Alle tien formaties beschikbaar. |
+| Automatische instructies | Achterstand aanvallen en vermoeide spelers wisselen ingesteld. Instellingen na herladen behouden; aanvalsinstructie daadwerkelijk op minuut 70 uitgevoerd en in het verslag opgenomen. |
+| Wedstrijd | FC Utrecht–FC Twente tot rust op minuut 45, herladen behield 0–0 en tactiek, hervat op 4×. Eindstand 1–1; netto +15.035 credits, saldo 227.132. Begroting, verslag en vijf boekingen kwamen overeen. |
+| Carrière | Managernaam Testmanager bleef na herladen staan. Gelijkspel leverde 70 XP; speelminuten en goals verschenen bij de juiste spelers. |
+| Seizoenen | Zelfgemaakte AZ-testcarrière na drie seizoenen geïmporteerd. Afsluiten bewaarde drie eindstanden; details waren op mobiel te openen. |
+| Contracten | Seizoen 4 blokkeerde aftrap met verlopen contracten. Alle 28 contracten verlengd tot seizoen 6 met 8% salarisstijging. Na herladen kon de wedstrijd worden gestart. |
+| Mobiel | Financiën, contracten, carrière, historie en voorbeschouwing visueel bekeken. Geen horizontale pagina-overloop; brede tabellen scrollen in hun eigen blok. |
+| Console | Geen fouten of waarschuwingen in de opgevraagde console van de testcarrière. |
+
+`npm.cmd test`: alle **50 tests** slagen. De uitbreiding controleert onder andere migratie zonder afschrijvingen, eenmalige afrekening, verkoop en aankoop, verlopen contracten zonder financiële blokkade, sponsorbonussen naar rato, trainingslimieten, automatische instructies, alle tien veldindelingen, ongeldige backups en 52 complete seizoenen. De langetermijntest bewaakt begrensde boekhouding/historie met behoud van totalen en een export kleiner dan 2 MB.
+
+De oude versie-5-fixture is synthetisch gegenereerd uit de openbare code. Een onafhankelijke regeneratie vanaf commit `f2b1c858afb6252e50b0c4f17413ad2e39454a51` kwam veld voor veld overeen. Er is geen persoonlijke gebruikerssave in de repository opgenomen.
+
+Beperkingen: geen fysieke mobiele apparaten, andere browserengines of online multiplayer getest. De economie is een prototype; de tests bewijzen correcte verwerking van de regels, geen evenwichtige spelbalans over alle speelstijlen. Automatisch wisselen is met logische tests afgedekt; de handmatige browserwedstrijd activeerde de tactische regel.

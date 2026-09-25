@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import { KEY, newGame } from '../public/game.js';
-import { RECOVERY_KEY, exportBackup } from '../public/storage.js';
+import { RECOVERY_KEY, exportBackup, parseBackup } from '../public/storage.js';
 
 let instance=0;
 async function boot(t,raw=JSON.stringify(newGame('PSV'))){
@@ -87,4 +88,30 @@ test('UI keeps the current career when confirming an import cannot write storage
   assert.equal(h.entries.get(KEY),original);
   h.click({action:'cancel-import'});
   assert.match(h.app.innerHTML,/<dd>PSV<\/dd>/);
+});
+
+test('roster update is explicit, recovers the old career, and preserves credits on failure',async t=>{
+  const old=parseBackup(readFileSync(new URL('./fixtures/legacy-v5-live.json',import.meta.url),'utf8'));
+  old.pending=null;old.trainingUsed=true;old.credits=98765;old.management.ledgerOpening=98765;
+  const raw=JSON.stringify(old),h=await boot(t,raw);
+  assert.equal(h.entries.get(KEY),raw,'opening an old career does not update squads');
+  h.click({tab:'progress'});h.fail=true;h.click({action:'update-rosters'});
+  assert.match(h.app.innerHTML,/Bijwerken is niet gelukt/);
+  assert.equal(h.entries.get(KEY),raw);
+  h.fail=false;h.click({action:'update-rosters'});
+  const updated=JSON.parse(h.entries.get(KEY));
+  assert.equal(updated.clubs[0].players.length,28);
+  assert.equal(updated.credits,98765);assert.equal(updated.trainingUsed,true);
+  assert.equal(h.entries.get(RECOVERY_KEY),raw);
+  h.click({action:'preview-recovery'});h.click({action:'confirm-import'});
+  assert.equal(h.entries.get(KEY),raw);
+});
+
+test('UI cannot replace rosters during a live match',async t=>{
+  const raw=JSON.stringify(parseBackup(readFileSync(new URL('./fixtures/legacy-v5-live.json',import.meta.url),'utf8')));
+  const h=await boot(t,raw);
+  h.click({action:'open-backups'});h.click({action:'update-rosters'});
+  assert.equal(h.entries.get(KEY),raw);
+  assert.equal(h.entries.has(RECOVERY_KEY),false);
+  assert.match(h.app.innerHTML,/Rond eerst je lopende wedstrijd af/);
 });

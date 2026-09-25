@@ -33,7 +33,7 @@ test('real names are unique across six real clubs and a starter can be changed',
   const game=newGame('PSV');
   assert.deepEqual(new Set(game.clubs.map(c=>c.name)),new Set(clubNames));
   const roster=game.clubs.flatMap(c=>c.players);
-  assert.equal(new Set(roster.map(p=>p.id)).size,300);
+  assert.equal(new Set(roster.map(p=>p.id)).size,roster.length);
   const bench=game.clubs[0].players.find(p=>!game.lineupIds.includes(p.id));
   assert.equal(setStarter(game,0,bench.id),true);
   assert.equal(game.lineupIds[0],bench.id);
@@ -119,3 +119,4 @@ test('changed live tactics preserve played minutes and affect future match outpu
   assert.deepEqual(defensive.lastMatch.detail.events.filter(e=>e.minute<=45),firstEvents);
   assert.notDeepEqual(attacking.lastMatch.detail.stats,defensive.lastMatch.detail.stats);
 });
+

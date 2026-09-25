@@ -1,8 +1,10 @@
-import { lineUp, rng, simulate } from './engine.js';
+import { formations, lineUp, positionFit, rng, simulate } from './engine.js';
 import { realPlayers } from './real-players.js';
+import { clubData, playerIdentity, ROSTER_VERSION } from './clubs.js';
+import { ensureManagement, recordCash, scoutingCost, settleMatch, recordPlayerMatch, archiveSeason, expiredMatchdayContracts, sellPlayer as completeSale } from './management.js';
 
 export const KEY = 'touchline-save-v2';
-export const clubNames = ['Ajax','Feyenoord','PSV','AZ','FC Utrecht','FC Twente'];
+export const clubNames = clubData.map(club=>club.name);
 const clamp = (x,a,b) => Math.max(a,Math.min(b,x));
 const positions={G:['GK'],D:['RB','CB','CB','LB'],M:['CDM','CM','CM','CAM'],F:['RW','LW','ST']};
 function fromSource(source,index){
@@ -11,13 +13,17 @@ function fromSource(source,index){
   return {id:`real-${index}`,name:source.name,age:2026-source.birthYear,position:positions[source.role][index%positions[source.role].length],attack:stat(),passing:stat(),defending:stat(),pace:stat(),finishing:stat(),composure:stat(),stamina:stat(),fitness:75+Math.floor(random()*26),morale:70+Math.floor(random()*31)};
 }
 const rosterCounts={G:3,D:16,M:17,F:14};
-const squads=Array.from({length:6},()=>[]);
 const reserves=[];
 for(const role of Object.keys(rosterCounts)){
   const pool=realPlayers.map((p,i)=>({p,i})).filter(({p})=>p.role===role);
-  pool.forEach(({p,i},n)=>{const player=fromSource(p,i);if(n<rosterCounts[role]*6)squads[n%6].push(player);else reserves.push(player);});
+  pool.forEach(({p,i},n)=>{if(n>=rosterCounts[role]*6)reserves.push(fromSource(p,i));});
 }
-export const initialClubs=clubNames.map((name,i)=>({name,players:squads[i]}));
+export const initialClubs=clubData.map(club=>({name:club.name,players:club.players.map(source=>{
+  const identity=playerIdentity(source.name);
+  const seed=[...identity].reduce((hash,char)=>Math.imul(hash,31)+char.charCodeAt(0)|0,7);
+  const role={GK:'G',DEF:'D',MID:'M',ATT:'F'}[source.position];
+  return {...fromSource({name:source.name,birthYear:2026,role},seed),id:`club-${identity}`,age:null,position:source.position,number:source.number};
+})}));
 export const rating = p => Math.round((p.attack+p.passing+p.defending+p.pace+p.finishing+p.composure)/6);
 export const cost = p => Math.round((rating(p)-40)**2 * 145);
 export function schedule() {
@@ -29,11 +35,22 @@ export function schedule() {
   return [...rounds,...rounds.map(day=>day.map(([a,b])=>[b,a]))];
 }
 export function newGame(name='Ajax',color='#c5ff70') {
-  const clubs=structuredClone(initialClubs);
   const selected=clubNames.includes(name)?name:'Ajax';
-  clubs[0].name=selected;
-  clubs.slice(1).forEach((club,i)=>{club.name=clubNames.filter(n=>n!==selected)[i];});
-  return prepareSquad({version:5,clubs,color,round:0,credits:120000,points:0,results:[],training:'Recovery',academy:1,scout:null,market:[],news:[`Welkom bij ${clubs[0].name}. Je eerste seizoen begint vandaag.`],tactics:{formation:'4-3-3',mentality:50,pressing:50,tempo:50},lineupIds:lineUp(clubs[0]).map(p=>p.id),pending:null,season:1,lastMatch:null,reportOpen:false});
+  const clubs=structuredClone([initialClubs.find(c=>c.name===selected),...initialClubs.filter(c=>c.name!==selected)]);
+  return ensureManagement(prepareSquad({version:5,rosterVersion:ROSTER_VERSION,clubs,color,round:0,credits:120000,points:0,results:[],training:'Recovery',academy:1,scout:null,market:[],news:[`Welkom bij ${clubs[0].name}. Je eerste seizoen begint vandaag.`],tactics:{formation:'4-3-3',mentality:50,pressing:50,tempo:50},lineupIds:lineUp(clubs[0]).map(p=>p.id),pending:null,season:1,lastMatch:null,reportOpen:false}));
+}
+// Explicit opt-in only. Keep the club order because results reference its indices.
+// The caller must save a recovery copy before replacing the active career.
+export function updateClubRosters(game){
+  if(game.pending)throw new Error('Rond eerst je lopende wedstrijd af om de selecties bij te werken.');
+  if(game.rosterVersion===ROSTER_VERSION)throw new Error('Deze carrière gebruikt de nieuwe selecties al.');
+  const updated=structuredClone(game);
+  updated.clubs=game.clubs.map(club=>structuredClone(initialClubs.find(c=>c.name===club.name)));
+  updated.lineupIds=[];delete updated.benchIds;updated.captainId=null;
+  // Old offers are no longer valid; keep the scouting use and credits for this round.
+  updated.market=[];updated.rosterVersion=ROSTER_VERSION;updated.reportOpen=false;
+  updated.news.unshift('Clubselecties bijgewerkt. Basiself, wisselbank en aanvoerder zijn opnieuw gekozen. Uitslagen en credits zijn bewaard.');
+  return ensureManagement(prepareSquad(updated));
 }
 export function prepareSquad(game){
   const players=game.clubs[0].players,known=new Set(players.map(p=>p.id));
@@ -55,11 +72,11 @@ export function migrateSave(old){
       p.opponentSelection=p.first.teams[1-side].map(player=>player.id);p.captainId=p.selection.includes(game.captainId)?game.captainId:p.selection[0];p.subs=p.subs||0;p.coaching=[];delete p.first;
     }
     if(game.pending)game.pending.paused=true;
-    return game;
+    return ensureManagement(game);
   }
   if(old.version!==2&&old.version!==3)return null;
   const selected=clubNames.includes(old.clubs[0]?.name)?old.clubs[0].name:'Ajax',fresh=newGame(selected,old.color);
-  return {...fresh,credits:old.credits,round:old.round,results:old.results||[],points:old.points||0,tactics:old.tactics||fresh.tactics,trainingUsed:false,news:[`Je club speelt nu als ${selected} met echte spelersnamen. Uitslagen en credits zijn bewaard.`,...(old.news||[])].slice(0,20)};
+  return ensureManagement({...fresh,management:undefined,credits:old.credits,round:old.round,results:old.results||[],points:old.points||0,tactics:old.tactics||fresh.tactics,trainingUsed:false,news:[`Je club speelt nu als ${selected} met echte spelersnamen. Uitslagen en credits zijn bewaard.`,...(old.news||[])].slice(0,20)});
 }
 export function setStarter(game,slot,id){
   if(game.pending||!Number.isInteger(slot)||slot<0||slot>10||!game.clubs[0].players.some(p=>p.id===id))return false;
@@ -98,24 +115,27 @@ export function nextFixture(game) {return schedule()[game.round]?.find(pair=>pai
 export function train(game,focus) {
   if(!['Recovery','Attacking','Defending','Fitness'].includes(focus)) return false;
   if(game.trainingUsed||game.pending) return false;
-  const players=game.clubs[0].players;
+  ensureManagement(game);const players=game.clubs[0].players;
+  const development=1+game.management.facilities.training-1+game.management.staff.coach;
   for(const p of players){
-    if(focus==='Recovery') p.fitness=clamp(p.fitness+9,0,100);
+    if(focus==='Recovery') p.fitness=clamp(p.fitness+9+game.management.facilities.medical-1,0,100);
     if(focus==='Fitness') {p.fitness=clamp(p.fitness+3,0,100);p.stamina=clamp(p.stamina+1,0,99);}
-    if(focus==='Attacking') {p.attack=clamp(p.attack+1,0,99);p.fitness=clamp(p.fitness-4,0,100);}
-    if(focus==='Defending') {p.defending=clamp(p.defending+1,0,99);p.fitness=clamp(p.fitness-4,0,100);}
+    if(focus==='Attacking') {p.attack=clamp(p.attack+development,0,99);p.fitness=clamp(p.fitness-4,0,100);}
+    if(focus==='Defending') {p.defending=clamp(p.defending+development,0,99);p.fitness=clamp(p.fitness-4,0,100);}
   }
   game.training=focus;game.trainingUsed=true;game.news.unshift(`${focus} training afgerond. Nieuwe sessie na je volgende wedstrijd.`);return true;
 }
 export function scout(game) {
-  if(game.pending || game.scout || game.credits<15000) return false;
+  ensureManagement(game);const fee=scoutingCost(game);
+  if(game.pending || game.scout || game.credits<fee) return false;
   const random=rng(13000+game.round*271+game.results.length*19);
   const owned=new Set(game.clubs.flatMap(c=>c.players.map(p=>p.id)));
-  const pool=reserves.filter(p=>!owned.has(p.id));
+  const names=new Set(game.clubs.flatMap(c=>c.players.map(p=>playerIdentity(p.name))));
+  const pool=reserves.filter(p=>!owned.has(p.id)&&!names.has(playerIdentity(p.name)));
   if(pool.length<4)return false;
-  game.credits-=15000;
+  recordCash(game,-fee,'scouting','Scoutingrapport');
   game.market=Array.from({length:4},()=>{const p=pool.splice(Math.floor(random()*pool.length),1)[0];return {...p,fitness:100};});
-  game.scout='completed';game.news.unshift('Scouts hebben vier jonge spelers gevonden. Bekijk de transfermarkt.');return true;
+  game.scout='completed';game.news.unshift('Scouts hebben vier spelers gevonden. Bekijk de transfermarkt.');return true;
 }
 export function signPlayer(game,id) {
   if(game.pending)return false;
@@ -123,19 +143,40 @@ export function signPlayer(game,id) {
   if(index<0 || game.clubs[0].players.length>=55) return false;
   const p=game.market[index],price=cost(p);
   if(game.credits<price) return false;
-  game.credits-=price;game.clubs[0].players.push(p);game.market.splice(index,1);
+  recordCash(game,-price,'transfer',`${p.name} aangetrokken`);game.clubs[0].players.push(p);game.market.splice(index,1);ensureManagement(game);
   game.news.unshift(`${p.name} tekent bij ${game.clubs[0].name} voor ${price.toLocaleString('nl-NL')} credits.`);return true;
 }
+export function sellPlayer(game,id,buyerIndex){if(!completeSale(game,id,buyerIndex))return false;prepareSquad(game);return true;}
 const statKeys=['goals','shots','onTarget','xg','passes','completed','possessions','fouls'];
 const emptyStats=()=>Object.fromEntries([...statKeys,'possession','passAccuracy'].map(key=>[key,0]));
 export function beginMatch(game){
   if(game.pending)return game.pending;if(game.round>=10)return null;
-  prepareSquad(game);const [home,away]=nextFixture(game),other=home===0?away:home;game.reportOpen=false;
-  game.pending={home,away,minute:0,selection:[...game.lineupIds],bench:[...game.benchIds],captainId:game.captainId,opponentSelection:lineUp(game.clubs[other]).map(p=>p.id),used:[],subs:0,played:{},stats:[emptyStats(),emptyStats()],events:[],coaching:[],paused:true};return game.pending;
+  ensureManagement(game);prepareSquad(game);if(expiredMatchdayContracts(game).length)return null;
+  const [home,away]=nextFixture(game),other=home===0?away:home;game.reportOpen=false;
+  game.pending={home,away,minute:0,startedSelection:[...game.lineupIds],selection:[...game.lineupIds],bench:[...game.benchIds],captainId:game.captainId,opponentSelection:lineUp(game.clubs[other]).map(p=>p.id),used:[],subs:0,played:{},stats:[emptyStats(),emptyStats()],events:[],coaching:[],paused:true};return game.pending;
 }
 export function matchFitness(player,minutes=0){return clamp(Math.round(player.fitness-minutes*(.08+(100-player.stamina)*.0015)),25,100);}
+export function applyAutoInstructions(game){
+  const p=game.pending;if(!p||p.paused)return;
+  const rules=game.management.auto,side=p.home===0?0:1,difference=p.stats[side].goals-p.stats[1-side].goals;
+  if(rules.chaseGoal&&p.minute>=70&&difference<0&&!p.autoChased){
+    game.tactics.mentality=80;game.tactics.tempo=70;p.autoChased=true;p.coaching.push({minute:p.minute,text:'Auto-instructie: achterstand aanvallen (mentaliteit 80, tempo 70).'});
+  }
+  if(rules.protectLead&&p.minute>=75&&difference>0&&!p.autoProtected){
+    game.tactics.mentality=25;game.tactics.tempo=35;p.autoProtected=true;p.coaching.push({minute:p.minute,text:'Auto-instructie: voorsprong bewaken (mentaliteit 25, tempo 35).'});
+  }
+  if(rules.subTired&&p.minute>=60&&p.subs<3){
+    const players=game.clubs[0].players;
+    const tired=p.selection.map((id,slot)=>({player:players.find(v=>v.id===id),slot})).filter(({player})=>matchFitness(player,p.played[player.id]||0)<60).sort((a,b)=>matchFitness(a.player,p.played[a.player.id]||0)-matchFitness(b.player,p.played[b.player.id]||0));
+    for(const {player,slot} of tired){
+      const reserve=p.bench.map(id=>players.find(v=>v.id===id)).filter(v=>positionFit(v.position,formations[game.tactics.formation][slot])>=.93&&v.fitness>matchFitness(player,p.played[player.id]||0)).sort((a,b)=>b.fitness-a.fitness)[0];
+      if(reserve){p.paused=true;makeSubstitution(game,player.id,reserve.id);p.paused=false;p.coaching.at(-1).text='Auto-instructie · '+p.coaching.at(-1).text;break;}
+    }
+  }
+}
 export function advanceMatch(game){
   const p=game.pending;if(!p||p.paused||p.minute>=90)return null;
+  applyAutoInstructions(game);
   const minute=p.minute+1,mySide=p.home===0?0:1;
   const clubs=[game.clubs[p.home],game.clubs[p.away]].map((club,side)=>({...club,players:club.players.map(player=>({...player,fitness:matchFitness(player,side===mySide?(p.played[player.id]||0):p.minute)}))}));
   const own=p.selection,other=p.opponentSelection;
@@ -152,10 +193,11 @@ export function finishMatch(game){
   for(let i=0;i<fixtures.length;i++){
     const [home,away]=fixtures[i];
     const result=home===p.home&&away===p.away?{clubs:[game.clubs[home].name,game.clubs[away].name],teams:[home===0?p.selection:p.opponentSelection,away===0?p.selection:p.opponentSelection].map((ids,side)=>ids.map(id=>game.clubs[side===0?home:away].players.find(player=>player.id===id))),stats:structuredClone(p.stats),events:structuredClone(p.events),coaching:structuredClone(p.coaching),played:{...p.played},captainId:p.captainId}:simulate({seed:11000+(game.season||1)*100000+game.round*100+i,clubs:[game.clubs[home],game.clubs[away]]});
+    recordPlayerMatch(game,result,home,away,p);
     const match={home,away,goals:result.stats.map(s=>s.goals),round:game.round+1};game.results.push(match);if(home===0||away===0)own={...match,detail:result};
   }
   const side=own.home===0?0:1,them=1-side,reward=own.goals[side]>own.goals[them]?35000:own.goals[side]===own.goals[them]?18000:10000;
-  game.credits+=reward;game.points+=own.goals[side]>own.goals[them]?3:own.goals[side]===own.goals[them]?1:0;
+  own.reward=reward;own.settlement=settleMatch(game,own);game.points+=own.goals[side]>own.goals[them]?3:own.goals[side]===own.goals[them]?1:0;
   for(const player of game.clubs[0].players)player.fitness=p.played[player.id]?matchFitness(player,p.played[player.id]):Math.min(player.fitness+3,100);
   own.reward=reward;game.news.unshift(`Speeldag ${game.round+1}: ${game.clubs[own.home].name} ${own.goals[0]}–${own.goals[1]} ${game.clubs[own.away].name}. +${reward.toLocaleString('nl-NL')} credits.`);
   game.round++;game.trainingUsed=false;game.scout=null;game.market=[];game.pending=null;game.lastMatch=own;game.reportOpen=true;return own;
@@ -163,9 +205,11 @@ export function finishMatch(game){
 export function playRound(game){if(!beginMatch(game))return null;while(game.pending){game.pending.paused=false;advanceMatch(game);}return game.lastMatch;}
 export function newSeason(game) {
   if(game.round<10) return false;
-  const place=standings(game).findIndex(row=>row.i===0)+1;
-  const bonus=(7-place)*30000;game.credits+=bonus;
+  ensureManagement(game);const table=standings(game),place=table.findIndex(row=>row.i===0)+1;
+  if(!archiveSeason(game,table))return false;
+  const bonus=(7-place)*30000;recordCash(game,bonus,'prize','Seizoensbonus');
   game.news.unshift(`Seizoen afgerond op plaats ${place}. Seizoensbonus: ${bonus.toLocaleString('nl-NL')} credits.`);
   game.season=(game.season||1)+1;game.reportOpen=false;game.round=0;game.results=[];game.trainingUsed=false;game.scout=null;game.market=[];
+  game.management.developmentUsed=false;
   return true;
 }
