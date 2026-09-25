@@ -1,6 +1,8 @@
+import {unavailableSelection,applyRecommendedSquad} from '../public/fitness.js';
+function playRound(game){if(unavailableSelection(game).length)applyRecommendedSquad(game);return playRoundWithoutRotation(game);}
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {KEY,newGame,playRound,newSeason} from '../public/game.js';
+import {KEY,newGame,playRound as playRoundWithoutRotation,newSeason} from '../public/game.js';
 
 let instance=0;
 async function boot(t,game=newGame('PSV')){
@@ -46,4 +48,25 @@ test('history is rendered after season rollover and expired contracts can be ren
   h.click({office:'contracts'});h.click({management:'renew-all'});
   assert.ok(Object.values(h.state().management.contracts).every(c=>c.untilSeason===4));
   h.click({action:'play'});assert.ok(h.state().pending);assert.match(h.app.innerHTML,/AFTRAP/);
+});
+
+test('fit squad preview is reversible and only applying it changes the saved manual selection',async t=>{
+  const game=newGame('PSV');game.round=1;
+  const id=game.lineupIds[2];game.medical.injuries[id]={kind:'muscle',remaining:2,season:1,round:1};
+  const h=await boot(t,game),original=h.state();h.click({tab:'squad'});
+  assert.match(h.app.innerHTML,/Wie is inzetbaar/);assert.match(h.app.innerHTML,/Spierklachten/);
+  h.click({fitness:'preview'});assert.match(h.app.innerHTML,/Voorstel fit elftal/);assert.deepEqual(h.state(),original);
+  h.click({fitness:'cancel'});assert.deepEqual(h.state(),original);assert.doesNotMatch(h.app.innerHTML,/aria-label="Voorstel fit elftal"/);
+  h.click({fitness:'preview'});h.click({fitness:'apply'});
+  assert.ok(![...h.state().lineupIds,...h.state().benchIds].includes(id));assert.equal(h.state().medical.injuries[id].remaining,2);
+  assert.equal(h.state().credits,original.credits);assert.equal(new Set([...h.state().lineupIds,...h.state().benchIds]).size,18);
+  h.click({action:'play'});assert.ok(h.state().pending);const playing=h.state();h.click({fitness:'preview'});h.click({fitness:'apply'});assert.deepEqual(h.state(),playing);
+});
+
+test('injured matchday players produce a useful kickoff message and stay visible in profiles',async t=>{
+  const game=newGame();game.round=1;game.medical.injuries[game.lineupIds[2]]={kind:'knock',remaining:1,season:1,round:1};
+  const h=await boot(t,game);h.click({action:'play'});assert.equal(h.state().pending,null);assert.match(h.app.innerHTML,/Vervang eerst de geblesseerde spelers/);
+  h.click({tab:'prematch'});assert.match(h.app.innerHTML,/geblesseerde speler\(s\) in je wedstrijdselectie/);
+  h.click({tab:'clubs'});assert.match(h.app.innerHTML,/Lichte tik/);
+  h.click({tab:'training'});assert.ok(!h.app.innerHTML.includes(`<option value="${game.lineupIds[2]}">`));
 });

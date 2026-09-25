@@ -1,9 +1,11 @@
+import {unavailableSelection,applyRecommendedSquad} from '../public/fitness.js';
+function playRound(game){if(unavailableSelection(game).length)applyRecommendedSquad(game);return playRoundWithoutRotation(game);}
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {clubData, playerIdentity, ROSTER_VERSION} from '../public/clubs.js';
 import {formations, lineUp, positionFit} from '../public/engine.js';
-import {KEY, beginMatch, initialClubs, newGame, playRound, scout, updateClubRosters} from '../public/game.js';
+import {KEY, beginMatch, initialClubs, newGame, playRound as playRoundWithoutRotation, scout, updateClubRosters} from '../public/game.js';
 import {parseBackup, restoreBackup, RECOVERY_KEY} from '../public/storage.js';
 
 const legacyRaw=readFileSync(new URL('./fixtures/legacy-v5-live.json',import.meta.url),'utf8');

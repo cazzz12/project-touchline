@@ -1,6 +1,6 @@
 # Project Touchline
 
-Versie **0.5.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
+Versie **0.6.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
@@ -10,7 +10,15 @@ Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als
 
 Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers gebruiken spelcredits. Verwijderde browsergegevens wissen je voortgang. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
 
-## Nieuw: clubbeheer en carrière
+## Nieuw: blessures, herstel en fitte opstellingen
+
+Onder **Selectie** zie je wie inzetbaar is en wie een spelblessure heeft. **Stel fit elftal voor** toont een voorstel voor elf starters, zeven reserves en een aanvoerder. Annuleren behoudt je keuzes; **Pas voorstel toe** slaat de nieuwe opstelling op. Geblesseerde spelers kunnen niet deelnemen of individueel trainen.
+
+Alle zes clubs hebben nu conditieherstel tussen speeldagen en blessures van één tot drie gemiste wedstrijden. Het herstelcentrum verkleint het risico, verbetert conditieherstel en verkort vanaf niveau 3 nieuwe blessures. Na de seizoensrust is iedereen weer fit. Dit zijn fictieve gebeurtenissen in jouw spel, geen gezondheidsinformatie over de echte spelers. Lees [de regels voor fitheid](docs/fitness.md).
+
+Bestaande carrières krijgen geen blessures achteraf. Een al lopende wedstrijd uit een oudere versie behoudt zijn oorspronkelijke selectie en conditieregels tot het eindsignaal. De nieuwe regels beginnen bij een nieuwe aftrap.
+
+## Clubbeheer en carrière
 
 - **Clubzaken:** inkomsten en uitgaven, salarissen, contracten verlengen, spelers verkopen aan een andere club, faciliteiten, trainers, scouts en drie sponsorcontracten.
 - **Training:** een individuele ontwikkelsessie naast de bestaande teamtraining; faciliteiten en trainers verbeteren het effect.
@@ -44,7 +52,7 @@ De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare 
 
 ## Interfacecontrole
 
-De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 50 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, automatische instructies en 52 opeenvolgende seizoenen.
+De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 62 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, herstel, selectievoorstellen, automatische instructies en 52 opeenvolgende seizoenen.
 
 Zie [het controleverslag](docs/browser-check.md) voor de geteste flows en beperkingen. Gebruik voor bestaande saves dezelfde browser en hetzelfde adres als voorheen: `localhost` en `127.0.0.1` hebben elk hun eigen browseropslag.
 

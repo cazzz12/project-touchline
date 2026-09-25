@@ -1,7 +1,9 @@
+import {unavailableSelection,applyRecommendedSquad} from '../public/fitness.js';
+function playRound(game){if(unavailableSelection(game).length)applyRecommendedSquad(game);return playRoundWithoutRotation(game);}
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {newGame,playRound,newSeason,beginMatch,advanceMatch,finishMatch,makeSubstitution,sellPlayer,train,scout,cost,signPlayer,applyAutoInstructions} from '../public/game.js';
+import {newGame,playRound as playRoundWithoutRotation,newSeason,beginMatch,advanceMatch,finishMatch,makeSubstitution,sellPlayer,train,scout,cost,signPlayer,applyAutoInstructions} from '../public/game.js';
 import {ensureManagement,recordCash,payroll,maintenance,chooseSponsor,upgradeClub,upgradePrice,scoutingCost,renewContract,renewExpiring,developPlayer,careerRecord,saleOffer} from '../public/management.js';
 import {parseBackup,exportBackup,readStoredGame} from '../public/storage.js';
 import {formations} from '../public/engine.js';

@@ -1,5 +1,6 @@
 import { formations } from './engine.js';
 import { KEY, clubNames, migrateSave, nextFixture } from './game.js';
+import {injuryTypes,availablePlayers,injuryFor,roundNumber} from './fitness.js';
 import { sponsors } from './management.js';
 
 export const RECOVERY_KEY = `${KEY}-before-import`;
@@ -60,6 +61,17 @@ function management(game){
   return Object.values(m.playerStats).every(p=>record(p)&&text(p.name)&&['appearances','starts','minutes','goals','seasonAppearances','seasonGoals'].every(k=>integer(p[k],0))&&integer(p.season,1)&&list(p.clubs,c=>clubNames.includes(c),6));
 }
 
+function medical(game){
+  const m=game.medical,known=new Set(game.clubs.flatMap(c=>c.players.map(p=>p.id)));
+  if(!record(m)||m.schema!==1||!integer(m.lastRound,0,roundNumber(game))||!record(m.injuries)||Object.keys(m.injuries).length>330)return false;
+  if(!Object.entries(m.injuries).every(([id,i])=>known.has(id)&&record(i)&&Object.hasOwn(injuryTypes,i.kind)&&integer(i.remaining,1,3)&&integer(i.season,1,game.season)&&integer(i.round,1,10)&&(i.season-1)*10+i.round<=roundNumber(game)))return false;
+  return game.clubs.every((club,index)=>{
+    const available=availablePlayers(game,index),keepers=club.players.filter(p=>p.position==='GK').length;
+    return available.length>=18&&available.filter(p=>p.position==='GK').length>=Math.min(2,keepers);
+  });
+}
+function medicalReport(r){return record(r)&&list(r.injured,p=>record(p)&&text(p.name)&&Object.hasOwn(injuryTypes,p.kind)&&integer(p.remaining,1,3),55)&&list(r.recovered,text,55);}
+
 // Validate before a file is allowed to replace browser storage. Migration operates
 // on the parsed copy, never on the active in-memory career or the stored text.
 function validate(game) {
@@ -77,10 +89,10 @@ function validate(game) {
     || game.market.some(p => allIds.includes(p.id))
     || !['Recovery', 'Attacking', 'Defending', 'Fitness'].includes(game.training)
     || !idList(game.lineupIds, own, 11) || !idList(game.benchIds, own, 7)
-    || game.benchIds.some(id => game.lineupIds.includes(id)) || !game.lineupIds.includes(game.captainId)||!management(game)) invalid();
+    || game.benchIds.some(id => game.lineupIds.includes(id)) || !game.lineupIds.includes(game.captainId)||!management(game)||!medical(game)) invalid();
   if (game.lastMatch != null) {
     const r = game.lastMatch;
-    if (!result(r) || !number(r.reward ?? 0) || !record(r.detail) || !stats(r.detail.stats)
+    if ((r.medicalReport!==undefined&&!medicalReport(r.medicalReport))||!result(r) || !number(r.reward ?? 0) || !record(r.detail) || !stats(r.detail.stats)
       || !events(r.detail.events) || !coaching(r.detail.coaching || [])
       || (r.settlement!==undefined&&(!record(r.settlement)||!signedMoney(r.settlement.net)||!list(r.settlement.entries,cashEntry,8)))) invalid();
   }
@@ -93,6 +105,8 @@ function validate(game) {
       || !unique([...p.selection, ...p.bench, ...p.used]) || !p.selection.includes(p.captainId)
       || !idList(p.opponentSelection, opponent, 11) || !stats(p.stats) || !events(p.events) || !coaching(p.coaching)
       || !record(p.played) || !Object.entries(p.played).every(([id, minutes]) => own.has(id) && integer(minutes, 0, p.minute))) invalid();
+    if(p.medicalRules!==undefined&&p.medicalRules!==1)invalid();
+    if([...p.selection,...p.bench,...p.opponentSelection].some(id=>injuryFor(game,id)))invalid();
     if((p.startedSelection!==undefined&&!idList(p.startedSelection,own,11))||['autoChased','autoProtected'].some(key=>p[key]!==undefined&&typeof p[key]!=='boolean'))invalid();
     p.paused = true;
   }

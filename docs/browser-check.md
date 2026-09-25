@@ -99,3 +99,16 @@ Gecontroleerd in dezelfde ingebouwde Chromium-browser, desktop 1440 × 900 en mo
 De oude versie-5-fixture is synthetisch gegenereerd uit de openbare code. Een onafhankelijke regeneratie vanaf commit `f2b1c858afb6252e50b0c4f17413ad2e39454a51` kwam veld voor veld overeen. Er is geen persoonlijke gebruikerssave in de repository opgenomen.
 
 Beperkingen: geen fysieke mobiele apparaten, andere browserengines of online multiplayer getest. De economie is een prototype; de tests bewijzen correcte verwerking van de regels, geen evenwichtige spelbalans over alle speelstijlen. Automatisch wisselen is met logische tests afgedekt; de handmatige browserwedstrijd activeerde de tactische regel.
+
+# Aanvulling 0.6.0 — fitheid en inzetbaarheid
+
+Getest op een afzonderlijk lokaal adres (poort 43130) met nieuw aangemaakte testcarrières. De eigen gebruikerscarrière is niet gebruikt voor blessures, imports of wedstrijdsimulaties.
+
+- Desktop 1440 × 900: inzetbaarheidsoverzicht en voorstel voor basiself, zeven reserves en aanvoerder bekeken. Annuleren behield de oorspronkelijke keeper; toepassen wijzigde de selectie. Herladen behield het toegepaste elftal.
+- Een synthetische carrière met een automatisch ontstane spelblessure na vijf gesimuleerde rondes geïmporteerd. Aftrappen met de geblesseerde keeper werd geblokkeerd met een verwijzing naar Selectie.
+- Mobiel 390 × 844: blessureoverzicht en voorstel bleven binnen de paginabreedte. De geblesseerde speler stond niet in het voorstel. Na toepassen en herladen kon de wedstrijd beginnen.
+- De wedstrijd op 4× uitgespeeld, met automatische rust en herladen op minuut 45. Tijdens de rust bleef de blessure staan en was de voorstelknop geblokkeerd. Pas na het eindsignaal was de gemiste speeldag verwerkt; het herstelbericht stond in het verslag en clubnieuws.
+- Opnieuw herladen behield het herstel: geen actieve blessure meer in het overzicht. Geen fouten of waarschuwingen in de opgevraagde browserconsole.
+- Alle 62 automatische tests slagen. Nieuwe controles dekken oude lopende saves zonder nieuwe conditieregels, herstel volgens werkelijke speelminuten bij alle zes clubs, reproduceerbare blessures, trainingsblokkades, pure selectievoorstellen, herstelduur, transfers met blessure, inzetbare tegenstanders, seizoensrust, ongeldige backups en de UI-acties bekijken/annuleren/toepassen. De bestaande test met 52 seizoenen rouleert nu expliciet bij blessures.
+
+Blessures zijn spelgebeurtenissen, geen medische informatie over echte spelers. De geteste flow stelt blessures vast na het eindsignaal; acute uitval tijdens een wedstrijd en schorsingen zijn nog niet gebouwd. De eerdere beperkingen voor browser- en balanstests blijven gelden.

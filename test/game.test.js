@@ -1,6 +1,8 @@
+import {unavailableSelection,applyRecommendedSquad} from '../public/fitness.js';
+function playRound(game){if(unavailableSelection(game).length)applyRecommendedSquad(game);return playRoundWithoutRotation(game);}
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { advanceMatch, beginMatch, clubNames, finishMatch, migrateSave, setBench, setCaptain, makeSubstitution, newGame, schedule, playRound, setStarter, standings, train, scout, signPlayer, newSeason } from '../public/game.js';
+import { advanceMatch, beginMatch, clubNames, finishMatch, migrateSave, setBench, setCaptain, makeSubstitution, newGame, schedule, playRound as playRoundWithoutRotation, setStarter, standings, train, scout, signPlayer, newSeason } from '../public/game.js';
 
 test('six clubs play every opponent twice over ten rounds',()=>{
   const rounds=schedule();

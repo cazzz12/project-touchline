@@ -1,3 +1,4 @@
+import {ensureFitness,injuryFor,availablePlayers} from './fitness.js';
 // Local career systems. Amounts and contracts are game rules, never real club data.
 export const overall = p => Math.round((p.attack+p.passing+p.defending+p.pace+p.finishing+p.composure)/6);
 export const transferValue = p => Math.round((overall(p)-40)**2*145);
@@ -9,7 +10,7 @@ export const sponsors = {
 export const facilities = {
   stadium:{name:'Stadionvoorzieningen',baseCost:18000,max:5,description:'Meer inkomsten bij thuiswedstrijden. Dit zijn spelniveaus, geen echte stadioncapaciteiten.'},
   training:{name:'Trainingscomplex',baseCost:14000,max:5,description:'Een extra ontwikkelpunt per niveau boven niveau 1 bij vaardigheidstraining.'},
-  medical:{name:'Herstelcentrum',baseCost:10000,max:5,description:'Een extra conditiepunt per niveau boven niveau 1 bij hersteltraining.'}
+  medical:{name:'Herstelcentrum',baseCost:10000,max:5,description:'Meer conditieherstel, lager blessurerisico en vanaf niveau 3 kortere spelblessures.'}
 };
 export const staffRoles = {
   coach:{name:'Trainingsstaf',baseCost:16000,max:3,description:'Een extra ontwikkelpunt per niveau bij vaardigheidstraining.'},
@@ -39,7 +40,7 @@ export function ensureManagement(game){
   if(m.schema!==1||!m.contracts||typeof m.contracts!=='object')return game;
   if(Array.isArray(m.ledger)&&m.ledger.length===0)m.ledgerOpening=game.credits;
   for(const p of game.clubs[0].players)if(!Object.hasOwn(m.contracts,p.id))m.contracts[p.id]={salary:Math.max(100,(overall(p)-40)*15),untilSeason:(game.season||1)+2};
-  return game;
+  return ensureFitness(game);
 }
 export function recordCash(game,amount,category,label){
   ensureManagement(game);const m=game.management;
@@ -87,7 +88,7 @@ export function renewExpiring(game){let count=0;for(const p of game.clubs[0].pla
 export function expiredMatchdayContracts(game){return [...game.lineupIds,...game.benchIds].filter(id=>game.management.contracts[id].untilSeason<game.season);}
 export function developPlayer(game,id,attribute){
   if(game.pending||game.management.developmentUsed||!['attack','passing','defending','pace','finishing','composure','stamina'].includes(attribute))return false;
-  const p=game.clubs[0].players.find(p=>p.id===id);if(!p||p[attribute]>=99)return false;
+  const p=game.clubs[0].players.find(p=>p.id===id);if(!p||injuryFor(game,id)||p[attribute]>=99)return false;
   p[attribute]=clamp(p[attribute]+1+game.management.staff.coach+game.management.facilities.training-1,0,99);
   p.fitness=clamp(p.fitness-3,0,100);game.management.developmentUsed=true;
   game.news.unshift(`${p.name} heeft individueel getraind. −3 conditie.`);return true;
@@ -96,6 +97,8 @@ export function saleOffer(game,id,buyerIndex){
   const club=game.clubs[0],p=club.players.find(p=>p.id===id),buyer=game.clubs[buyerIndex];
   if(game.pending||!p||!Number.isInteger(buyerIndex)||buyerIndex<1||!buyer||buyer.players.length>=55||club.players.length<=18)return null;
   if(p.position==='GK'&&club.players.filter(p=>p.position==='GK').length<=2)return null;
+  const healthy=availablePlayers(game);
+  if(!injuryFor(game,id)&&(healthy.length<=18||(p.position==='GK'&&healthy.filter(p=>p.position==='GK').length<=2)))return null;
   return {player:p,buyer,price:Math.floor(transferValue(p)*.65)};
 }
 export function sellPlayer(game,id,buyerIndex){
