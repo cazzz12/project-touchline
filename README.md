@@ -1,6 +1,6 @@
 # Project Touchline
 
-Een speelbare **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Creëer je club, beheer je selectie, stel je tactiek in, train spelers, scout en koop talent, speel een seizoen van tien speeldagen en klim op de ranglijst. De clubs en spelers zijn fictief. Resultaten, clubkas en voortgang worden lokaal in je browser opgeslagen.
+Een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, stel je eigen basiself op, pas tijdens de rust tactiek en spelers aan, train en scout, en speel een fictieve minicompetitie van tien speeldagen. Resultaten, clubkas en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
@@ -8,12 +8,14 @@ npm start
 
 Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als `npm.ps1` wordt geblokkeerd. Run `npm test` voor controles van de simulatie en seizoensvoortgang. Node.js 20+ is vereist; externe pakketten zijn niet nodig.
 
-Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers zijn compacte prototypes met credits. Verwijderde browsergegevens wissen je voortgang.
+Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers zijn compacte prototypes met credits. Verwijderde browsergegevens wissen je voortgang. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
 
 ## Simulation model
 
-Zes clubs spelen thuis en uit. Elke club heeft een spelerspool en stelt voor een gekozen formatie automatisch de beste elf op. Balbezit verloopt via opbouw, progressie, kans en schot. De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare seed. Schoten krijgen xG; de statistieken tonen onder meer balbezit en passnauwkeurigheid. Het model is illustratief en niet gekalibreerd op echte voetbaldata.
+Zes bestaande Nederlandse clubs spelen een **niet-officiële fictieve minicompetitie** met heen- en terugwedstrijden. Spelersnamen en globale posities komen uit [openfootball/players](https://github.com/openfootball/players) (CC0 1.0). Clubnamen zijn ook opgenomen in [openfootball/clubs](https://github.com/openfootball/clubs) (CC0 1.0). De selecties zijn voor het spel samengesteld: zij vertegenwoordigen **niet** de echte huidige clubselecties. Leeftijd is afgeleid van geboortejaar voor 2026; ratings, conditie, prestaties, transferprijzen en overige attributen zijn gegenereerde spelwaarden. Er zijn geen officiële foto's, clublogo's of kits gebruikt. Het bronbestand `public/real-players.js` is een momentopname; gegevens kunnen verouderen.
+
+Je kiest handmatig elf spelers voor de formatie. De wedstrijd toont een tijdlijn tot de rust; dan kun je maximaal drie wissels doen en mentaliteit, pressing of tempo wijzigen voor de tweede helft. De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare seed. Schoten krijgen xG. Het model is illustratief en niet gekalibreerd op echte voetbaldata.
 
 ## Next milestones
 
-Volgende stappen: betrouwbare serveropslag en accounts, handmatige opstellingen en wissels, een rijkere match feed, spelerloopbanen, competities met andere managers en anti misbruik. Wallets en rewards vereisen daarna een duurzame economie en juridische toetsing.
+Volgende stappen: geverifieerde huidige clubselecties via een geschikte databron, betrouwbaardere serveropslag en accounts, een privéruimte voor eigen clubs met vrienden, spelerloopbanen, multiplayer en anti misbruik. Wallets en rewards vereisen daarna een duurzame economie en juridische toetsing.
