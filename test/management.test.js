@@ -19,7 +19,9 @@ test('legacy upgrade adds no money movements and preserves a match already in pr
   const raw=readFileSync(new URL('./fixtures/legacy-v5-live.json',import.meta.url),'utf8'),original=JSON.parse(raw).game;
   const loaded=readStoredGame({getItem:()=>raw,setItem:()=>assert.fail('must not write on read')});
   assert.equal(loaded.error,'');const game=loaded.game;
-  for(const key of ['credits','clubs','lineupIds','benchIds','captainId','pending','results'])assert.deepEqual(game[key],original[key],key);
+  for(const key of ['credits','lineupIds','benchIds','captainId','pending','results'])assert.deepEqual(game[key],original[key],key);
+  const oldPlayerFields=game.clubs.map(c=>({...c,players:c.players.map(({reflexes,handling,positioning,...p})=>p)}));
+  assert.deepEqual(oldPlayerFields,original.clubs);
   assert.equal(game.management.ledger.length,0);checkLedger(game);
   toMinute(game,90);checkLedger(game);assert.ok(parseBackup(exportBackup(game)));
 });

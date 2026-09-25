@@ -18,7 +18,8 @@ const positions = new Set([...Object.values(formations).flat(),'DEF','MID','ATT'
 function player(p) {
   return record(p) && typeof p.id === 'string' && /^(real-\d+|club-[a-z0-9-]{1,100})$/.test(p.id) && text(p.name)
     && (p.age===null||integer(p.age, 1, 120)) && positions.has(p.position)
-    && (p.number===undefined||integer(p.number,1,99)) && playerStats.every(key => number(p[key], 0, 100));
+    && (p.number===undefined||integer(p.number,1,99)) && playerStats.every(key => number(p[key], 0, 100))
+    && ['reflexes','handling','positioning'].every(key=>p[key]===undefined||number(p[key],0,100));
 }
 function stats(items) {
   return Array.isArray(items) && items.length === 2 && items.every(s => record(s)
@@ -26,7 +27,8 @@ function stats(items) {
 }
 function events(items) {
   return list(items, e => record(e) && integer(e.minute, 1, 90) && integer(e.side, 0, 1)
-    && text(e.player) && ['goal', 'save', 'miss'].includes(e.type) && number(e.xg, 0, 1));
+    && text(e.player) && ['goal', 'save', 'miss'].includes(e.type) && number(e.xg, 0, 1)
+    && (e.keeperId===undefined||text(e.keeperId)) && (e.keeper===undefined||text(e.keeper)));
 }
 function coaching(items) {
   return list(items, e => record(e) && integer(e.minute, 0, 90) && text(e.text), 10000);
@@ -58,7 +60,18 @@ function management(game){
     ||!list(m.history,h=>record(h)&&integer(h.season,1)&&integer(h.place,1,6)&&clubNames.includes(h.club)&&seasonRecord(h.record)
       &&list(h.results,result,30)&&list(h.table,r=>record(r)&&clubNames.includes(r.name)&&['i','p','w','d','l','gf','ga','pts'].every(k=>integer(r[k],0)),6),50)
     ||!unique(m.history.map(h=>h.season))||!record(m.playerStats)||Object.keys(m.playerStats).length>2000)return false;
-  return Object.values(m.playerStats).every(p=>record(p)&&text(p.name)&&['appearances','starts','minutes','goals','seasonAppearances','seasonGoals'].every(k=>integer(p[k],0))&&integer(p.season,1)&&list(p.clubs,c=>clubNames.includes(c),6));
+  return Object.values(m.playerStats).every(p=>record(p)&&text(p.name)&&['appearances','starts','minutes','goals','seasonAppearances','seasonGoals'].every(k=>integer(p[k],0))&&integer(p.season,1)&&list(p.clubs,c=>clubNames.includes(c),6)
+    && (p.keeping===undefined||(record(p.keeping)&&['appearances','minutes','saves','conceded','cleanSheets'].every(k=>integer(p.keeping[k],0))&&p.keeping.cleanSheets<=p.keeping.appearances&&p.keeping.appearances<=p.appearances&&p.keeping.minutes<=p.minutes)));
+}
+
+function keeperReport(detail){
+  if(detail.keeperRules===undefined)return detail.keeping===undefined;
+  if(detail.keeperRules!==1||!Array.isArray(detail.keeping)||detail.keeping.length!==2)return false;
+  return detail.keeping.every((rows,side)=>list(rows,p=>record(p)&&text(p.id)&&text(p.name)&&integer(p.minutes,1,90)&&integer(p.saves,0,90)&&integer(p.conceded,0,90)
+    && typeof p.cleanSheet==='boolean'&&p.cleanSheet===(p.minutes>=60&&p.conceded===0),4)
+    && unique(rows.map(p=>p.id))&&rows.reduce((n,p)=>n+p.minutes,0)===90
+    && rows.every(p=>p.saves===detail.events.filter(e=>e.side!==side&&e.keeperId===p.id&&e.type==='save').length&&p.conceded===detail.events.filter(e=>e.side!==side&&e.keeperId===p.id&&e.type==='goal').length)
+    && detail.events.filter(e=>e.side!==side).every(e=>rows.some(p=>p.id===e.keeperId&&p.name===e.keeper)));
 }
 
 function medical(game){
@@ -93,7 +106,7 @@ function validate(game) {
   if (game.lastMatch != null) {
     const r = game.lastMatch;
     if ((r.medicalReport!==undefined&&!medicalReport(r.medicalReport))||!result(r) || !number(r.reward ?? 0) || !record(r.detail) || !stats(r.detail.stats)
-      || !events(r.detail.events) || !coaching(r.detail.coaching || [])
+      || !events(r.detail.events) || !keeperReport(r.detail) || !coaching(r.detail.coaching || [])
       || (r.settlement!==undefined&&(!record(r.settlement)||!signedMoney(r.settlement.net)||!list(r.settlement.entries,cashEntry,8)))) invalid();
   }
   if (game.pending != null) {
@@ -106,6 +119,11 @@ function validate(game) {
       || !idList(p.opponentSelection, opponent, 11) || !stats(p.stats) || !events(p.events) || !coaching(p.coaching)
       || !record(p.played) || !Object.entries(p.played).every(([id, minutes]) => own.has(id) && integer(minutes, 0, p.minute))) invalid();
     if(p.medicalRules!==undefined&&p.medicalRules!==1)invalid();
+    if(p.keeperRules!==undefined&&p.keeperRules!==1)invalid();
+    if(p.keeperRules===1){
+      if(!record(p.keeperMinutes)||!Object.entries(p.keeperMinutes).every(([id,n])=>own.has(id)&&integer(n,1,p.played[id]??0))||Object.values(p.keeperMinutes).reduce((a,b)=>a+b,0)!==p.minute)invalid();
+      if(!p.events.every(e=>text(e.keeper)&&text(e.keeperId)&&(e.side===(p.home===0?0:1)?e.keeperId===p.opponentSelection[0]:Object.hasOwn(p.keeperMinutes,e.keeperId))))invalid();
+    }else if(p.keeperMinutes!==undefined)invalid();
     if([...p.selection,...p.bench,...p.opponentSelection].some(id=>injuryFor(game,id)))invalid();
     if((p.startedSelection!==undefined&&!idList(p.startedSelection,own,11))||['autoChased','autoProtected'].some(key=>p[key]!==undefined&&typeof p[key]!=='boolean'))invalid();
     p.paused = true;

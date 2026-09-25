@@ -1,6 +1,6 @@
 # Project Touchline
 
-Versie **0.6.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
+Versie **0.7.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
@@ -10,7 +10,13 @@ Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als
 
 Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers gebruiken spelcredits. Verwijderde browsergegevens wissen je voortgang. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
 
-## Nieuw: blessures, herstel en fitte opstellingen
+## Nieuw: keepers die schoten stoppen
+
+Keepers beïnvloeden nu of een schot op doel een goal wordt. Reflexen, balvastheid, positionering, conditie en moraal tellen mee. Bekijk de keeperkwaliteiten in het spelersprofiel, vergelijk de basiskeepers bij **Voorbeschouwing** en train een keeper via **Training**. Keepertraining gebruikt dezelfde individuele sessie als andere spelertraining.
+
+Het liveverslag noemt de keeper bij reddingen; het eindverslag en **Carrière** tonen reddingen, tegengoals en de nul gehouden. Keeperwissels verdelen de statistieken over de juiste spelers. De vaardigheden zijn gegenereerde spelwaarden; algemene ratings, prijzen en bestaande contracten blijven behouden. Een lopende oude wedstrijd behoudt zijn oorspronkelijke regels. Lees [de keeperregels](docs/keepers.md).
+
+## Blessures, herstel en fitte opstellingen
 
 Onder **Selectie** zie je wie inzetbaar is en wie een spelblessure heeft. **Stel fit elftal voor** toont een voorstel voor elf starters, zeven reserves en een aanvoerder. Annuleren behoudt je keuzes; **Pas voorstel toe** slaat de nieuwe opstelling op. Geblesseerde spelers kunnen niet deelnemen of individueel trainen.
 
@@ -52,7 +58,7 @@ De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare 
 
 ## Interfacecontrole
 
-De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 62 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, herstel, selectievoorstellen, automatische instructies en 52 opeenvolgende seizoenen.
+De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 73 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, automatische instructies en 52 opeenvolgende seizoenen.
 
 Zie [het controleverslag](docs/browser-check.md) voor de geteste flows en beperkingen. Gebruik voor bestaande saves dezelfde browser en hetzelfde adres als voorheen: `localhost` en `127.0.0.1` hebben elk hun eigen browseropslag.
 

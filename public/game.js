@@ -4,6 +4,7 @@ import { clubData, playerIdentity, ROSTER_VERSION } from './clubs.js';
 import { ensureManagement, recordCash, scoutingCost, settleMatch, recordPlayerMatch, archiveSeason, expiredMatchdayContracts, sellPlayer as completeSale } from './management.js';
 
 import {injuryFor,unavailableSelection,recommendedSquad,settleFitness,seasonRest,fitnessAfterMinutes} from './fitness.js';
+import {ensureKeeperSkills,keeperMatchStats} from './keepers.js';
 
 export const KEY = 'touchline-save-v2';
 export const clubNames = clubData.map(club=>club.name);
@@ -139,6 +140,7 @@ export function scout(game) {
   if(pool.length<4)return false;
   recordCash(game,-fee,'scouting','Scoutingrapport');
   game.market=Array.from({length:4},()=>{const p=pool.splice(Math.floor(random()*pool.length),1)[0];return {...p,fitness:100};});
+  ensureKeeperSkills(game);
   game.scout='completed';game.news.unshift('Scouts hebben vier spelers gevonden. Bekijk de transfermarkt.');return true;
 }
 export function signPlayer(game,id) {
@@ -157,7 +159,7 @@ export function beginMatch(game){
   if(game.pending)return game.pending;if(game.round>=10)return null;
   ensureManagement(game);prepareSquad(game);if(expiredMatchdayContracts(game).length||unavailableSelection(game).length)return null;
   const [home,away]=nextFixture(game),other=home===0?away:home;game.reportOpen=false;
-  game.pending={home,away,medicalRules:1,minute:0,startedSelection:[...game.lineupIds],selection:[...game.lineupIds],bench:[...game.benchIds],captainId:game.captainId,opponentSelection:recommendedSquad(game,other,'4-3-3').lineupIds,used:[],subs:0,played:{},stats:[emptyStats(),emptyStats()],events:[],coaching:[],paused:true};return game.pending;
+  game.pending={home,away,medicalRules:1,keeperRules:1,keeperMinutes:{},minute:0,startedSelection:[...game.lineupIds],selection:[...game.lineupIds],bench:[...game.benchIds],captainId:game.captainId,opponentSelection:recommendedSquad(game,other,'4-3-3').lineupIds,used:[],subs:0,played:{},stats:[emptyStats(),emptyStats()],events:[],coaching:[],paused:true};return game.pending;
 }
 export const matchFitness=fitnessAfterMinutes;
 export function applyAutoInstructions(game){
@@ -184,7 +186,8 @@ export function advanceMatch(game){
   const minute=p.minute+1,mySide=p.home===0?0:1;
   const clubs=[game.clubs[p.home],game.clubs[p.away]].map((club,side)=>({...club,players:club.players.map(player=>({...player,fitness:matchFitness(player,side===mySide?(p.played[player.id]||0):p.minute)}))}));
   const own=p.selection,other=p.opponentSelection;
-  const part=simulate({seed:73001+(game.season||1)*100000+game.round*1000+minute,clubs,homeTactics:mySide===0?game.tactics:{},awayTactics:mySide===1?game.tactics:{},homeSelection:mySide===0?own:other,awaySelection:mySide===1?own:other,startMinute:minute,endMinute:minute});
+  const part=simulate({seed:73001+(game.season||1)*100000+game.round*1000+minute,clubs,homeTactics:mySide===0?game.tactics:{},awayTactics:mySide===1?game.tactics:{},homeSelection:mySide===0?own:other,awaySelection:mySide===1?own:other,startMinute:minute,endMinute:minute,keeperRules:p.keeperRules??0});
+  if(p.keeperRules===1)p.keeperMinutes[own[0]]=(p.keeperMinutes[own[0]]||0)+1;
   p.selection.forEach(id=>p.played[id]=(p.played[id]||0)+1);p.minute=minute;
   p.stats.forEach((s,i)=>{statKeys.forEach(key=>s[key]+=part.stats[i][key]);s.xg=Number(s.xg.toFixed(2));s.possession=Math.round(100*s.possessions/minute);s.passAccuracy=s.passes?Math.round(100*s.completed/s.passes):0;});
   p.events.push(...part.events.map(event=>({...event,score:p.stats.map(s=>s.goals)})));
@@ -196,7 +199,14 @@ export function finishMatch(game){
   const fixtures=schedule()[game.round];let own;const minutesByClub={};
   for(let i=0;i<fixtures.length;i++){
     const [home,away]=fixtures[i];
-    const result=home===p.home&&away===p.away?{clubs:[game.clubs[home].name,game.clubs[away].name],teams:[home===0?p.selection:p.opponentSelection,away===0?p.selection:p.opponentSelection].map((ids,side)=>ids.map(id=>game.clubs[side===0?home:away].players.find(player=>player.id===id))),stats:structuredClone(p.stats),events:structuredClone(p.events),coaching:structuredClone(p.coaching),played:{...p.played},captainId:p.captainId}:simulate({seed:11000+(game.season||1)*100000+game.round*100+i,clubs:[game.clubs[home],game.clubs[away]],...(p.medicalRules===1?{homeSelection:recommendedSquad(game,home,'4-3-3').lineupIds,awaySelection:recommendedSquad(game,away,'4-3-3').lineupIds}:{})});
+    const matchClubs=[game.clubs[home],game.clubs[away]];
+    const result=home===p.home&&away===p.away?{
+      clubs:matchClubs.map(c=>c.name),
+      teams:[home===0?p.selection:p.opponentSelection,away===0?p.selection:p.opponentSelection].map((ids,side)=>ids.map(id=>matchClubs[side].players.find(player=>player.id===id))),
+      stats:structuredClone(p.stats),events:structuredClone(p.events),coaching:structuredClone(p.coaching),played:{...p.played},captainId:p.captainId,
+      ...(p.keeperRules===1?{keeperRules:1,keeping:keeperMatchStats(matchClubs,p.events,[home,away].map(index=>index===0?p.keeperMinutes:{[p.opponentSelection[0]]:90}))}:{})
+    }:simulate({seed:11000+(game.season||1)*100000+game.round*100+i,clubs:matchClubs,keeperRules:p.keeperRules??0,
+      ...(p.medicalRules===1?{homeSelection:recommendedSquad(game,home,'4-3-3',p.keeperRules??0).lineupIds,awaySelection:recommendedSquad(game,away,'4-3-3',p.keeperRules??0).lineupIds}:{})});
     for(const [side,index] of [home,away].entries())minutesByClub[index]=index===0?{...p.played}:Object.fromEntries(result.teams[side].map(player=>[player.id,90]));
     recordPlayerMatch(game,result,home,away,p);
     const match={home,away,goals:result.stats.map(s=>s.goals),round:game.round+1};game.results.push(match);if(home===0||away===0)own={...match,detail:result};

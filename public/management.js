@@ -1,4 +1,5 @@
 import {ensureFitness,injuryFor,availablePlayers} from './fitness.js';
+import {ensureKeeperSkills,keeperSkills,keeperAttributes} from './keepers.js';
 // Local career systems. Amounts and contracts are game rules, never real club data.
 export const overall = p => Math.round((p.attack+p.passing+p.defending+p.pace+p.finishing+p.composure)/6);
 export const transferValue = p => Math.round((overall(p)-40)**2*145);
@@ -40,7 +41,7 @@ export function ensureManagement(game){
   if(m.schema!==1||!m.contracts||typeof m.contracts!=='object')return game;
   if(Array.isArray(m.ledger)&&m.ledger.length===0)m.ledgerOpening=game.credits;
   for(const p of game.clubs[0].players)if(!Object.hasOwn(m.contracts,p.id))m.contracts[p.id]={salary:Math.max(100,(overall(p)-40)*15),untilSeason:(game.season||1)+2};
-  return ensureFitness(game);
+  return ensureKeeperSkills(ensureFitness(game));
 }
 export function recordCash(game,amount,category,label){
   ensureManagement(game);const m=game.management;
@@ -87,8 +88,10 @@ export function renewContract(game,id){
 export function renewExpiring(game){let count=0;for(const p of game.clubs[0].players)if(renewContract(game,p.id))count++;return count;}
 export function expiredMatchdayContracts(game){return [...game.lineupIds,...game.benchIds].filter(id=>game.management.contracts[id].untilSeason<game.season);}
 export function developPlayer(game,id,attribute){
-  if(game.pending||game.management.developmentUsed||!['attack','passing','defending','pace','finishing','composure','stamina'].includes(attribute))return false;
-  const p=game.clubs[0].players.find(p=>p.id===id);if(!p||injuryFor(game,id)||p[attribute]>=99)return false;
+  if(game.pending||game.management.developmentUsed||!['attack','passing','defending','pace','finishing','composure','stamina',...Object.keys(keeperSkills)].includes(attribute))return false;
+  const p=game.clubs[0].players.find(p=>p.id===id);if(!p||injuryFor(game,id)||(Object.hasOwn(keeperSkills,attribute)&&p.position!=='GK'))return false;
+  if(p.position==='GK')Object.assign(p,keeperAttributes(p));
+  if(p[attribute]>=99)return false;
   p[attribute]=clamp(p[attribute]+1+game.management.staff.coach+game.management.facilities.training-1,0,99);
   p.fitness=clamp(p.fitness-3,0,100);game.management.developmentUsed=true;
   game.news.unshift(`${p.name} heeft individueel getraind. −3 conditie.`);return true;
@@ -124,6 +127,11 @@ export function recordPlayerMatch(game,detail,home,away,pending){
       if(stats.season!==game.season){stats.season=game.season;stats.seasonAppearances=0;stats.seasonGoals=0;}
       const goals=detail.events.filter(e=>e.side===side&&e.type==='goal'&&(e.playerId?e.playerId===id:e.player===player.name)).length;
       stats.appearances++;stats.starts+=starters.includes(id)?1:0;stats.minutes+=played;stats.goals+=goals;stats.seasonAppearances++;stats.seasonGoals+=goals;
+      const keeping=detail.keeperRules===1?detail.keeping[side].find(p=>p.id===id):null;
+      if(keeping){
+        stats.keeping??={appearances:0,minutes:0,saves:0,conceded:0,cleanSheets:0};
+        stats.keeping.appearances++;stats.keeping.minutes+=keeping.minutes;stats.keeping.saves+=keeping.saves;stats.keeping.conceded+=keeping.conceded;stats.keeping.cleanSheets+=Number(keeping.cleanSheet);
+      }
       if(!stats.clubs.includes(club.name))stats.clubs.push(club.name);
     }
   }

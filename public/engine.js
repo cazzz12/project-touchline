@@ -1,3 +1,4 @@
+import {keeperAbility,goalChanceAgainstKeeper,keeperMatchStats} from './keepers.js';
 export function rng(seed) {
   let x = seed >>> 0;
   return () => { x += 0x6D2B79F5; let t = x; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0) / 4294967296; };
@@ -40,20 +41,21 @@ function fit(player, role) {
   const primary = group === 'GK' ? (player.defending + player.composure)/2 : group === 'DEF' ? player.defending : group === 'ST' ? (player.finishing + player.attack)/2 : (player.attack + player.passing)/2;
   return same + primary*.65 + player.fitness*.12 + player.morale*.08;
 }
-export function lineUp(club, formation = '4-3-3') {
+export function lineUp(club, formation = '4-3-3', keeperRules = 0) {
   if (!formations[formation]) throw new Error('Unknown formation');
   const remaining = [...club.players];
   return formations[formation].map(role => {
-    remaining.sort((a,b) => fit(b,role)-fit(a,role));
+    const score=p=>role==='GK'&&keeperRules===1?(p.position==='GK'?10000:0)+keeperAbility(p):fit(p,role);
+    remaining.sort((a,b) => score(b)-score(a));
     return remaining.splice(0,1)[0];
   });
 }
-export function simulate({ seed = 12345, homeTactics = {}, awayTactics = {}, clubs = createClubs(42), homeSelection, awaySelection, startMinute = 1, endMinute = 90 } = {}) {
+export function simulate({ seed = 12345, homeTactics = {}, awayTactics = {}, clubs = createClubs(42), homeSelection, awaySelection, startMinute = 1, endMinute = 90, keeperRules = 1 } = {}) {
   const random = rng(Number(seed));
   const tactics = [homeTactics,awayTactics].map(t => ({ formation: t.formation || '4-3-3', mentality: clamp(Number(t.mentality ?? 50),0,100), pressing: clamp(Number(t.pressing ?? 50),0,100), tempo: clamp(Number(t.tempo ?? 50),0,100) }));
   const teams = clubs.map((club,i) => {
     const ids=i===0?homeSelection:awaySelection;
-    if(!ids)return lineUp(club,tactics[i].formation);
+    if(!ids)return lineUp(club,tactics[i].formation,keeperRules);
     const selected=ids.map(id=>club.players.find(p=>p.id===id));
     if(selected.length!==11||selected.some(p=>!p)||new Set(ids).size!==11)throw new Error('Invalid starting XI');
     return selected;
@@ -93,10 +95,11 @@ export function simulate({ seed = 12345, homeTactics = {}, awayTactics = {}, clu
     const onTarget = random() < targetChance;
     if (onTarget) s.onTarget++;
     const shotRoll = random();
-    const goal = onTarget && shotRoll < clamp(xg / targetChance,0,1);
+    const keeper=teams[other][0],chance=clamp(xg / targetChance,0,1);
+    const goal = onTarget && shotRoll < (keeperRules===1?goalChanceAgainstKeeper(chance,keeper):chance);
     if (goal) s.goals++;
-    events.push({ minute, side, player: atk.name, playerId:atk.id, type: goal ? 'goal' : onTarget ? 'save' : 'miss', xg: Number(xg.toFixed(2)), score: stats.map(st=>st.goals) });
+    events.push({ minute, side, player: atk.name, playerId:atk.id, type: goal ? 'goal' : onTarget ? 'save' : 'miss', xg: Number(xg.toFixed(2)), score: stats.map(st=>st.goals),...(keeperRules===1?{keeperId:keeper.id,keeper:keeper.name}:{}) });
   }
   stats.forEach(s => { s.xg = Number(s.xg.toFixed(2)); s.possession = Math.round(100*s.possessions/(endMinute-startMinute+1)); s.passAccuracy = s.passes ? Math.round(100*s.completed/s.passes) : 0; });
-  return { seed:Number(seed), clubs:clubs.map(c=>c.name), tactics, teams, stats, events };
+  return { seed:Number(seed), clubs:clubs.map(c=>c.name), tactics, teams, stats, events,...(keeperRules===1?{keeperRules:1,keeping:keeperMatchStats(clubs,events,teams.map(team=>({[team[0].id]:endMinute-startMinute+1})))}:{}) };
 }

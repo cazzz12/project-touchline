@@ -112,3 +112,18 @@ Getest op een afzonderlijk lokaal adres (poort 43130) met nieuw aangemaakte test
 - Alle 62 automatische tests slagen. Nieuwe controles dekken oude lopende saves zonder nieuwe conditieregels, herstel volgens werkelijke speelminuten bij alle zes clubs, reproduceerbare blessures, trainingsblokkades, pure selectievoorstellen, herstelduur, transfers met blessure, inzetbare tegenstanders, seizoensrust, ongeldige backups en de UI-acties bekijken/annuleren/toepassen. De bestaande test met 52 seizoenen rouleert nu expliciet bij blessures.
 
 Blessures zijn spelgebeurtenissen, geen medische informatie over echte spelers. De geteste flow stelt blessures vast na het eindsignaal; acute uitval tijdens een wedstrijd en schorsingen zijn nog niet gebouwd. De eerdere beperkingen voor browser- en balanstests blijven gelden.
+
+# Aanvulling 0.7.0 — keepers
+
+Getest met een nieuwe, door de agent aangemaakte PSV-testcarrière op een apart lokaal adres (poort 43131). Desktop 1440 × 900 en mobiel 390 × 844; geen persoonlijke save gebruikt voor training of wedstrijdtests.
+
+- Keeperprofiel geopend via het keeperfilter. Nick Olij had 63 reflexen; één keepertraining maakte daarvan 64 en verlaagde conditie van 100 naar 97. Beide individuele trainingsknoppen werden geblokkeerd. Herladen behield de waarden en het saldo.
+- De voorbeschouwing toonde beide basiskeepers en hun effectieve keeperkracht. Het liveverslag noemde de keeper bij reddingen, met een aparte regel voor reddingen per club.
+- PSV–FC Twente op 4× gespeeld. Bij rust (1–1) Tijn Smolenaars vervangen door Nick Olij. Herladen behield minuut 45, score en de keeperwissel. De wedstrijd eindigde 2–2.
+- Het verslag kende beide PSV-keepers 45 minuten en één tegengoal toe. Smolenaars kreeg zijn ene redding uit de eerste helft; Olij nul reddingen. Pasveer kreeg 90 minuten, twee reddingen en twee tegengoals. De cijfers verschenen ook in Carrière, voor alle zes clubs. Geen PSV-keeper kreeg een nul toegekend.
+- Mobiele training, eindverslag en carrière visueel gecontroleerd. Geen horizontale pagina-overloop; de brede carrièretabel scrollt binnen zijn eigen blok. Geen fouten of waarschuwingen in de opgevraagde browserconsole. Na afloop de tijdelijke viewport hersteld en de testtab gesloten.
+- De bestaande carrière op poort 3000 herladen: dezelfde club, speeldag, selectieomvang en clubkas bleven zichtbaar. De nieuwe keeperkwaliteiten zijn beschikbaar zonder een selectie-update.
+
+Alle **73 automatische tests** slagen. Nieuw: keeperkwaliteit bij 400 identieke seeds, gelijke schoten/xG bij andere keepervaardigheden, conditie/moraal en veldspelers in doel, keeperadvies, trainingslimieten, keeperwissels met bewaren/hervatten, nul-regels, transfers en afwijzen van ongeldige keepergegevens. Twee compatibiliteitscontroles vergelijken uitslagen, events, credits, conditie, blessures en spelersstatistieken met vooraf berekende resultaten uit 0.6.0. Ook de bestaande 52-seizoenentest slaagt.
+
+Beperkingen: de drie keepervaardigheden vormen samen één schotstopwaarde; rebounds, hoge ballen en aparte één-tegen-ééns ontbreken. Het model is geen officiële of gekalibreerde voorspelling. Geen fysieke mobiele apparaten of andere browserengines getest.

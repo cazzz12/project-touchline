@@ -70,3 +70,14 @@ test('injured matchday players produce a useful kickoff message and stay visible
   h.click({tab:'clubs'});assert.match(h.app.innerHTML,/Lichte tik/);
   h.click({tab:'training'});assert.ok(!h.app.innerHTML.includes(`<option value="${game.lineupIds[2]}">`));
 });
+
+test('keeper profile, training form and career report expose saved keeper effects',async t=>{
+  const g=newGame(),p=g.clubs[0].players.find(p=>p.position==='GK'),h=await boot(t,g);
+  h.click({tab:'clubs'});assert.match(h.app.innerHTML,/Keeperkwaliteiten/);assert.match(h.app.innerHTML,/Balvastheid/);
+  h.click({tab:'training'});assert.match(h.app.innerHTML,/TRAIN DEZE KEEPER/);
+  h.submit('keeper-development-form',{playerId:p.id,attribute:'reflexes'});
+  assert.equal(h.state().clubs[0].players.find(v=>v.id===p.id).reflexes,p.reflexes+1);
+  assert.match(h.app.innerHTML,/SESSIE GEBRUIKT/);
+  const before=h.state();h.submit('development-form',{playerId:p.id,attribute:'passing'});assert.deepEqual(h.state(),before);
+  h.click({tab:'career'});assert.match(h.app.innerHTML,/Reddingen & de nul/);
+});
