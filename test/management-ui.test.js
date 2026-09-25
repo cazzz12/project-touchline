@@ -2,7 +2,7 @@ import {unavailableSelection,applyRecommendedSquad} from '../public/fitness.js';
 function playRound(game){if(unavailableSelection(game).length)applyRecommendedSquad(game);return playRoundWithoutRotation(game);}
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {KEY,newGame,playRound as playRoundWithoutRotation,newSeason} from '../public/game.js';
+import {KEY,newGame,playRound as playRoundWithoutRotation,newSeason,beginMatch,advanceMatch} from '../public/game.js';
 
 let instance=0;
 async function boot(t,game=newGame('PSV')){
@@ -80,4 +80,22 @@ test('keeper profile, training form and career report expose saved keeper effect
   assert.match(h.app.innerHTML,/SESSIE GEBRUIKT/);
   const before=h.state();h.submit('development-form',{playerId:p.id,attribute:'passing'});assert.deepEqual(h.state(),before);
   h.click({tab:'career'});assert.match(h.app.innerHTML,/Reddingen & de nul/);
+});
+
+test('red card UI shows the empty role and position changes preserve the missing player across save',async t=>{
+  const g=newGame();g.season=3;for(const c of Object.values(g.management.contracts))c.untilSeason=5;
+  beginMatch(g);while(g.pending.minute<64){g.pending.paused=false;advanceMatch(g);}
+  const h=await boot(t,g);assert.match(h.app.innerHTML,/10 tegen 11/);assert.match(h.app.innerHTML,/RODE KAART/);assert.match(h.app.innerHTML,/LEEG/);
+  const missing=h.state().pending.selection.findIndex(id=>id===null),id=h.state().pending.selection[9];
+  h.submit('live-position-form',{from:'9',to:String(missing)});assert.equal(h.state().pending.selection[missing],id);assert.equal(h.state().pending.selection.filter(Boolean).length,10);
+  const saved=h.state();h.submit('live-position-form',{from:'0',to:'9'});assert.deepEqual(h.state(),saved);assert.match(h.app.innerHTML,/laat iemand in het doel staan/);
+});
+
+test('suspended and short squads render warnings, empty places and a usable preview',async t=>{
+  const g=newGame();g.round=1;
+  for(const p of g.clubs[0].players.slice(9))g.discipline.suspensions[p.id]={reason:'red',remaining:2,season:1,round:1};
+  const h=await boot(t,g);h.click({tab:'squad'});assert.match(h.app.innerHTML,/Geschorst/);assert.match(h.app.innerHTML,/9 spelers inzetbaar/);
+  h.click({fitness:'preview'});assert.match(h.app.innerHTML,/Lege plek/);h.click({fitness:'apply'});assert.equal(h.state().lineupIds.filter(Boolean).length,9);
+  h.click({tab:'prematch'});assert.match(h.app.innerHTML,/Wie mist de volgende speeldag/);
+  h.click({action:'play'});assert.ok(h.state().pending);assert.match(h.app.innerHTML,/9 tegen 11/);
 });

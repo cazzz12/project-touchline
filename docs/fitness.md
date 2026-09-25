@@ -1,10 +1,10 @@
-# Fitheid en inzetbaarheid — 0.6.0
+# Fitheid en inzetbaarheid — bijgewerkt voor 0.8.0
 
 Deze regels simuleren uitsluitend gebeurtenissen binnen de eigen Touchline-carrière. Blessures, conditie en herstel beschrijven niet de werkelijke gezondheid van de genoemde spelers.
 
 ## Selectievoorstel
 
-Onder Selectie staat het aantal inzetbare spelers en een overzicht van spelblessures. De knop **Stel fit elftal voor** doet een voorstel, zonder de opgeslagen opstelling te wijzigen. Het voorstel bevat de basiself, zeven bankspelers en de aanvoerder. **Annuleren** behoudt de handmatige selectie; **Pas voorstel toe** slaat het voorstel op.
+Onder Selectie staat het aantal inzetbare spelers en een overzicht van spelblessures. De knop **Stel fit elftal voor** doet een voorstel, zonder de opgeslagen opstelling te wijzigen. Het voorstel bevat maximaal elf starters, zeven bankspelers en de aanvoerder; blessures en schorsingen worden overgeslagen. Bij onvoldoende inzetbare spelers blijven plaatsen leeg. **Annuleren** behoudt de handmatige selectie; **Pas voorstel toe** slaat het voorstel op.
 
 Het advies weegt gegenereerde kwaliteit, positiefit en conditie. Het kiest een keeper in doel en één reservekeeper, plus zes veldspelers zolang die beschikbaar zijn. Een bestaande aanvoerder blijft aanvoerder als hij in het voorgestelde elftal staat. Een voorstel garandeert geen overwinning. Contractverloop blijft een afzonderlijke controle bij de aftrap.
 
@@ -22,7 +22,7 @@ Na het eindsignaal kan een gebruikte speler een spelblessure krijgen. Er vallen 
 
 De speler mist de volgende één tot drie speeldagen. Na elke werkelijk afgeronde speeldag gaat er één af. Een nieuwe blessure wordt niet meteen op dezelfde speeldag ingekort. Conditieherstel en hersteltraining wissen de blessure niet. Geblesseerden slaan vaardigheids- en fysieke teamtraining over en kunnen niet individueel trainen.
 
-Alle zes clubs gebruiken deze regels. Om de kleine minicompetitie speelbaar te houden ontstaan geen blessures die een club onder 18 inzetbare spelers of twee inzetbare keepers brengen. Een verkoop van een fitte speler mag dezelfde grens niet doorbreken. Een geblesseerde speler kan worden verkocht; zijn resterende hersteltijd volgt zijn vaste ID naar de nieuwe club. Dit prototype heeft nog geen lange blessures, schorsingen of medische stafspecialisten.
+Alle zes clubs gebruiken deze regels. Om de kleine minicompetitie speelbaar te houden ontstaan geen nieuwe blessures die een club onder 18 inzetbare spelers of twee inzetbare keepers brengen. Een verkoop van een inzetbare speler mag dezelfde grens niet doorbreken. Schorsingen kunnen de beschikbare selectie wel onder die grens brengen; dan geldt de regeling voor [ondertal](discipline.md). Een geblesseerde speler kan worden verkocht; zijn resterende hersteltijd volgt zijn vaste ID naar de nieuwe club. Lange blessures en medische stafspecialisten ontbreken nog.
 
 ## Herstelcentrum
 

@@ -1,5 +1,6 @@
 import {formations, positionFit, rng} from './engine.js';
 import {keeperAbility} from './keepers.js';
+import {suspensionFor} from './discipline.js';
 
 // Entirely fictional match availability. Never describes a real player's health.
 export const injuryTypes={knock:{label:'Lichte tik',days:1},muscle:{label:'Spierklachten',days:2},ankle:{label:'Enkelklachten',days:3}};
@@ -10,8 +11,9 @@ export function ensureFitness(game){
   return game;
 }
 export const injuryFor=(game,id)=>game.medical?.injuries?.[id]||null;
-export const availablePlayers=(game,index=0)=>game.clubs[index].players.filter(p=>!injuryFor(game,p.id));
-export const unavailableSelection=game=>[...game.lineupIds,...game.benchIds].filter(id=>injuryFor(game,id));
+export const unavailablePlayer=(game,id)=>Boolean(injuryFor(game,id)||suspensionFor(game,id));
+export const availablePlayers=(game,index=0)=>game.clubs[index].players.filter(p=>!unavailablePlayer(game,p.id));
+export const unavailableSelection=game=>[...game.lineupIds,...game.benchIds].filter(id=>id&&unavailablePlayer(game,id));
 export const fitnessAfterMinutes=(player,minutes=0)=>clamp(Math.round(player.fitness-minutes*(.08+(100-player.stamina)*.0015)),25,100);
 export const medicalLevel=(game,index=0)=>index===0?game.management.facilities.medical:1;
 export const restGain=(game,index,minutes)=> (minutes?12:18)+2*(medicalLevel(game,index)-1);
@@ -26,19 +28,19 @@ function effectiveQuality(p){return (p.attack+p.passing+p.defending+p.pace+p.fin
 // Pure advice: no save or manual selection is changed until the caller applies it.
 export function recommendedSquad(game,index=0,formation=game.tactics.formation,keeperRules=1){
   const remaining=availablePlayers(game,index).slice(),lineupIds=[];
-  if(remaining.length<18||!formations[formation])return null;
+  if(!formations[formation])return null;
   for(const role of formations[formation]){
     remaining.sort((a,b)=>{
       const score=p=>(role==='GK'?(p.position==='GK'?10000:0):(p.position==='GK'?-10000:0))+(role==='GK'&&keeperRules===1?keeperAbility(p):effectiveQuality(p)*positionFit(p.position,role));
       return score(b)-score(a)||a.id.localeCompare(b.id);
     });
-    lineupIds.push(remaining.shift().id);
+    lineupIds.push(remaining.shift()?.id??null);
   }
   remaining.sort((a,b)=>effectiveQuality(b)-effectiveQuality(a)||a.id.localeCompare(b.id));
   const keeper=remaining.filter(p=>p.position==='GK').sort((a,b)=>keeperRules===1?keeperAbility(b)-keeperAbility(a):0)[0];
   const reserves=remaining.filter(p=>p.id!==keeper?.id).sort((a,b)=>Number(a.position==='GK')-Number(b.position==='GK')||effectiveQuality(b)-effectiveQuality(a)||a.id.localeCompare(b.id));
   const benchIds=[...(keeper?[keeper.id]:[]),...reserves.map(p=>p.id)].slice(0,7);
-  const captainId=index===0&&lineupIds.includes(game.captainId)?game.captainId:game.clubs[index].players.filter(p=>lineupIds.includes(p.id)).sort((a,b)=>b.composure-a.composure)[0].id;
+  const captainId=index===0&&game.captainId&&lineupIds.includes(game.captainId)?game.captainId:game.clubs[index].players.filter(p=>lineupIds.includes(p.id)).sort((a,b)=>b.composure-a.composure)[0]?.id??null;
   return {lineupIds,benchIds,captainId};
 }
 export function applyRecommendedSquad(game){

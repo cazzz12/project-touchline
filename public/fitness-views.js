@@ -1,11 +1,12 @@
+import {suspensionFor} from './discipline.js';
 import {formations} from './engine.js';
 import {injuryFor,injuryTypes,availablePlayers,unavailableSelection,medicalLevel} from './fitness.js';
 const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-export function statusLabel(game,p){const injury=injuryFor(game,p.id);return injury?`${injuryTypes[injury.kind].label} · ${injury.remaining} speeldag(en)`:`${p.fitness}% conditie`;}
-export function statusBadge(game,p){return `<small class="fitness-status ${injuryFor(game,p.id)?'injured':p.fitness<70?'tired':''}">${esc(statusLabel(game,p))}</small>`;}
+export function statusLabel(game,p){const injury=injuryFor(game,p.id);const ban=suspensionFor(game,p.id);return ban?'Geschorst · '+ban.remaining+' speeldag(en)'+(injury?' · ook geblesseerd':''):injury?`${injuryTypes[injury.kind].label} · ${injury.remaining} speeldag(en)`:`${p.fitness}% conditie`;}
+export function statusBadge(game,p){return `<small class="fitness-status ${(injuryFor(game,p.id)||suspensionFor(game,p.id))?'injured':p.fitness<70?'tired':''}">${esc(statusLabel(game,p))}</small>`;}
 export function availabilityWarning(game){
   const ids=unavailableSelection(game);
-  return ids.length?`<p class="match-feedback" role="status">${ids.length} geblesseerde speler(s) in je wedstrijdselectie. Vervang ze vóór de aftrap: ${ids.map(id=>esc(game.clubs[0].players.find(p=>p.id===id).name)).join(', ')}. <button class="report-button" data-tab="squad">NAAR SELECTIE →</button></p>`:'';
+  return ids.length?`<p class="match-feedback" role="status">${ids.length} ${ids.some(id=>suspensionFor(game,id))?'niet-inzetbare speler(s)':'geblesseerde speler(s)'} in je wedstrijdselectie. Vervang ze vóór de aftrap: ${ids.map(id=>esc(game.clubs[0].players.find(p=>p.id===id).name)).join(', ')}. <button class="report-button" data-tab="squad">NAAR SELECTIE →</button></p>`:'';
 }
 export function fitnessPanel(game,proposal=null){
   const club=game.clubs[0],injured=club.players.filter(p=>injuryFor(game,p.id)),available=availablePlayers(game),tired=available.filter(p=>p.fitness<70),level=medicalLevel(game);
@@ -18,7 +19,7 @@ export function fitnessPanel(game,proposal=null){
 }
 function proposalView(game,proposal){
   const player=id=>game.clubs[0].players.find(p=>p.id===id),changed=proposal.lineupIds.filter((id,i)=>id!==game.lineupIds[i]).length;
-  return `<section class="backup-preview" aria-label="Voorstel fit elftal"><h3>Voorstel · ${game.tactics.formation}</h3><p class="muted">${changed} gewijzigde basisplaatsen. Geblesseerden worden overgeslagen. Aanvoerder: ${esc(player(proposal.captainId).name)}.</p><div class="fitness-proposal"><div><h4>Basiself</h4>${proposal.lineupIds.map((id,i)=>`<div class="row"><span><small class="position">${formations[game.tactics.formation][i]}</small> ${esc(player(id).name)}</span><b>${player(id).fitness}%</b></div>`).join('')}</div><div><h4>Wisselbank</h4>${proposal.benchIds.map(id=>`<div class="row"><span>${esc(player(id).name)}</span><b>${player(id).fitness}%</b></div>`).join('')}</div></div><div class="backup-actions"><button class="primary" data-fitness="apply" ${game.pending?'disabled':''}>PAS VOORSTEL TOE</button><button class="report-button" data-fitness="cancel">ANNULEREN</button></div></section>`;
+  return `<section class="backup-preview" aria-label="Voorstel fit elftal"><h3>Voorstel · ${game.tactics.formation}</h3><p class="muted">${changed} gewijzigde basisplaatsen. Geblesseerden en geschorsten worden overgeslagen. Aanvoerder: ${esc(player(proposal.captainId)?.name||'Geen')}.</p><div class="fitness-proposal"><div><h4>Basiself</h4>${proposal.lineupIds.map((id,i)=>`<div class="row"><span><small class="position">${formations[game.tactics.formation][i]}</small> ${esc(player(id)?.name||'Lege plek')}</span><b>${player(id)?player(id).fitness+'%':'—'}</b></div>`).join('')}</div><div><h4>Wisselbank</h4>${proposal.benchIds.map(id=>`<div class="row"><span>${esc(player(id)?.name||'Lege plek')}</span><b>${player(id)?player(id).fitness+'%':'—'}</b></div>`).join('')}</div></div><div class="backup-actions"><button class="primary" data-fitness="apply" ${game.pending?'disabled':''}>PAS VOORSTEL TOE</button><button class="report-button" data-fitness="cancel">ANNULEREN</button></div></section>`;
 }
 export function fitnessReport(report){
   if(!report)return '';

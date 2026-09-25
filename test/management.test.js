@@ -35,7 +35,9 @@ test('one round pays the declared income and costs once and records every player
   assert.equal(game.management.playerStats[out].minutes,30);
   assert.equal(game.management.playerStats[inside].minutes,60);
   assert.equal(game.management.playerStats[inside].starts,0);
-  assert.equal(Object.values(game.management.playerStats).reduce((sum,p)=>sum+p.minutes,0),3*22*90);
+  const sentOff=Object.values(game.management.playerStats).filter(p=>p.redCards);
+  assert.ok(sentOff.every(p=>p.starts===1));
+  assert.equal(Object.values(game.management.playerStats).reduce((sum,p)=>sum+p.minutes,0),3*22*90-sentOff.reduce((sum,p)=>sum+90-p.minutes,0));
   assert.equal(Object.values(game.management.playerStats).reduce((sum,p)=>sum+p.goals,0),game.results.reduce((sum,r)=>sum+r.goals[0]+r.goals[1],0));
   const complete=structuredClone(game);assert.equal(finishMatch(game),null);assert.equal(advanceMatch(game),null);assert.deepEqual(game,complete);
   checkLedger(game);assert.deepEqual(parseBackup(exportBackup(game)),game);

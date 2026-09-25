@@ -1,4 +1,5 @@
-import {ensureFitness,injuryFor,availablePlayers} from './fitness.js';
+import {ensureFitness,injuryFor,availablePlayers,unavailablePlayer} from './fitness.js';
+import {ensureDiscipline,doubleForfeit} from './discipline.js';
 import {ensureKeeperSkills,keeperSkills,keeperAttributes} from './keepers.js';
 // Local career systems. Amounts and contracts are game rules, never real club data.
 export const overall = p => Math.round((p.attack+p.passing+p.defending+p.pace+p.finishing+p.composure)/6);
@@ -25,7 +26,7 @@ function summarize(matches){
   for(const match of matches){
     const side=match.home===0?0:1,gf=match.goals[side],ga=match.goals[1-side];
     result.matches++;result.goalsFor+=gf;result.goalsAgainst+=ga;
-    if(gf>ga){result.wins++;result.points+=3;}else if(gf===ga){result.draws++;result.points++;}else result.losses++;
+    if(doubleForfeit(match)){result.losses++;}else if(gf>ga){result.wins++;result.points+=3;}else if(gf===ga){result.draws++;result.points++;}else result.losses++;
   }
   return result;
 }
@@ -41,7 +42,7 @@ export function ensureManagement(game){
   if(m.schema!==1||!m.contracts||typeof m.contracts!=='object')return game;
   if(Array.isArray(m.ledger)&&m.ledger.length===0)m.ledgerOpening=game.credits;
   for(const p of game.clubs[0].players)if(!Object.hasOwn(m.contracts,p.id))m.contracts[p.id]={salary:Math.max(100,(overall(p)-40)*15),untilSeason:(game.season||1)+2};
-  return ensureKeeperSkills(ensureFitness(game));
+  return ensureDiscipline(ensureKeeperSkills(ensureFitness(game)));
 }
 export function recordCash(game,amount,category,label){
   ensureManagement(game);const m=game.management;
@@ -58,7 +59,7 @@ export function matchBudget(game,home,won=false){
   return {tickets:home?3000+m.facilities.stadium*3000:0,sponsor:sponsor?sponsor.perMatch+(won?sponsor.perWin:0):0,wages:payroll(game),maintenance:maintenance(game)};
 }
 export function settleMatch(game,match){
-  const side=match.home===0?0:1,won=match.goals[side]>match.goals[1-side],draw=match.goals[side]===match.goals[1-side];
+  const side=match.home===0?0:1,won=match.goals[side]>match.goals[1-side],draw=!doubleForfeit(match)&&match.goals[side]===match.goals[1-side];
   const budget=matchBudget(game,match.home===0,won);
   const rows=[[match.reward,'prize','Wedstrijdbonus'],[budget.tickets,'tickets','Thuiswedstrijdinkomsten'],[budget.sponsor,'sponsor','Sponsorbetaling'],[-budget.wages,'wages','Spelerssalarissen'],[-budget.maintenance,'facilities','Faciliteiten en staf']];
   const entries=rows.filter(([amount])=>amount!==0).map(([amount,category,label])=>recordCash(game,amount,category,label));
@@ -86,7 +87,7 @@ export function renewContract(game,id){
   contract.salary=Math.ceil(contract.salary*1.08);contract.untilSeason=game.season+2;return true;
 }
 export function renewExpiring(game){let count=0;for(const p of game.clubs[0].players)if(renewContract(game,p.id))count++;return count;}
-export function expiredMatchdayContracts(game){return [...game.lineupIds,...game.benchIds].filter(id=>game.management.contracts[id].untilSeason<game.season);}
+export function expiredMatchdayContracts(game){return [...game.lineupIds,...game.benchIds].filter(id=>id&&game.management.contracts[id].untilSeason<game.season);}
 export function developPlayer(game,id,attribute){
   if(game.pending||game.management.developmentUsed||!['attack','passing','defending','pace','finishing','composure','stamina',...Object.keys(keeperSkills)].includes(attribute))return false;
   const p=game.clubs[0].players.find(p=>p.id===id);if(!p||injuryFor(game,id)||(Object.hasOwn(keeperSkills,attribute)&&p.position!=='GK'))return false;
@@ -101,7 +102,7 @@ export function saleOffer(game,id,buyerIndex){
   if(game.pending||!p||!Number.isInteger(buyerIndex)||buyerIndex<1||!buyer||buyer.players.length>=55||club.players.length<=18)return null;
   if(p.position==='GK'&&club.players.filter(p=>p.position==='GK').length<=2)return null;
   const healthy=availablePlayers(game);
-  if(!injuryFor(game,id)&&(healthy.length<=18||(p.position==='GK'&&healthy.filter(p=>p.position==='GK').length<=2)))return null;
+  if(!unavailablePlayer(game,id)&&(healthy.length<=18||(p.position==='GK'&&healthy.filter(p=>p.position==='GK').length<=2)))return null;
   return {player:p,buyer,price:Math.floor(transferValue(p)*.65)};
 }
 export function sellPlayer(game,id,buyerIndex){
@@ -118,8 +119,8 @@ export function recordPlayerMatch(game,detail,home,away,pending){
   const m=game.management;
   for(const [side,index] of [home,away].entries()){
     const club=game.clubs[index],own=index===0;
-    const minutes=own?pending.played:Object.fromEntries(detail.teams[side].map(p=>[p.id,90]));
-    const starters=own?(pending.startedSelection||game.lineupIds):detail.teams[side].map(p=>p.id);
+    const minutes=detail.disciplineRules===1?detail.playedBySide[side]:own?pending.played:Object.fromEntries(detail.teams[side].map(p=>[p.id,90]));
+    const starters=detail.disciplineRules===1?detail.startedSelections[side]:own?(pending.startedSelection||game.lineupIds):detail.teams[side].map(p=>p.id);
     for(const [id,played] of Object.entries(minutes)){
       if(!played)continue;
       const player=club.players.find(p=>p.id===id);if(!player)continue;
@@ -127,6 +128,10 @@ export function recordPlayerMatch(game,detail,home,away,pending){
       if(stats.season!==game.season){stats.season=game.season;stats.seasonAppearances=0;stats.seasonGoals=0;}
       const goals=detail.events.filter(e=>e.side===side&&e.type==='goal'&&(e.playerId?e.playerId===id:e.player===player.name)).length;
       stats.appearances++;stats.starts+=starters.includes(id)?1:0;stats.minutes+=played;stats.goals+=goals;stats.seasonAppearances++;stats.seasonGoals+=goals;
+      if(detail.disciplineRules===1){
+        stats.yellowCards=(stats.yellowCards||0)+detail.events.filter(e=>e.playerId===id&&(e.type==='yellow'||e.secondYellow)).length;
+        stats.redCards=(stats.redCards||0)+detail.events.filter(e=>e.playerId===id&&e.type==='red').length;
+      }
       const keeping=detail.keeperRules===1?detail.keeping[side].find(p=>p.id===id):null;
       if(keeping){
         stats.keeping??={appearances:0,minutes:0,saves:0,conceded:0,cleanSheets:0};
