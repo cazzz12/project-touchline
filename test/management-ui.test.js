@@ -7,6 +7,33 @@ import {recordCash,saleOffer,renewExpiring} from '../public/management.js';
 import {clubTransferQuote,releaseReason} from '../public/transfers.js';
 
 let instance=0;
+test('scouting UI persists free filters and shortlist, compares without purchases and routes bids correctly',async t=>{
+  const g=newGame(),h=await boot(t,g),cash=g.credits;
+  h.click({tab:'transfers'});h.click({transferSection:'search'});assert.match(h.app.innerHTML,/Zoek gericht naar versterking/);
+  h.submit('scouting-search-form',{role:'MID',budget:'100000',skill:'passing',minimum:'65'});assert.equal(h.state().scoutingDesk.criteria.budget,100000);assert.equal(h.state().credits,cash);
+  const id=h.app.innerHTML.match(/data-shortlist-add="([^"]+)"/)[1];h.click({shortlistAdd:id});assert.equal(h.state().scoutingDesk.shortlist.length,1);
+  const before=h.state();h.click({comparePlayer:id});assert.match(h.app.innerHTML,/aria-label="Spelers vergelijken"/);assert.match(h.app.innerHTML,/geen voorspelling/);assert.deepEqual(h.state(),before);
+  const own=g.clubs[0].players.find(p=>p.position==='MID');h.submit('scouting-comparison-form',{candidate:id,ownId:own.id});assert.match(h.app.innerHTML,new RegExp(own.name));assert.deepEqual(h.state(),before);
+  h.click({transferSection:'shortlist'});assert.match(h.app.innerHTML,/Shortlist · 1 \/ 20/);
+  const seller=g.clubs.findIndex(c=>c.players.some(p=>p.id===id));h.click({clubBid:id,seller:String(seller)});assert.match(h.app.innerHTML,/aria-label="Transferbod"/);assert.deepEqual(h.state(),before);
+  const restored=await boot(t,h.state());restored.click({transferSection:'shortlist'});restored.click({tab:'transfers'});assert.match(restored.app.innerHTML,/Shortlist · 1 \/ 20/);
+  restored.click({shortlistRemove:id});assert.equal(restored.state().scoutingDesk.shortlist.length,0);assert.equal(restored.state().credits,cash);
+});
+test('scouting UI leaves an empty report unpaid, then honours a new profile and preserves the paid request',async t=>{
+  const h=await boot(t,newGame()),cash=h.state().credits;h.click({tab:'transfers'});h.click({transferSection:'search'});
+  h.submit('scouting-search-form',{role:'all',budget:'1',skill:'any',minimum:'99'});assert.equal(h.state().scoutingDesk.criteria.minimum,0);
+  h.click({transferSection:'scouting'});h.click({action:'scout'});assert.equal(h.state().credits,cash);assert.match(h.app.innerHTML,/Er zijn geen credits besteed/);
+  h.click({transferSection:'search'});h.click({resetScouting:''});h.click({transferSection:'scouting'});h.click({action:'scout'});
+  assert.equal(h.state().market.length,4);assert.equal(h.state().credits,cash-15000);assert.match(h.app.innerHTML,/Deze opdracht:/);
+  const report=h.state().scoutingDesk.report;h.click({transferSection:'search'});h.submit('scouting-search-form',{role:'GK',budget:'',skill:'reflexes',minimum:'70'});
+  assert.deepEqual(h.state().scoutingDesk.report,report);assert.equal(h.state().credits,cash-15000);
+  h.submit('scouting-search-form',{role:'MID',budget:'',skill:'reflexes',minimum:'70'});assert.equal(h.state().scoutingDesk.criteria.role,'GK');assert.match(h.app.innerHTML,/Kies geldige filters/);
+});
+test('unavailable shortlisted players remain removable and names are escaped',async t=>{
+  const g=newGame();g.scoutingDesk.shortlist=[{id:'real-99999',name:'<img onerror=attack()>',season:1,round:0}];const h=await boot(t,g);
+  h.click({tab:'transfers'});h.click({transferSection:'shortlist'});assert.match(h.app.innerHTML,/Niet beschikbaar in de huidige clubselecties/);assert.match(h.app.innerHTML,/&lt;img onerror=attack\(\)&gt;/);assert.doesNotMatch(h.app.innerHTML,/<img onerror/);
+  h.click({shortlistRemove:'real-99999'});assert.equal(h.state().scoutingDesk.shortlist.length,0);
+});
 test('reputation UI explains progress, leaves saves unchanged and blocks unearned sponsorships',async t=>{
   const g=newGame(),h=await boot(t,g),before=h.state();
   h.click({office:'reputation'});assert.match(h.app.innerHTML,/Clubreputatie/);assert.match(h.app.innerHTML,/Nog 100 punten tot Gevestigd/);assert.deepEqual(h.state(),before);

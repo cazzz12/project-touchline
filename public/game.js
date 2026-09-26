@@ -1,5 +1,6 @@
 import {recordSkillGain,settleDevelopment} from './development.js';
 import {settleReputation,closeReputationSeason} from './reputation.js';
+import {validCriteria,matchesCriteria,defaultCriteria} from './scouting-state.js';
 import {settleClubMarket,completeIncomingSale} from './club-market.js';
 import { formations, lineUp, positionFit, rng, simulate } from './engine.js';
 import { realPlayers } from './real-players.js';
@@ -9,7 +10,7 @@ import { ensureManagement, recordCash, scoutingCost, settleMatch, recordPlayerMa
 import {injuryFor,unavailableSelection,recommendedSquad,settleFitness,seasonRest,fitnessAfterMinutes} from './fitness.js';
 import {suspensionFor,forfeitingSides,awardedGoals,settleDiscipline,doubleForfeit} from './discipline.js';
 import {availablePlayers,unavailablePlayer} from './fitness.js';
-import {ensureKeeperSkills,keeperMatchStats} from './keepers.js';
+import {ensureKeeperSkills,keeperMatchStats,keeperAttributes} from './keepers.js';
 import {expireTransferOffers} from './transfer-state.js';
 
 export const KEY = 'touchline-save-v2';
@@ -61,7 +62,7 @@ export function updateClubRosters(game){
   delete updated.development;
   updated.lineupIds=[];delete updated.benchIds;updated.captainId=null;
   // Old offers are no longer valid; keep the scouting use and credits for this round.
-  updated.market=[];updated.rosterVersion=ROSTER_VERSION;updated.reportOpen=false;
+  updated.market=[];if(updated.scoutingDesk)updated.scoutingDesk.report=null;updated.rosterVersion=ROSTER_VERSION;updated.reportOpen=false;
   updated.news.unshift('Clubselecties bijgewerkt. Basiself, wisselbank en aanvoerder zijn opnieuw gekozen. Uitslagen en credits zijn bewaard.');
   return ensureManagement(prepareSquad(updated));
 }
@@ -139,18 +140,22 @@ export function train(game,focus) {
   }
   game.training=focus;game.trainingUsed=true;game.news.unshift(`${focus} training afgerond. Nieuwe sessie na je volgende wedstrijd.`);return true;
 }
-export function scout(game) {
+export function scout(game,criteria=game.scoutingDesk?.criteria||defaultCriteria()) {
+  if(!validCriteria(criteria))return false;
   ensureManagement(game);const fee=scoutingCost(game);
   if(game.pending || game.scout || game.credits<fee) return false;
   const random=rng(13000+game.round*271+game.results.length*19);
   const owned=new Set(game.clubs.flatMap(c=>c.players.map(p=>p.id)));
   const names=new Set(game.clubs.flatMap(c=>c.players.map(p=>playerIdentity(p.name))));
-  const pool=reserves.filter(p=>!owned.has(p.id)&&!names.has(playerIdentity(p.name)));
-  if(pool.length<4)return false;
+  const pool=reserves.filter(p=>!owned.has(p.id)&&!names.has(playerIdentity(p.name)))
+    .map(p=>p.position==='GK'?{...p,...keeperAttributes(p)}:p).filter(p=>matchesCriteria(p,cost(p),criteria));
+  if(!pool.length)return false;
+  if(criteria.skill!=='any')pool.sort((a,b)=>b[criteria.skill]-a[criteria.skill]||cost(a)-cost(b)||a.id.localeCompare(b.id));
   recordCash(game,-fee,'scouting','Scoutingrapport');
-  game.market=Array.from({length:4},()=>{const p=pool.splice(Math.floor(random()*pool.length),1)[0];return {...p,fitness:100};});
+  game.market=Array.from({length:Math.min(4,pool.length)},()=>{const p=pool.splice(criteria.skill==='any'?Math.floor(random()*pool.length):0,1)[0];return {...p,fitness:100};});
+  game.scoutingDesk.report={criteria:structuredClone(criteria),season:game.season,round:game.round,fee};
   ensureKeeperSkills(game);
-  game.scout='completed';game.news.unshift('Scouts hebben vier spelers gevonden. Bekijk de transfermarkt.');return true;
+  game.scout='completed';game.news.unshift(`Scouts hebben ${game.market.length} passende spelers gevonden. Bekijk het scoutingrapport.`);return true;
 }
 export function signPlayer(game,id) {
   if(game.pending)return false;
@@ -254,7 +259,7 @@ export function finishMatch(game){
   if(p.developmentRules===1)own.developmentReport=settleDevelopment(game,p);
   if(p.reputationRules===1)own.reputationReport=settleReputation(game,own,p);
   own.reward=reward;game.news.unshift(`Speeldag ${game.round+1}: ${game.clubs[own.home].name} ${own.goals[0]}–${own.goals[1]} ${game.clubs[own.away].name}. +${reward.toLocaleString('nl-NL')} credits.`);
-  game.round++;game.trainingUsed=false;game.scout=null;game.market=[];game.pending=null;game.lastMatch=own;game.reportOpen=true;settleClubMarket(game);return own;
+  game.round++;game.trainingUsed=false;game.scout=null;game.market=[];game.scoutingDesk.report=null;game.pending=null;game.lastMatch=own;game.reportOpen=true;settleClubMarket(game);return own;
 }
 export function playRound(game){if(!beginMatch(game))return null;while(game.pending){game.pending.paused=false;advanceMatch(game);}return game.lastMatch;}
 export function newSeason(game) {
@@ -267,6 +272,7 @@ export function newSeason(game) {
   game.news.unshift(`Seizoen afgerond op plaats ${place}. Seizoensbonus: ${bonus.toLocaleString('nl-NL')} credits.`);
   game.season=(game.season||1)+1;game.reportOpen=false;game.round=0;game.results=[];game.trainingUsed=false;game.scout=null;game.market=[];
   game.reputation.current={season:game.season,matches:0};
+  game.scoutingDesk.report=null;
   game.management.developmentUsed=false;game.discipline.yellows={};seasonRest(game);
   game.news.unshift('Seizoensrust afgerond: iedereen heeft 100% conditie en is weer inzetbaar.');
   return true;

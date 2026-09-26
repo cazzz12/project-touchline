@@ -1,6 +1,6 @@
 # Project Touchline
 
-Versie **0.12.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
+Versie **0.13.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
@@ -10,7 +10,15 @@ Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als
 
 Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers gebruiken spelcredits. Verwijderde browsergegevens wissen je voortgang. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
 
-## Nieuw: clubreputatie en nieuwe sponsors
+## Nieuw: gericht scouten, shortlist en vergelijken
+
+Open **Scouting & transfers → Gericht zoeken**. Bewaar een gewenste positiegroep, maximale transferprijs en vaardigheid. Zoeken bij andere clubs en in je huidige rapport is gratis. Hetzelfde profiel stuurt je volgende betaalde scoutingopdracht; bij nul passende spelers betaal je niets.
+
+Bewaar maximaal twintig kandidaten op je **Shortlist** en vergelijk hun vaardigheden, conditie, prijs en salaris met een eigen speler uit dezelfde positiegroep. Je ziet de berekening van de rolscore; die voorspelt geen wedstrijdwinst. Vergelijken wijzigt je opstelling niet en doet geen aankoop. Je shortlist en zoekprofiel blijven na herladen en over seizoenen bewaard. Oudere saves en bestaande rapporten blijven bruikbaar. Lees [de scoutingregels](docs/scouting.md).
+
+De [roadmap](docs/roadmap.md) legt ook de bevestigde productrichting vast: online spelen met e-mail- of walletaanmelding, distributie via de Solana dApp Store en koopbare packs als onderdeel van het verdienmodel. Deze onderdelen zijn nog niet gebouwd; packinhoud, prijzen en economische regels worden later uitgewerkt.
+
+## Clubreputatie en nieuwe sponsors
 
 Open **Clubzaken → Reputatie**. Nieuwe zeges leveren 12 punten op, een gelijkspel 5 en verlies 1. Eigen reglementair verlies geeft niets. Na tien volledig bijgehouden wedstrijden krijg je bij de seizoensafsluiting ook een bonus voor de eindpositie. Je ziet de volgende mijlpaal, punten per bron en de laatste 40 prestaties.
 
@@ -98,7 +106,7 @@ De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare 
 
 ## Interfacecontrole
 
-De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 149 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden en 52 opeenvolgende seizoenen.
+De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 166 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden, gerichte scouting, shortlist, spelersvergelijking en 52 opeenvolgende seizoenen.
 
 Zie [het controleverslag](docs/browser-check.md) voor de geteste flows en beperkingen. Gebruik voor bestaande saves dezelfde browser en hetzelfde adres als voorheen: `localhost` en `127.0.0.1` hebben elk hun eigen browseropslag.
 

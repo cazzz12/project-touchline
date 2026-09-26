@@ -7,6 +7,8 @@ import {openOffer} from './transfer-state.js';
 import {incomingOpen,MAX_CLUB_BUDGET} from './club-market-state.js';
 import {developmentSkills,skillsFor} from './development.js';
 import {resultPoints,seasonPoints,reputationOutcome} from './reputation.js';
+import {validCriteria,matchesCriteria} from './scouting-state.js';
+import {cost} from './game.js';
 
 export const RECOVERY_KEY = `${KEY}-before-import`;
 export const MAX_BACKUP_BYTES = 2 * 1024 * 1024;
@@ -156,6 +158,16 @@ function reputation(game){
   const last=r.history.findLast(e=>e.kind!=='season');if(last&&(last.season-1)*10+last.round!==r.lastRound)return false;
   return !game.management.sponsor||r.points>=(sponsors[game.management.sponsor.kind].reputation||0);
 }
+function scoutingDesk(game){
+  const d=game.scoutingDesk,stamp=roundNumber(game);
+  if(!record(d)||d.schema!==1||!validCriteria(d.criteria)||!list(d.shortlist,p=>record(p)
+    && typeof p.id==='string'&&/^(real-\d+|club-[a-z0-9-]{1,100})$/.test(p.id)&&text(p.name)
+    && integer(p.season,1,game.season)&&integer(p.round,0,10)&&(p.season-1)*10+p.round<=stamp,20)
+    ||!unique(d.shortlist.map(p=>p.id)))return false;
+  return d.report===null||(record(d.report)&&validCriteria(d.report.criteria)&&d.report.season===game.season&&d.report.round===game.round
+    && [10500,12000,13500,15000].includes(d.report.fee)&&game.scout==='completed'
+    && game.market.every(p=>matchesCriteria(p,cost(p),d.report.criteria)));
+}
 function development(game){
   const d=game.development,stamp=roundNumber(game),own=new Set(game.clubs[0].players.map(p=>p.id));
   if(!record(d)||d.schema!==1||!integer(d.lastRound,0,stamp)||!record(d.players)||Object.keys(d.players).length>2000)return false;
@@ -205,7 +217,7 @@ function validate(game) {
     || game.market.some(p => allIds.includes(p.id))
     || !['Recovery', 'Attacking', 'Defending', 'Fitness'].includes(game.training)
     || !slots(game.lineupIds, own) || !idList(game.benchIds, own)||game.benchIds.length>7
-    || game.benchIds.some(id => game.lineupIds.includes(id)) || !captain(game.captainId,game.lineupIds)||!management(game)||!medical(game)||!discipline(game)||!transferDesk(game)||!clubMarket(game)||!development(game)||!reputation(game)) invalid();
+    || game.benchIds.some(id => game.lineupIds.includes(id)) || !captain(game.captainId,game.lineupIds)||!management(game)||!medical(game)||!discipline(game)||!transferDesk(game)||!clubMarket(game)||!development(game)||!reputation(game)||!scoutingDesk(game)) invalid();
   if (game.lastMatch != null) {
     const r = game.lastMatch;
     if(r.reputationReport!==undefined&&(!record(r.reputationReport)||r.reputationReport.gain!==resultPoints[reputationOutcome(r)]||!integer(r.reputationReport.total,r.reputationReport.gain,game.reputation.points)))invalid();

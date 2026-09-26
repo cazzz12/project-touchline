@@ -208,3 +208,21 @@ Getest in een aparte browsercarrière op poort 43136, op desktop en met mobiele 
 Alle **149 automatische tests** slagen, inclusief zestien nieuwe controles voor reputatie en schermbediening. De controles omvatten oudere saves, oude lopende wedstrijden, v2-migratie, gewone en reglementaire uitslagen, herladen, eenmalige verwerking, alle zes eindbonussen, gedeeltelijke seizoenen, sponsorgrenzen en betalingen, bestaande contracten, transfers, selectie-updates, begrensde historie en ongeldige backups. Drie oudere testfixtures die rechtstreeks naar seizoen 3 springen initialiseren nu ook reputatie vanaf dat kunstmatige startmoment. Historische uitslagcontroles behouden dezelfde verwachte resultaten; de 52-seizoenentest blijft slagen.
 
 Beperkingen: vaste lokale voortgangs- en sponsorregels. Reputatie beïnvloedt nog geen supporters, scouting, stadionbezoek of transferbereidheid. Geen fysieke mobiele apparaten, andere browserengines of online ranglijsten getest. De controles bewijzen verwerking van de regels, geen langetermijnbalans van de hele economie.
+
+
+## Aanvulling 0.13.0 — gericht scouten en vergelijken, 26 september 2026
+
+Gecontroleerd in de ingebouwde Chromium-browser op het bestaande vensterformaat en met een tijdelijke viewport van 390 × 844. Een aparte PSV-testcarrière op poort 43137 is gebruikt voor filters, shortlist, aankopen en een volledige wedstrijd. De eigen carrière op poort 3000 is alleen geopend, herladen en via navigatie bekeken.
+
+- Gratis zoeken naar middenvelders met maximaal 100.000 credits en passing vanaf 65 vond Peer Koopmeiners. Een strengere minimumwaarde gaf nul resultaten zonder uitgaven.
+- Bewaren op de shortlist en vergelijken met Paul Wanner en Guus Til lieten de clubkas op 120.000 credits. Herladen behield de shortlist en het zoekprofiel. Bekijk bod opende de juiste AZ-speler zonder een bod te versturen.
+- Een betaalde opdracht met een onhaalbare prijsgrens van 1 credit leverde niets op en kostte niets. Daarna gaf een keeperopdracht met prijsgrens 100.000 en reflexen vanaf 55 vier passende spelers, voor één afschrijving van 15.000 credits.
+- Aankoop van Adrián Rodríguez kostte 58.000 credits; de shortlist toonde daarna Eigen speler en zijn contract, zonder tweede aankoopknop. Iván Villar bleef als nog niet aangekochte kandidaat staan.
+- Na een volledige testwedstrijd en herladen bleef de shortlist met drie namen behouden. Iván Villar was onbeschikbaar doordat het rapport was verlopen; de aangetrokken keeper en de clubkandidaat bleven beschikbaar met bijgewerkte carrièregegevens.
+- Mobiele zoekvelden en de keepervergelijking zijn visueel gecontroleerd. Geen horizontale pagina-overloop; brede tabellen en navigatie scrollen binnen hun eigen vak.
+- De bestaande Ajax-carrière opent zonder opslagwaarschuwing. De actuele samenvatting bleef bij een tweede herlaadcontrole gelijk. De nieuwe scoutingpagina staat klaar zonder in die carrière filters, shortlist, spelers of credits te wijzigen.
+- Geen fouten of waarschuwingen in de opgevraagde browserconsole van beide tabbladen. De tijdelijke viewport is teruggezet.
+
+Alle **166 automatische tests** slagen. De zeventien nieuwe tests dekken onder meer migratie van oude rapporten en lopende wedstrijden, gratis zoekopdrachten, ongeldige criteria, nulresultaten, maximaal vier kandidaten, scoutkorting, één opdracht per speeldag, de shortlistlimiet, vergelijking zonder mutaties, aankopen, verlopen kandidaten, seizoenen, backupvalidatie en schermbediening.
+
+Beperkingen: lokale Chromium-controle en modeltests; geen fysieke Android/iOS-test, online accounts, serverbetalingen of Solana dApp Store-publicatie. De tests bevestigen spelregels en verwerking, geen officiële scoutingkwaliteit of uitgebalanceerde economie.

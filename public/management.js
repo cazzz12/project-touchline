@@ -1,5 +1,6 @@
 import {ensureDevelopment,recordSkillGain} from './development.js';
 import {ensureReputation} from './reputation.js';
+import {ensureScoutingDesk} from './scouting-state.js';
 import {ensureFitness,injuryFor,availablePlayers,unavailablePlayer} from './fitness.js';
 import {ensureClubMarket,clubBudget,recordClubBudget,closePlayerOffers} from './club-market-state.js';
 import {ensureTransferDesk,releaseReason} from './transfer-state.js';
@@ -49,6 +50,7 @@ export function ensureManagement(game){
   if(Array.isArray(m.ledger)&&m.ledger.length===0)m.ledgerOpening=game.credits;
   for(const p of game.clubs[0].players)if(!Object.hasOwn(m.contracts,p.id))m.contracts[p.id]={salary:Math.max(100,(overall(p)-40)*15),untilSeason:(game.season||1)+2};
   ensureReputation(game);
+  ensureScoutingDesk(game);
   return ensureDevelopment(ensureClubMarket(ensureTransferDesk(ensureDiscipline(ensureKeeperSkills(ensureFitness(game))))));
 }
 export function recordCash(game,amount,category,label){
