@@ -22,7 +22,7 @@ test('v0.14 live careers finish identically, including transfers, cash and repor
   for(const [club,hash] of [['Ajax','6dd58fd2ac68a4b6240ebba3262fe5756093d247503a5074c07fde1a3300232c'],['PSV','d1247d94212a54be951b8914836d963db311f45ec198bb33c0125c0753002970']]){
     let g=newGame(club);beginMatch(g);delete g.pending.stadiumRules;delete g.pending.stadiumGate;delete g.stadium;
     advance(g,32);g=parseBackup(exportBackup(g));assert.equal(ticketIncome(g,true),6000);advance(g);
-    assert.equal(g.stadium.totals.matches,0);const copy=structuredClone(g);delete copy.stadium;
+    assert.equal(g.stadium.totals.matches,0);const copy=structuredClone(g);delete copy.stadium;delete copy.inbox;
     assert.equal(createHash('sha256').update(JSON.stringify(copy)).digest('hex'),hash);check(g);
   }
 });

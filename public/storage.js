@@ -10,6 +10,7 @@ import {resultPoints,seasonPoints,reputationOutcome} from './reputation.js';
 import {validCriteria,matchesCriteria} from './scouting-state.js';
 import {cost} from './game.js';
 import {validStadium,validStadiumGate} from './stadium.js';
+import {validInbox} from './inbox.js';
 
 export const RECOVERY_KEY = `${KEY}-before-import`;
 export const MAX_BACKUP_BYTES = 2 * 1024 * 1024;
@@ -225,7 +226,7 @@ function cardTotals(p,known){
 // Validate before a file is allowed to replace browser storage. Migration operates
 // on the parsed copy, never on the active in-memory career or the stored text.
 function validate(game) {
-  if(!validStadium(game))invalid();
+  if(!validStadium(game)||!validInbox(game.inbox))invalid();
   if (!record(game) || !Array.isArray(game.clubs) || game.clubs.length !== 6
     || !unique(game.clubs.map(c => c?.name))
     || !game.clubs.every(c => record(c) && clubNames.includes(c.name) && list(c.players, player, 55) && c.players.length >= 18)) invalid();

@@ -3,6 +3,7 @@ import {ensureReputation} from './reputation.js';
 import {ensureScoutingDesk} from './scouting-state.js';
 import {ensureLeagueMarket} from './league-market-state.js';
 import {ensureStadium,ticketIncome} from './stadium.js';
+import {ensureInbox} from './inbox.js';
 import {ensureFitness,injuryFor,availablePlayers,unavailablePlayer} from './fitness.js';
 import {ensureClubMarket,clubBudget,recordClubBudget,closePlayerOffers} from './club-market-state.js';
 import {ensureTransferDesk,releaseReason} from './transfer-state.js';
@@ -55,6 +56,7 @@ export function ensureManagement(game){
   ensureScoutingDesk(game);
   ensureLeagueMarket(game);
   ensureStadium(game);
+  ensureInbox(game);
   return ensureDevelopment(ensureClubMarket(ensureTransferDesk(ensureDiscipline(ensureKeeperSkills(ensureFitness(game))))));
 }
 export function recordCash(game,amount,category,label){

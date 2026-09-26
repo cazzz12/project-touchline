@@ -5,8 +5,29 @@ import assert from 'node:assert/strict';
 import {KEY,newGame,playRound as playRoundWithoutRotation,newSeason,beginMatch,advanceMatch} from '../public/game.js';
 import {recordCash,saleOffer,renewExpiring} from '../public/management.js';
 import {clubTransferQuote,releaseReason} from '../public/transfers.js';
+import {inboxMessages} from '../public/inbox.js';
 
 let instance=0;
+test('inbox filters are free, marking visible items affects only that category and persists after reload',async t=>{
+  const g=newGame();playRound(g);g.reportOpen=false;const h=await boot(t,g),before=h.state();
+  h.click({tab:'inbox'});assert.match(h.app.innerHTML,/Wat vraagt jouw aandacht/);h.click({inboxCategory:'transfers'});h.click({inboxStatus:'unread'});assert.deepEqual(h.state(),before);
+  h.click({inboxReadVisible:''});const after=h.state();assert.equal(after.credits,before.credits);assert.deepEqual(after.clubs,before.clubs);assert.deepEqual(after.clubMarket,before.clubMarket);
+  assert.ok(inboxMessages(after).filter(m=>m.category==='transfers').every(m=>m.read));assert.equal(inboxMessages(after).find(m=>m.key.startsWith('sponsor:')).read,false);assert.match(h.app.innerHTML,/Geen berichten met deze filters/);
+  const restored=await boot(t,after);restored.click({tab:'inbox'});restored.click({inboxCategory:'transfers'});assert.match(restored.app.innerHTML,/MARKEER ONGELEZEN/);assert.deepEqual(restored.state(),after);
+  const key=inboxMessages(after).find(m=>m.category==='transfers').key;restored.click({inboxRead:key,read:'false'});assert.equal(inboxMessages(restored.state()).find(m=>m.key===key).read,false);
+});
+test('opening inbox destinations marks read without accepting transfers, signing or changing selection',async t=>{
+  const g=newGame();playRound(g);g.reportOpen=false;const h=await boot(t,g),before=h.state(),bid=inboxMessages(g).find(m=>m.key.startsWith('incoming:'));
+  h.click({inboxOpen:bid.key});assert.match(h.app.innerHTML,/Ontvangen biedingen/);assert.equal(h.state().inbox.read.includes(bid.key),true);
+  const after=h.state();delete after.inbox;delete before.inbox;assert.deepEqual(after,before);
+  const sponsor=inboxMessages(h.state()).find(m=>m.key.startsWith('sponsor:'));h.click({inboxOpen:sponsor.key});assert.match(h.app.innerHTML,/KIES DIT CONTRACT/);assert.equal(h.state().management.sponsor,null);
+  const saved=h.state();h.click({inboxOpen:'incoming:999999'});assert.deepEqual(h.state(),saved);assert.match(h.app.innerHTML,/inmiddels opgelost of veranderd/);
+});
+test('inbox can open a paused match without advancing time or expiring anything',async t=>{
+  const g=newGame();beginMatch(g);const h=await boot(t,g);h.click({action:'save-close'});const before=h.state();h.click({tab:'inbox'});assert.match(h.app.innerHTML,/Er staat een wedstrijd open/);
+  const item=inboxMessages(before).find(m=>m.key.startsWith('match:'));h.click({inboxOpen:item.key});assert.match(h.app.innerHTML,/role="dialog"/);assert.equal(h.state().pending.minute,0);assert.equal(h.state().pending.paused,true);
+  assert.deepEqual(h.state().pending,before.pending);assert.deepEqual(h.state().clubs,before.clubs);assert.equal(h.state().credits,before.credits);
+});
 test('stadium choices persist for free, upgrades change capacity and match locks reject changes',async t=>{
   const g=newGame(),h=await boot(t,g),before=h.state();
   h.click({office:'stadium'});assert.match(h.app.innerHTML,/Stadion & supporters/);assert.match(h.app.innerHTML,/3\.000 \/ 5\.000/);assert.deepEqual(h.state(),before);

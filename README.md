@@ -1,6 +1,6 @@
 # Project Touchline
 
-Versie **0.15.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
+Versie **0.16.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
@@ -10,7 +10,13 @@ Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als
 
 Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers gebruiken spelcredits. Verwijderde browsergegevens wissen je voortgang. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
 
-## Nieuw: stadion en supporters
+## Nieuw: postvak voor de manager
+
+Open **Postvak** voor ontvangen biedingen, geaccepteerde aankoopbiedingen en tegenbiedingen, aflopende contracten, blessures, schorsingen en bereikte trainingsdoelen. Ook een negatieve clubkas, ontbrekende sponsor, open wedstrijd en voltooid seizoen krijgen een melding wanneer dat van toepassing is. De teller in het menu toont ongelezen berichten.
+
+Filter op onderwerp of leesstatus en markeer de zichtbare berichten als gelezen. Een melding opent het bijbehorende scherm; verkopen, aankopen, verlengen en verder spelen blijven afzonderlijke keuzes. Leesmarkeringen blijven na herladen en in backups bewaard. Berichten volgen de huidige situatie en verdwijnen zodra deze is opgelost. Bestaande saves krijgen geen verzonnen berichtengeschiedenis. Lees [de postvakregels](docs/inbox.md).
+
+## Stadion en supporters
 
 Open **Clubzaken → Stadion**. Vergelijk ticketprijzen van 1 tot 4 spelcredits, bekijk de verwachte bezetting en breid je tribunes uit. Reputatie en de laatste vijf uitslagen bepalen samen met de prijs hoeveel supporters komen. De capaciteit is een spelwaarde, geen echte stadioninformatie.
 
@@ -118,7 +124,7 @@ De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare 
 
 ## Interfacecontrole
 
-De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 194 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden, gerichte scouting, shortlist, spelersvergelijking, onderlinge clubtransfers stadionprijzen, bezoekersaantallen, ticketafrekening en 52 opeenvolgende seizoenen.
+De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 208 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden, gerichte scouting, shortlist, spelersvergelijking, onderlinge clubtransfers, postvakfilters, leesstatus, veilige doorklikroutes, stadionprijzen, bezoekersaantallen, ticketafrekening en 52 opeenvolgende seizoenen.
 
 Zie [het controleverslag](docs/browser-check.md) voor de geteste flows en beperkingen. Gebruik voor bestaande saves dezelfde browser en hetzelfde adres als voorheen: `localhost` en `127.0.0.1` hebben elk hun eigen browseropslag.
 

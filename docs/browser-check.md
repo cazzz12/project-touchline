@@ -256,3 +256,18 @@ Beperkingen: één browserengine en gesimuleerd mobiel formaat. De automatische 
 - `npm.cmd test`: 194 tests slagen. Nieuwe controles omvatten lege migratie zonder kaswijziging, oude v0.14-wedstrijden met exact dezelfde gehele carrière, prijzen en reputatie/formulegrenzen, bevroren aftrapafspraken, geen dubbele inkomsten, uitwedstrijden, reglementaire uitslagen, vijf seizoenen bezoekershistorie, ongeldige imports en schermbediening.
 - Echte mobiele apparaten en andere browsers zijn niet getest. Capaciteiten, ticketprijzen en bezoekers blijven fictieve spelwaarden. Er zijn geen accounts of echte betalingen toegevoegd.
 - Gebruikerscarrière opnieuw geopend op poort 3000: Ajax, seizoen 1, 8 gespeelde wedstrijden, 27 spelers en 101.446 credits behouden. Bestaand stadionniveau 2 geeft 7.500 spelplaatsen; de bezoekersmeting begint na speeldag 8. Alleen navigatie uitgevoerd.
+
+## Vervolg: postvak voor de manager (0.16.0, 26 september 2026)
+
+- Een aparte Ajax-testcarrière op poort 43140 gebruikt. De hoofdcarrière op poort 3000 is alleen herladen en via navigatie bekeken; geen leesmarkeringen of spelacties uitgevoerd.
+- Nieuwe carrière toont één sponsormelding. Als gelezen markeren verwijdert de menuteller; filter Ongelezen geeft een lege toestand en een geblokkeerde bulkknop. Herladen behoudt de leesstatus en 120.000 credits.
+- Opnieuw ongelezen markeren en Bekijk sponsors opent de sponsoropties zonder contract af te sluiten. Een wedstrijd gestart en op minuut nul opgeslagen en gesloten. De postvakknop opent dezelfde gepauzeerde wedstrijd op 0–0; pas Aftrap laat de klok lopen.
+- Ajax–FC Twente op 4× gespeeld: rust op 45 minuten met 1–1, herladen en hervatten, eindstand 2–2. Clubkas na de bestaande afrekening 131.420 credits. De wedstrijdmelding verdwijnt; drie actuele transferbiedingen verschijnen.
+- Filter Transfers en Markeer deze als gelezen markeert precies drie biedingen. De sponsormelding blijft ongelezen. Herladen behoudt één ongelezen van vier. Een transferbericht opent Ontvangen biedingen met dezelfde drie nog te beoordelen aanbiedingen en dezelfde clubkas, zonder verkoop.
+- Desktop en mobiel 390 × 844 visueel gecontroleerd. Op mobiel één kolom, knoppen onder elkaar en tekst binnen de kaarten. Pagina scrollWidth = clientWidth = 375; kaartbreedtes beide 341. Op desktop geen pagina-overloop. Mobiel een afzonderlijke gelezen transfer opnieuw ongelezen gemaakt. De viewport is daarna hersteld.
+- Geen fouten of waarschuwingen in de opgevraagde consoles van de testtab en hoofdtab. Tijdelijke testtab gesloten; bewijsbeeld van het hoofdpostvak opgeslagen.
+- De tekst van het voortgangsscherm vóór en na herladen is exact gelijk: Ajax, seizoen 1, 9/10 wedstrijden, 27 spelers en 84.666 credits. Het postvak toont de bestaande twee biedingen en een schorsing, zonder de carrière te wijzigen.
+
+Alle **208 automatische tests** slagen. Veertien nieuwe controles dekken savebehoud en oude lopende wedstrijden, actuele groepen en urgentie, gewijzigde of verdwenen berichten, contracten, transferstatus, geen betalingen door lezen, wedstrijdpauze, filters, bulkmarkering, backups, limieten, ongeldige sleutels, HTML-escaping en schermroutes. De historische carrièrevingerafdruktest negeert alleen het nieuwe lege inboxveld; bestaande spelresultaten blijven gelijk.
+
+Beperkingen: één browserengine en een gesimuleerd mobiel formaat. Het postvak toont lokale actuele zaken, geen historisch nieuwsarchief of pushmeldingen. Online accounts, e-mail, wallet en packs zijn niet toegevoegd of getest.
