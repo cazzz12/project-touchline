@@ -1,3 +1,4 @@
+import {recordSkillGain,settleDevelopment} from './development.js';
 import {settleClubMarket,completeIncomingSale} from './club-market.js';
 import { formations, lineUp, positionFit, rng, simulate } from './engine.js';
 import { realPlayers } from './real-players.js';
@@ -56,6 +57,7 @@ export function updateClubRosters(game){
   updated.clubs=game.clubs.map(club=>structuredClone(initialClubs.find(c=>c.name===club.name)));
   if(updated.discipline){const ids=new Set(updated.clubs.flatMap(c=>c.players.map(p=>p.id)));for(const key of ['yellows','suspensions'])updated.discipline[key]=Object.fromEntries(Object.entries(updated.discipline[key]).filter(([id])=>ids.has(id)));}
   if(updated.medical){const ids=new Set(updated.clubs.flatMap(c=>c.players.map(p=>p.id)));updated.medical.injuries=Object.fromEntries(Object.entries(updated.medical.injuries).filter(([id])=>ids.has(id)));}
+  delete updated.development;
   updated.lineupIds=[];delete updated.benchIds;updated.captainId=null;
   // Old offers are no longer valid; keep the scouting use and credits for this round.
   updated.market=[];updated.rosterVersion=ROSTER_VERSION;updated.reportOpen=false;
@@ -130,9 +132,9 @@ export function train(game,focus) {
   for(const p of players){
     if(injuryFor(game,p.id)&&focus!=='Recovery')continue;
     if(focus==='Recovery') p.fitness=clamp(p.fitness+9+game.management.facilities.medical-1,0,100);
-    if(focus==='Fitness') {p.fitness=clamp(p.fitness+3,0,100);p.stamina=clamp(p.stamina+1,0,99);}
-    if(focus==='Attacking') {p.attack=clamp(p.attack+development,0,99);p.fitness=clamp(p.fitness-4,0,100);}
-    if(focus==='Defending') {p.defending=clamp(p.defending+development,0,99);p.fitness=clamp(p.fitness-4,0,100);}
+    if(focus==='Fitness') {p.fitness=clamp(p.fitness+3,0,100);recordSkillGain(game,p,'stamina',1,'team');}
+    if(focus==='Attacking') {recordSkillGain(game,p,'attack',development,'team');p.fitness=clamp(p.fitness-4,0,100);}
+    if(focus==='Defending') {recordSkillGain(game,p,'defending',development,'team');p.fitness=clamp(p.fitness-4,0,100);}
   }
   game.training=focus;game.trainingUsed=true;game.news.unshift(`${focus} training afgerond. Nieuwe sessie na je volgende wedstrijd.`);return true;
 }
@@ -171,7 +173,7 @@ export function beginMatch(game){
   const opponent=recommendedSquad(game,other,'4-3-3').lineupIds;
   expireTransferOffers(game);
   game.reportOpen=false;
-  game.pending={home,away,medicalRules:1,keeperRules:1,disciplineRules:1,keeperMinutes:{},opponentKeeperMinutes:{},opponentPlayed:{},bookings:[{},{}],dismissed:[[],[]],
+  game.pending={home,away,developmentRules:1,medicalRules:1,keeperRules:1,disciplineRules:1,keeperMinutes:{},opponentKeeperMinutes:{},opponentPlayed:{},bookings:[{},{}],dismissed:[[],[]],
     minute:0,startedSelection:own.lineupIds.filter(Boolean),opponentStarted:opponent.filter(Boolean),selection:[...own.lineupIds],bench:[...own.benchIds],captainId:own.captainId,opponentSelection:opponent,
     abandoned:forfeitingSides(home===0?[own.lineupIds,opponent]:[opponent,own.lineupIds]),used:[],subs:0,played:{},stats:[{...emptyStats(),yellowCards:0,redCards:0},{...emptyStats(),yellowCards:0,redCards:0}],events:[],coaching:[],paused:true};return game.pending;
 }
@@ -232,7 +234,7 @@ export function finishMatch(game){
     const matchClubs=[game.clubs[home],game.clubs[away]];
     const result=home===p.home&&away===p.away?{
       clubs:matchClubs.map(c=>c.name),
-      teams:[home===0?p.selection:p.opponentSelection,away===0?p.selection:p.opponentSelection].map((ids,side)=>ids.filter(Boolean).map(id=>matchClubs[side].players.find(player=>player.id===id))),
+      teams:[home===0?p.selection:p.opponentSelection,away===0?p.selection:p.opponentSelection].map((ids,side)=>ids.filter(Boolean).map(id=>(p.developmentRules===1?{...matchClubs[side].players.find(player=>player.id===id)}:matchClubs[side].players.find(player=>player.id===id)))),
       stats:structuredClone(p.stats),events:structuredClone(p.events),coaching:structuredClone(p.coaching),played:{...p.played},captainId:p.captainId,
       ...(p.disciplineRules===1?{disciplineRules:1,minute:p.minute,abandoned:[...p.abandoned],dismissed:structuredClone(p.dismissed),bookings:structuredClone(p.bookings),playedBySide:[home,away].map(index=>({... (index===0?p.played:p.opponentPlayed)})),startedSelections:[home,away].map(index=>[...(index===0?p.startedSelection:p.opponentStarted)])}:{}),
       ...(p.keeperRules===1?{keeperRules:1,keeping:keeperMatchStats(matchClubs,p.events,[home,away].map(index=>index===0?p.keeperMinutes:p.disciplineRules===1?p.opponentKeeperMinutes:{[p.opponentSelection[0]]:90}))}:{})
@@ -248,6 +250,7 @@ export function finishMatch(game){
   if(p.disciplineRules===1)own.disciplineReport=settleDiscipline(game,details);
   if(p.medicalRules===1)own.medicalReport=settleFitness(game,minutesByClub);
   else for(const player of game.clubs[0].players)player.fitness=p.played[player.id]?matchFitness(player,p.played[player.id]):Math.min(player.fitness+3,100);
+  if(p.developmentRules===1)own.developmentReport=settleDevelopment(game,p);
   own.reward=reward;game.news.unshift(`Speeldag ${game.round+1}: ${game.clubs[own.home].name} ${own.goals[0]}–${own.goals[1]} ${game.clubs[own.away].name}. +${reward.toLocaleString('nl-NL')} credits.`);
   game.round++;game.trainingUsed=false;game.scout=null;game.market=[];game.pending=null;game.lastMatch=own;game.reportOpen=true;settleClubMarket(game);return own;
 }

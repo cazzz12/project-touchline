@@ -43,6 +43,23 @@ test('received bid UI rejects without moving money and keeps incoming, purchase 
   const after=h.state();assert.equal(after.clubMarket.offers[0].status,'rejected');assert.equal(after.credits,before.credits);assert.deepEqual(after.clubs,before.clubs);assert.deepEqual(after.clubMarket.clubs,before.clubMarket.clubs);
   h.click({transferSection:'clubs'});assert.match(h.app.innerHTML,/Spelers bij andere clubs/);h.click({transferSection:'scouting'});assert.match(h.app.innerHTML,/STUUR SCOUTS/);
 });
+test('development UI saves a goal without training, tracks training and shares the existing session limit',async t=>{
+  const game=newGame(),p=game.clubs[0].players[0],h=await boot(t,game),before=h.state();
+  h.click({tab:'training'});h.click({trainingSection:'development'});assert.match(h.app.innerHTML,/Spelerontwikkeling/);
+  h.submit('development-plan-form',{playerId:p.id,attribute:'passing',target:String(p.passing+3)});
+  const planned=h.state();assert.deepEqual(planned.clubs,before.clubs);assert.equal(planned.credits,before.credits);assert.equal(planned.management.developmentUsed,false);assert.match(h.app.innerHTML,/Groeiverwachting/);
+  h.click({trainPlan:p.id});assert.equal(h.state().clubs[0].players[0].passing,p.passing+1);assert.equal(h.state().development.players[p.id].gains.individual,1);assert.match(h.app.innerHTML,/INDIVIDUELE SESSIE GEBRUIKT/);
+  const trained=h.state();h.click({trainPlan:p.id});assert.deepEqual(h.state(),trained);
+  h.click({trainingSection:'team'});h.submit('keeper-development-form',{playerId:p.id,attribute:'reflexes'});assert.deepEqual(h.state(),trained);
+  h.click({openDevelopment:p.id});assert.match(h.app.innerHTML,/Vaardigheden & groei/);h.click({stopPlan:p.id});assert.equal(h.state().development.players[p.id].plan,null);assert.equal(h.state().development.players[p.id].gains.individual,1);
+});
+test('development UI rejects an invalid goal and renders keeper skills only for keepers',async t=>{
+  const g=newGame(),p=g.clubs[0].players.find(p=>p.position!=='GK'),h=await boot(t,g);
+  h.click({openDevelopment:p.id});const before=h.state();assert.doesNotMatch(h.app.innerHTML,/option value="reflexes"/);
+  h.submit('development-plan-form',{playerId:p.id,attribute:'reflexes',target:'90'});assert.deepEqual(h.state(),before);
+  h.submit('development-plan-form',{playerId:p.id,attribute:'passing',target:'100'});assert.deepEqual(h.state(),before);assert.match(h.app.innerHTML,/hoger doel tot 99/);
+  h.click({openDevelopment:g.clubs[0].players.find(p=>p.position==='GK').id});assert.match(h.app.innerHTML,/option value="reflexes"/);
+});
 async function boot(t,game=newGame('PSV')){
   const handlers={},entries=new Map([[KEY,JSON.stringify(game)]]),app={innerHTML:'',addEventListener:(type,fn)=>handlers[type]=fn};
   const old={document:globalThis.document,localStorage:globalThis.localStorage,FormData:globalThis.FormData};

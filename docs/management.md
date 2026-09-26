@@ -72,3 +72,7 @@ Oudere saves krijgen alleen de ontbrekende onderdelen. Clubkas, resultaten en lo
 ## Tegenstanderbudgetten vanaf 0.10.0
 
 Direct verkopen gebruikt nu het transferbudget van de gekozen koper. Zonder voldoende credits of selectieruimte is die club niet beschikbaar. Iedere verkoop boekt dezelfde opbrengst bij jou en uitgave bij de koper. Via **Scouting & transfers → Ontvangen biedingen** zie je ook spontane biedingen en alle tegenstanderbudgetten. Zie [de transferregels](transfers.md) voor bedragen, bevestiging en savebehoud.
+
+## Persoonlijke ontwikkelplannen vanaf 0.11.0
+
+**Training → Spelerontwikkeling** toont groeidoelen, beginwaarden en vooruitgang per bron. Trainen volgens plan deelt de bestaande individuele sessie met speler- en keepertraining. Actieve plannen geven daarnaast groei per 180 werkelijk gespeelde minuten, pas na de wedstrijd. Zie [de ontwikkelregels](development.md) voor tellers, transfers en savebehoud.

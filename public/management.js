@@ -1,3 +1,4 @@
+import {ensureDevelopment,recordSkillGain} from './development.js';
 import {ensureFitness,injuryFor,availablePlayers,unavailablePlayer} from './fitness.js';
 import {ensureClubMarket,clubBudget,recordClubBudget,closePlayerOffers} from './club-market-state.js';
 import {ensureTransferDesk,releaseReason} from './transfer-state.js';
@@ -44,7 +45,7 @@ export function ensureManagement(game){
   if(m.schema!==1||!m.contracts||typeof m.contracts!=='object')return game;
   if(Array.isArray(m.ledger)&&m.ledger.length===0)m.ledgerOpening=game.credits;
   for(const p of game.clubs[0].players)if(!Object.hasOwn(m.contracts,p.id))m.contracts[p.id]={salary:Math.max(100,(overall(p)-40)*15),untilSeason:(game.season||1)+2};
-  return ensureClubMarket(ensureTransferDesk(ensureDiscipline(ensureKeeperSkills(ensureFitness(game)))));
+  return ensureDevelopment(ensureClubMarket(ensureTransferDesk(ensureDiscipline(ensureKeeperSkills(ensureFitness(game))))));
 }
 export function recordCash(game,amount,category,label){
   ensureManagement(game);const m=game.management;
@@ -95,9 +96,13 @@ export function developPlayer(game,id,attribute){
   const p=game.clubs[0].players.find(p=>p.id===id);if(!p||injuryFor(game,id)||(Object.hasOwn(keeperSkills,attribute)&&p.position!=='GK'))return false;
   if(p.position==='GK')Object.assign(p,keeperAttributes(p));
   if(p[attribute]>=99)return false;
-  p[attribute]=clamp(p[attribute]+1+game.management.staff.coach+game.management.facilities.training-1,0,99);
+  recordSkillGain(game,p,attribute,game.management.staff.coach+game.management.facilities.training,'individual');
   p.fitness=clamp(p.fitness-3,0,100);game.management.developmentUsed=true;
   game.news.unshift(`${p.name} heeft individueel getraind. −3 conditie.`);return true;
+}
+export function trainAccordingToPlan(game,id){
+  const p=game.clubs[0].players.find(p=>p.id===id),plan=game.development?.players[id]?.plan;
+  return p&&plan&&p[plan.attribute]<plan.target?developPlayer(game,id,plan.attribute):false;
 }
 export function saleReason(game,id,buyerIndex,price){
   if(game.pending)return 'Rond eerst de lopende wedstrijd af.';
@@ -122,6 +127,7 @@ export function completePlayerSale(game,id,buyerIndex,price){
   recordClubBudget(game,buyerIndex,-price,`${player.name} gekocht van ${game.clubs[0].name}`);
   recordCash(game,price,'transfer',`${player.name} naar ${buyer.name}`);
   closePlayerOffers(game,id);
+  if(game.development.players[id])game.development.players[id].plan=null;
   game.news.unshift(`${player.name} verkocht aan ${buyer.name} voor ${price.toLocaleString('nl-NL')} credits.`);
   return true;
 }

@@ -1,3 +1,4 @@
+import {ensureDevelopment} from './development.js';
 import {overall,transferValue,recordCash} from './management.js';
 import {recommendedSquad} from './fitness.js';
 import {ensureTransferDesk,openOffer,releaseReason} from './transfer-state.js';
@@ -51,7 +52,7 @@ export function confirmClubPurchase(game,id){
   recordClubBudget(game,offer.seller,offer.price,`${player.name} verkocht aan ${game.clubs[0].name}`);
   seller.players=seller.players.filter(p=>p.id!==player.id);game.clubs[0].players.push(moved);
   game.management.contracts[player.id]={salary:offer.salary,untilSeason:offer.untilSeason};
-  offer.status='completed';
+  ensureDevelopment(game);offer.status='completed';
   game.news.unshift(`${player.name} overgenomen van ${seller.name} voor ${offer.price.toLocaleString('nl-NL')} credits.`);
   // Selection is a manager choice. Identity-keyed history, injuries and bans stay.
   return true;

@@ -174,3 +174,20 @@ Een nieuwe Ajax-testcarrière via de gewone interface gestart op poort 43134. De
 Alle **117 automatische tests** slagen. De veertien nieuwe tests controleren onder andere oude saves en lopende wedstrijden, eenmalige budgetbijdragen, reproduceerbare betaalbare biedingen, verkoop na herladen, salaris en selectieherstel, geldbehoud tussen beide clubs, afwijzing, ontoereikend budget, selectielimieten, uitval en historie, verloop en begrensde opslag, ongeldige imports en de nieuwe schermbediening. Bestaande selectielimiettests gebruiken expliciete testbudgetten om de selectiegrens onafhankelijk van de nieuwe budgetgrens te blijven controleren. De 52-seizoenentest blijft slagen.
 
 Beperkingen: vaste lokale biedingsregels en afzonderlijke transferbudgetten. Geen transfers tussen tegenstanders onderling, volledige tegenstanderboekhouding, online markt of fysieke mobiele apparaten getest.
+
+# Aanvulling 0.11.0 — persoonlijke spelerontwikkeling (26 september 2026)
+
+Een nieuwe Ajax-testcarrière via de interface gestart op poort 43135. De bestaande hoofdcarrière is alleen bekeken en herladen; geen trainingen, plannen, wedstrijden of transfers daarin uitgevoerd. Getest in Chromium op desktop en met mobiele viewport 390 × 844.
+
+- Voor Marc ter Stegen een passingdoel van 63 ingesteld vanaf 61. Bewaren wijzigde geen vaardigheid of clubkas. De verwachting was twee individuele sessies of 360 gespeelde minuten.
+- Eén individuele training verhoogde passing naar 62 en verlaagde conditie van 78 naar 75. Het overzicht schreef +1 toe aan individuele training; de gedeelde sessie was verbruikt. Herladen behield plan, vaardigheden, historie en sessielimiet.
+- Ajax–FC Twente gespeeld, tijdens de rust op minuut 45 herladen en hervat. Het duel eindigde in 2–2. Het eindverslag en plan toonden 90 van 180 minuten, zonder voortijdig vaardigheidspunt. De verwachting was daarna één sessie of 90 extra minuten.
+- Mobiel het plan, de voortgangsbalk en verwachting visueel bekeken. De pagina bleef binnen de beschikbare breedte: scrollWidth = clientWidth = 375.
+- FC Utrecht–Ajax uitgespeeld tot 3–1. Na de tweede volledige wedstrijd verhoogde de ontwikkeling passing van 62 naar 63. Het eindverslag toonde de 90 gespeelde minuten en het bereikte doel.
+- Herladen behield passing 63, de voltooide voortgang en de geblokkeerde knop Train volgens plan. De vaardigheidstabel toonde startwaarde 61 en totale groei +2, gesplitst in individuele training +1 en speelminuten +1. Beide verbeteringen stonden met hun juiste speeldag in de historie.
+- Stop plan verwijderde het plan en behield passing 63 en beide historische verbeteringen. Geen fouten of waarschuwingen in de opgevraagde consoles. Bewijsbeeld opgeslagen, tijdelijke viewport hersteld en testtab gesloten.
+- De hoofdcarrière vóór en na herladen vergeleken: de inhoud van het voortgangsoverzicht bleef gelijk. De nieuwe pagina is beschikbaar zonder selectie-update of verlies van bestaande voortgang.
+
+Alle **133 automatische tests** slagen. De zestien nieuwe controles dekken onder meer migratie zonder terugwerkende groei, geldige doelen, trainingslimieten, conditie, werkelijk gespeelde minuten, wissels en rode kaarten, pauzeren en hervatten, bereiken en wijzigen van doelen, eenmalige verwerking, behoud van wedstrijdrapporten, transfers, seizoensovergang, begrensde historie, ongeldige backups en schermbediening. Historische uitslagcontroles gebruiken ongewijzigde verwachte resultaten uit 0.6.0 en 0.7.0; ook de bestaande 52-seizoenentest slaagt. Na een laatste tekstaanpassing zijn de veertien UI-tests opnieuw geslaagd.
+
+Beperkingen: expliciet gekozen groeidoelen met vaste spelregels, geen officieel potentieel, leeftijdsmodel of jeugdopleiding. Alleen de beheerde Chromium-browser en gesimuleerde mobiele afmetingen getest. De tests bewijzen de verwerking van de ontwikkelregels, geen realistische of uitgebalanceerde ontwikkeling over een volledige voetbalcarrière.
