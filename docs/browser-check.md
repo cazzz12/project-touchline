@@ -226,3 +226,21 @@ Gecontroleerd in de ingebouwde Chromium-browser op het bestaande vensterformaat 
 Alle **166 automatische tests** slagen. De zeventien nieuwe tests dekken onder meer migratie van oude rapporten en lopende wedstrijden, gratis zoekopdrachten, ongeldige criteria, nulresultaten, maximaal vier kandidaten, scoutkorting, één opdracht per speeldag, de shortlistlimiet, vergelijking zonder mutaties, aankopen, verlopen kandidaten, seizoenen, backupvalidatie en schermbediening.
 
 Beperkingen: lokale Chromium-controle en modeltests; geen fysieke Android/iOS-test, online accounts, serverbetalingen of Solana dApp Store-publicatie. De tests bevestigen spelregels en verwerking, geen officiële scoutingkwaliteit of uitgebalanceerde economie.
+
+
+## Aanvulling 0.14.0 — transfers tussen computerclubs, 26 september 2026
+
+De ingebouwde Chromium-browser is gecontroleerd op het bestaande desktopformaat en op 390 × 844. Transacties en een volledige wedstrijd zijn uitsluitend uitgevoerd in een aparte Ajax-testcarrière op poort 43138.
+
+- Het lege transferjournaal toonde nul transacties en de vijf beginbudgetten van 120.000 credits. Filters en clubnavigatie waren beschikbaar.
+- Ajax–FC Twente is volledig gespeeld, met herladen bij rust op 45 minuten en hervatten vanaf dezelfde 1–1. Na het eindsignaal volgde één transfer: Jari De Busser van AZ naar Feyenoord voor 110.990 credits.
+- Het journaal en de selectie van Feyenoord toonden dezelfde speler. Feyenoord had daarna 29 spelers en 17.010 credits; AZ 27 spelers en 238.990 credits. De overige clubs hadden elk 128.000 na de bestaande speeldagbijdrage. De som van die vijf budgetten bleef 640.000 credits.
+- Het filter PSV gaf geen transacties, Feyenoord wel. Doorklikken op Bekijk selectie opende Feyenoord; zoeken op Jari De Busser vond één speler zonder oud rugnummer.
+- Herladen behield exact één journaalregel en dezelfde budgetten. De link vanuit het wedstrijdverslag opende het journaal zonder een tweede afhandeling.
+- Desktop en mobiele transferkaart zijn visueel gecontroleerd, inclusief clublogo’s, prijs, filters en selectieknop. Op mobiel was er geen horizontale pagina-overloop. De viewport is daarna hersteld.
+- De samenvatting van de bestaande Ajax-carrière op poort 3000 bleef voor en na herladen identiek. Het journaal begint daar leeg vanaf de huidige speeldag; eerdere wedstrijden kregen geen transfers achteraf. Er is in deze carrière geen testwedstrijd, aankoop of verkoop uitgevoerd.
+- Geen fouten of waarschuwingen in de opgevraagde browserconsole van de testcarrière.
+
+Alle **181 automatische tests** slagen. Vijftien nieuwe tests controleren migratie, ongewijzigde resultaten en financiën van v0.13-wedstrijden, eenmalige verwerking, behoud van budgettotalen, vaste speleridentiteit, shortlistverwijzingen, reserve- en budgetgrenzen, geen herhaalde verhuizing binnen een seizoen, vijftig bewaarde transacties met volledige totalen over acht seizoenen, ongeldige imports en de bediening van journaal en filters. Bestaande tests zijn aangepast waar ze veronderstelden dat computerclubs hun volledige budget onbesteed hielden; de financiële en selectiegrenzen blijven gecontroleerd. Oudere compatibiliteitsvingerafdrukken blijven gelijk.
+
+Beperkingen: één browserengine en gesimuleerd mobiel formaat. De automatische clubs gebruiken een eenvoudige selectie- en budgetregel; salarissen en volledige langetermijnplanning van computerclubs zijn niet gemodelleerd. Online transacties en Solana zijn niet in deze uitbreiding getest of gebouwd.

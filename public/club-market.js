@@ -1,4 +1,5 @@
 import {overall,transferValue,saleReason,completePlayerSale} from './management.js';
+import {settleLeagueMarket} from './league-market.js';
 import {unavailablePlayer,roundNumber} from './fitness.js';
 import {ensureClubMarket,incomingOpen,clubBudget,recordClubBudget,expireIncoming,ROUND_ALLOWANCE,MAX_CLUB_BUDGET} from './club-market-state.js';
 
@@ -18,7 +19,7 @@ function candidate(game,buyer,excluded){
   }).sort((a,b)=>b.score-a.score||a.price-b.price||(a.player.id<b.player.id?-1:1))[0];
 }
 // Called only after a completed round. Reads and reloads never generate offers.
-export function settleClubMarket(game){
+export function settleClubMarket(game,leagueRules=0){
   ensureClubMarket(game);const market=game.clubMarket,stamp=roundNumber(game);
   if(game.pending||game.round<1||market.lastRound>=stamp||game.results.filter(r=>r.round===game.round).length!==3)return 0;
   expireIncoming(game);market.lastRound=stamp;
@@ -26,6 +27,7 @@ export function settleClubMarket(game){
     const allowance=Math.min(ROUND_ALLOWANCE,MAX_CLUB_BUDGET-clubBudget(game,buyer));
     if(allowance)recordClubBudget(game,buyer,allowance,'Transferbijdrage na speeldag');
   }
+  settleLeagueMarket(game,leagueRules);
   let count=0;const excluded=new Set();
   // Rotate first choice between clubs; no randomness that can be rerolled by reload.
   for(let n=0;n<5&&count<3;n++){

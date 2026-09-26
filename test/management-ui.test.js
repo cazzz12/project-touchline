@@ -7,6 +7,18 @@ import {recordCash,saleOffer,renewExpiring} from '../public/management.js';
 import {clubTransferQuote,releaseReason} from '../public/transfers.js';
 
 let instance=0;
+test('transfer journal filters and club navigation are read-only and survive reload',async t=>{
+  const g=newGame();playRound(g);g.reportOpen=false;const trade=g.leagueMarket.history[0];assert.ok(trade);
+  const h=await boot(t,g),before=h.state();h.click({transferJournal:''});assert.match(h.app.innerHTML,/Recente verhuizingen/);assert.match(h.app.innerHTML,new RegExp(trade.name));assert.deepEqual(h.state(),before);
+  const uninvolved=[1,2,3,4,5].find(i=>i!==trade.buyer&&i!==trade.seller);h.submit('league-market-filter',{club:String(uninvolved),period:'all'});assert.match(h.app.innerHTML,/Geen transfers met deze filters/);assert.deepEqual(h.state(),before);
+  h.submit('league-market-filter',{club:String(trade.buyer),period:'season'});assert.match(h.app.innerHTML,new RegExp(trade.name));h.click({marketClub:String(trade.buyer)});assert.match(h.app.innerHTML,/Clubs & spelers/);assert.match(h.app.innerHTML,new RegExp(trade.name));assert.deepEqual(h.state(),before);
+  const restored=await boot(t,h.state());restored.click({tab:'transfers'});restored.click({transferSection:'journal'});assert.match(restored.app.innerHTML,new RegExp(trade.name));assert.deepEqual(restored.state(),before);
+});
+test('the match report links to the journal without another settlement and new careers show an empty state',async t=>{
+  const g=newGame();playRound(g);const h=await boot(t,g),before=h.state();assert.match(h.app.innerHTML,/BEWEGING OP DE TRANSFERMARKT/);
+  h.click({transferJournal:''});assert.doesNotMatch(h.app.innerHTML,/role="dialog"/);assert.match(h.app.innerHTML,/Transferjournaal/);assert.deepEqual(h.state(),before);
+  const fresh=await boot(t,newGame());fresh.click({tab:'transfers'});fresh.click({transferSection:'journal'});assert.match(fresh.app.innerHTML,/Nog geen onderlinge transfers/);assert.equal(fresh.state().leagueMarket.nextId,1);
+});
 test('scouting UI persists free filters and shortlist, compares without purchases and routes bids correctly',async t=>{
   const g=newGame(),h=await boot(t,g),cash=g.credits;
   h.click({tab:'transfers'});h.click({transferSection:'search'});assert.match(h.app.innerHTML,/Zoek gericht naar versterking/);

@@ -158,6 +158,27 @@ function reputation(game){
   const last=r.history.findLast(e=>e.kind!=='season');if(last&&(last.season-1)*10+last.round!==r.lastRound)return false;
   return !game.management.sponsor||r.points>=(sponsors[game.management.sponsor.kind].reputation||0);
 }
+function leagueMarket(game){
+  const m=game.leagueMarket,stamp=roundNumber(game);
+  if(!record(m)||m.schema!==1||!integer(m.sinceSeason,1,game.season)||!integer(m.sinceRound,0,10)
+    ||!integer(m.lastRound,(m.sinceSeason-1)*10+m.sinceRound,stamp)||!integer(m.nextId,1)
+    ||m.nextId-1>m.lastRound-((m.sinceSeason-1)*10+m.sinceRound)
+    ||!integer(m.totalVolume,0)||!integer(m.archivedVolume,0,m.totalVolume)||!Array.isArray(m.history)
+    ||m.history.length!==Math.min(m.nextId-1,50))return false;
+  let previous=(m.sinceSeason-1)*10+m.sinceRound,volume=m.archivedVolume;
+  const seasonPlayers=new Set();
+  for(const [i,e] of m.history.entries()){
+    if(!record(e)||e.id!==m.nextId-m.history.length+i||!integer(e.season,m.sinceSeason,game.season)||!integer(e.round,1,10)
+      ||!integer(e.buyer,1,5)||!integer(e.seller,1,5)||e.buyer===e.seller||e.buyerName!==game.clubs[e.buyer].name||e.sellerName!==game.clubs[e.seller].name
+      ||typeof e.playerId!=='string'||!/^(real-\d+|club-[a-z0-9-]{1,100})$/.test(e.playerId)||!text(e.name)
+      ||!['GK','DEF','MID','ATT'].includes(e.role)||!['depth','quality'].includes(e.reason)||!integer(e.rating,0,100)
+      ||e.price!==Math.max(1000,Math.round(Math.round((e.rating-40)**2*145)*1.05)))return false;
+    const time=(e.season-1)*10+e.round,key=`${e.season}:${e.playerId}`;
+    if(time<=previous||time>m.lastRound||seasonPlayers.has(key))return false;
+    previous=time;seasonPlayers.add(key);volume+=e.price;
+  }
+  return volume===m.totalVolume&&(m.nextId<=51?m.archivedVolume===0:m.archivedVolume>=1000*(m.nextId-51));
+}
 function scoutingDesk(game){
   const d=game.scoutingDesk,stamp=roundNumber(game);
   if(!record(d)||d.schema!==1||!validCriteria(d.criteria)||!list(d.shortlist,p=>record(p)
@@ -217,7 +238,7 @@ function validate(game) {
     || game.market.some(p => allIds.includes(p.id))
     || !['Recovery', 'Attacking', 'Defending', 'Fitness'].includes(game.training)
     || !slots(game.lineupIds, own) || !idList(game.benchIds, own)||game.benchIds.length>7
-    || game.benchIds.some(id => game.lineupIds.includes(id)) || !captain(game.captainId,game.lineupIds)||!management(game)||!medical(game)||!discipline(game)||!transferDesk(game)||!clubMarket(game)||!development(game)||!reputation(game)||!scoutingDesk(game)) invalid();
+    || game.benchIds.some(id => game.lineupIds.includes(id)) || !captain(game.captainId,game.lineupIds)||!management(game)||!medical(game)||!discipline(game)||!transferDesk(game)||!clubMarket(game)||!development(game)||!reputation(game)||!scoutingDesk(game)||!leagueMarket(game)) invalid();
   if (game.lastMatch != null) {
     const r = game.lastMatch;
     if(r.reputationReport!==undefined&&(!record(r.reputationReport)||r.reputationReport.gain!==resultPoints[reputationOutcome(r)]||!integer(r.reputationReport.total,r.reputationReport.gain,game.reputation.points)))invalid();
@@ -246,6 +267,7 @@ function validate(game) {
     if(p.medicalRules!==undefined&&p.medicalRules!==1)invalid();
     if(p.developmentRules!==undefined&&p.developmentRules!==1)invalid();
     if(p.reputationRules!==undefined&&p.reputationRules!==1)invalid();
+    if(p.leagueMarketRules!==undefined&&p.leagueMarketRules!==1)invalid();
     if(p.keeperRules!==undefined&&p.keeperRules!==1)invalid();
     if(p.keeperRules===1){
       if(!record(p.keeperMinutes)||!Object.entries(p.keeperMinutes).every(([id,n])=>own.has(id)&&integer(n,1,p.played[id]??0))||Object.values(p.keeperMinutes).reduce((a,b)=>a+b,0)!==p.minute)invalid();

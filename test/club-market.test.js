@@ -26,7 +26,11 @@ test('only completed rounds grant allowances and reproducible affordable distinc
   const reference=round();assert.deepEqual(g.clubMarket,reference.clubMarket);
   assert.equal(g.clubMarket.offers.length,3);assert.equal(new Set(g.clubMarket.offers.map(o=>o.playerId)).size,3);
   for(const o of g.clubMarket.offers){assert.ok(o.price<=clubBudget(g,o.buyer));assert.equal(incomingSaleReason(g,o),'');}
-  assert.ok(g.clubMarket.clubs.every(a=>a.balance===START_BUDGET+ROUND_ALLOWANCE&&a.ledger.length===1));
+  assert.equal(g.clubMarket.clubs.reduce((sum,a)=>sum+a.balance,0),5*(START_BUDGET+ROUND_ALLOWANCE));
+  for(const [index,a] of g.clubMarket.clubs.entries()){
+    const moved=g.leagueMarket.history.reduce((n,t)=>n+(t.seller===index+1?t.price:0)-(t.buyer===index+1?t.price:0),0);
+    assert.equal(a.balance,START_BUDGET+ROUND_ALLOWANCE+moved);assert.equal(a.ledger.filter(e=>e.label==='Transferbijdrage na speeldag').length,1);
+  }
   const complete=structuredClone(g);assert.equal(settleClubMarket(g),0);assert.equal(finishMatch(g),null);assert.deepEqual(g,complete);check(g);
 });
 test('accepting an incoming bid after reload moves one identity and exactly balances both clubs',()=>{
@@ -58,9 +62,10 @@ test('sale confirmation rechecks the buyer budget and capacity without partial p
   assert.equal(acceptIncomingOffer(g,999),false);check(g);
 });
 test('selling cannot leave too few players, healthy reserves or keepers',()=>{
-  const g=round(),o=g.clubMarket.offers[0],players=g.clubs[0].players,p=players.find(p=>p.id===o.playerId),otherKeeper=players.find(v=>v.position==='GK'&&v.id!==p.id);
+  const g=round(),players=g.clubs[0].players,p=players.find(p=>p.position==='GK'),buyer=[1,2,3,4,5].find(i=>saleOffer(g,p.id,i)),otherKeeper=players.find(v=>v.position==='GK'&&v.id!==p.id);
+  assert.ok(buyer,'the keeper was sellable before removing reserves');
   g.clubs[0].players=players.filter(v=>v.position!=='GK'||[p.id,otherKeeper.id].includes(v.id));let before=structuredClone(g);
-  assert.equal(acceptIncomingOffer(g,o.id),false);assert.deepEqual(g,before);g.clubs[0].players=players;
+  assert.equal(sellPlayer(g,p.id,buyer),false);assert.deepEqual(g,before);g.clubs[0].players=players;
   const out=g.clubMarket.offers.find(v=>v.role!=='GK'),others=players.filter(p=>p.id!==out.playerId&&p.position!=='GK');
   for(const p of others.slice(0,players.length-18))g.medical.injuries[p.id]={kind:'knock',remaining:1,season:1,round:1};
   before=structuredClone(g);assert.match(incomingSaleReason(g,out),/fitte/);assert.equal(acceptIncomingOffer(g,out.id),false);assert.deepEqual(g,before);

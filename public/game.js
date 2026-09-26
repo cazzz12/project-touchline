@@ -90,7 +90,7 @@ export function migrateSave(old){
   }
   if(old.version!==2&&old.version!==3)return null;
   const selected=clubNames.includes(old.clubs[0]?.name)?old.clubs[0].name:'Ajax',fresh=newGame(selected,old.color);
-  return ensureManagement({...fresh,management:undefined,reputation:undefined,credits:old.credits,round:old.round,results:old.results||[],points:old.points||0,tactics:old.tactics||fresh.tactics,trainingUsed:false,news:[`Je club speelt nu als ${selected} met echte spelersnamen. Uitslagen en credits zijn bewaard.`,...(old.news||[])].slice(0,20)});
+  return ensureManagement({...fresh,management:undefined,reputation:undefined,leagueMarket:undefined,credits:old.credits,round:old.round,results:old.results||[],points:old.points||0,tactics:old.tactics||fresh.tactics,trainingUsed:false,news:[`Je club speelt nu als ${selected} met echte spelersnamen. Uitslagen en credits zijn bewaard.`,...(old.news||[])].slice(0,20)});
 }
 export function setStarter(game,slot,id){
   if(game.pending||unavailablePlayer(game,id)||!Number.isInteger(slot)||slot<0||slot>10||!game.clubs[0].players.some(p=>p.id===id))return false;
@@ -179,7 +179,7 @@ export function beginMatch(game){
   const opponent=recommendedSquad(game,other,'4-3-3').lineupIds;
   expireTransferOffers(game);
   game.reportOpen=false;
-  game.pending={home,away,reputationRules:1,developmentRules:1,medicalRules:1,keeperRules:1,disciplineRules:1,keeperMinutes:{},opponentKeeperMinutes:{},opponentPlayed:{},bookings:[{},{}],dismissed:[[],[]],
+  game.pending={home,away,leagueMarketRules:1,reputationRules:1,developmentRules:1,medicalRules:1,keeperRules:1,disciplineRules:1,keeperMinutes:{},opponentKeeperMinutes:{},opponentPlayed:{},bookings:[{},{}],dismissed:[[],[]],
     minute:0,startedSelection:own.lineupIds.filter(Boolean),opponentStarted:opponent.filter(Boolean),selection:[...own.lineupIds],bench:[...own.benchIds],captainId:own.captainId,opponentSelection:opponent,
     abandoned:forfeitingSides(home===0?[own.lineupIds,opponent]:[opponent,own.lineupIds]),used:[],subs:0,played:{},stats:[{...emptyStats(),yellowCards:0,redCards:0},{...emptyStats(),yellowCards:0,redCards:0}],events:[],coaching:[],paused:true};return game.pending;
 }
@@ -259,7 +259,7 @@ export function finishMatch(game){
   if(p.developmentRules===1)own.developmentReport=settleDevelopment(game,p);
   if(p.reputationRules===1)own.reputationReport=settleReputation(game,own,p);
   own.reward=reward;game.news.unshift(`Speeldag ${game.round+1}: ${game.clubs[own.home].name} ${own.goals[0]}–${own.goals[1]} ${game.clubs[own.away].name}. +${reward.toLocaleString('nl-NL')} credits.`);
-  game.round++;game.trainingUsed=false;game.scout=null;game.market=[];game.scoutingDesk.report=null;game.pending=null;game.lastMatch=own;game.reportOpen=true;settleClubMarket(game);return own;
+  game.round++;game.trainingUsed=false;game.scout=null;game.market=[];game.scoutingDesk.report=null;game.pending=null;game.lastMatch=own;game.reportOpen=true;settleClubMarket(game,p.leagueMarketRules);return own;
 }
 export function playRound(game){if(!beginMatch(game))return null;while(game.pending){game.pending.paused=false;advanceMatch(game);}return game.lastMatch;}
 export function newSeason(game) {
