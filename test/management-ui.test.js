@@ -3,10 +3,24 @@ function playRound(game){if(unavailableSelection(game).length)applyRecommendedSq
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {KEY,newGame,playRound as playRoundWithoutRotation,newSeason,beginMatch,advanceMatch} from '../public/game.js';
-import {recordCash,saleOffer} from '../public/management.js';
+import {recordCash,saleOffer,renewExpiring} from '../public/management.js';
 import {clubTransferQuote,releaseReason} from '../public/transfers.js';
 
 let instance=0;
+test('reputation UI explains progress, leaves saves unchanged and blocks unearned sponsorships',async t=>{
+  const g=newGame(),h=await boot(t,g),before=h.state();
+  h.click({office:'reputation'});assert.match(h.app.innerHTML,/Clubreputatie/);assert.match(h.app.innerHTML,/Nog 100 punten tot Gevestigd/);assert.deepEqual(h.state(),before);
+  h.click({office:'sponsors'});assert.match(h.app.innerHTML,/data-sponsor="regional" disabled/);assert.match(h.app.innerHTML,/data-sponsor="national" disabled/);
+  h.click({sponsor:'regional'});assert.deepEqual(h.state(),before);assert.match(h.app.innerHTML,/nu niet afsluiten/);
+});
+test('the reputation report links to preserved history and an earned sponsor remains active after reload',async t=>{
+  const g=newGame();for(let i=0;i<100&&g.reputation.points<300;i++){if(g.round===10)newSeason(g);renewExpiring(g);playRound(g);}
+  assert.ok(g.reputation.points>=300);if(g.round===10)newSeason(g);playRound(g);
+  const h=await boot(t,g);assert.match(h.app.innerHTML,/Clubreputatie \+/);h.click({action:'view-reputation'});assert.match(h.app.innerHTML,/Recente reputatie/);assert.match(h.app.innerHTML,/Toonaangevend/);assert.equal(h.state().reportOpen,false);
+  h.click({office:'sponsors'});assert.match(h.app.innerHTML,/data-sponsor="national" >/);const cash=h.state().credits;h.click({sponsor:'national'});
+  assert.equal(h.state().management.sponsor.kind,'national');assert.equal(h.state().credits,cash);assert.match(h.app.innerHTML,/CONTRACT ACTIEF/);
+  const reloaded=await boot(t,h.state());reloaded.click({office:'sponsors'});assert.match(reloaded.app.innerHTML,/ACTIEF CONTRACT/);const before=reloaded.state();reloaded.click({sponsor:'regional'});assert.deepEqual(reloaded.state(),before);
+});
 test('club transfer UI filters, previews, saves a counteroffer and completes a purchase only after confirmation',async t=>{
   const g=newGame();recordCash(g,1000000,'test','Synthetic UI budget');const h=await boot(t,g),p=g.clubs[1].players.find(p=>!releaseReason(g,1,p.id));
   h.click({tab:'transfers'});assert.match(h.app.innerHTML,/Openstaande aanbiedingen/);
@@ -138,7 +152,7 @@ test('keeper profile, training form and career report expose saved keeper effect
 });
 
 test('red card UI shows the empty role and position changes preserve the missing player across save',async t=>{
-  const g=newGame();g.season=3;for(const c of Object.values(g.management.contracts))c.untilSeason=5;
+  const g=newGame();g.season=3;delete g.reputation;for(const c of Object.values(g.management.contracts))c.untilSeason=5;
   beginMatch(g);while(g.pending.minute<64){g.pending.paused=false;advanceMatch(g);}
   const h=await boot(t,g);assert.match(h.app.innerHTML,/10 tegen 11/);assert.match(h.app.innerHTML,/RODE KAART/);assert.match(h.app.innerHTML,/LEEG/);
   const missing=h.state().pending.selection.findIndex(id=>id===null),id=h.state().pending.selection[9];

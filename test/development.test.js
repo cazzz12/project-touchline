@@ -58,7 +58,7 @@ test('substitutes receive only played minutes and a failed or paused match gives
   check(g);
 });
 test('red cards and reglementary results cannot award unplayed development minutes',()=>{
-  const g=newGame();g.season=3;for(const c of Object.values(g.management.contracts))c.untilSeason=5;
+  const g=newGame();g.season=3;delete g.reputation;for(const c of Object.values(g.management.contracts))c.untilSeason=5;
   for(const p of g.clubs[0].players)setDevelopmentPlan(g,p.id,'passing',Math.min(99,p.passing+2));
   beginMatch(g);advance(g,64);const id=g.pending.dismissed[g.pending.home===0?0:1][0];assert.ok(id);advance(g,90);
   assert.equal(g.development.players[id].plan.minutes,64);check(g);

@@ -1,4 +1,5 @@
 import {ensureDevelopment,recordSkillGain} from './development.js';
+import {ensureReputation} from './reputation.js';
 import {ensureFitness,injuryFor,availablePlayers,unavailablePlayer} from './fitness.js';
 import {ensureClubMarket,clubBudget,recordClubBudget,closePlayerOffers} from './club-market-state.js';
 import {ensureTransferDesk,releaseReason} from './transfer-state.js';
@@ -10,7 +11,9 @@ export const transferValue = p => Math.round((overall(p)-40)**2*145);
 export const sponsors = {
   steady:{name:'Zekerheid',perMatch:6000,perWin:0,target:'Iedere positie',bonus:0,top:6},
   wins:{name:'Overwinningen',perMatch:2500,perWin:5000,target:'Top 3',bonus:30000,top:3},
-  title:{name:'Titelambitie',perMatch:1000,perWin:3000,target:'Kampioen',bonus:100000,top:1}
+  title:{name:'Titelambitie',perMatch:1000,perWin:3000,target:'Kampioen',bonus:100000,top:1},
+  regional:{name:'Regionale partner',perMatch:7500,perWin:0,target:'Iedere positie',bonus:0,top:6,reputation:100},
+  national:{name:'Landelijke partner',perMatch:3500,perWin:6500,target:'Top 3',bonus:45000,top:3,reputation:300}
 };
 export const facilities = {
   stadium:{name:'Stadionvoorzieningen',baseCost:18000,max:5,description:'Meer inkomsten bij thuiswedstrijden. Dit zijn spelniveaus, geen echte stadioncapaciteiten.'},
@@ -45,6 +48,7 @@ export function ensureManagement(game){
   if(m.schema!==1||!m.contracts||typeof m.contracts!=='object')return game;
   if(Array.isArray(m.ledger)&&m.ledger.length===0)m.ledgerOpening=game.credits;
   for(const p of game.clubs[0].players)if(!Object.hasOwn(m.contracts,p.id))m.contracts[p.id]={salary:Math.max(100,(overall(p)-40)*15),untilSeason:(game.season||1)+2};
+  ensureReputation(game);
   return ensureDevelopment(ensureClubMarket(ensureTransferDesk(ensureDiscipline(ensureKeeperSkills(ensureFitness(game))))));
 }
 export function recordCash(game,amount,category,label){
@@ -80,7 +84,7 @@ export function upgradeClub(game,group,key){
   game.management[group][key]++;return true;
 }
 export function chooseSponsor(game,kind){
-  if(game.pending||game.round>=10||game.management.sponsor||!Object.hasOwn(sponsors,kind))return false;
+  if(game.pending||game.round>=10||game.management.sponsor||!Object.hasOwn(sponsors,kind)||(game.reputation?.points||0)<(sponsors[kind].reputation||0))return false;
   game.management.sponsor={kind,season:game.season,startRound:game.round};
   game.news.unshift(`Sponsorcontract ${sponsors[kind].name} afgesloten voor de resterende ${10-game.round} speeldagen.`);return true;
 }

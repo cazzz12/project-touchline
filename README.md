@@ -1,6 +1,6 @@
 # Project Touchline
 
-Versie **0.11.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
+Versie **0.12.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
@@ -10,7 +10,15 @@ Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als
 
 Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers gebruiken spelcredits. Verwijderde browsergegevens wissen je voortgang. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
 
-## Nieuw: persoonlijke trainingsplannen en zichtbare groei
+## Nieuw: clubreputatie en nieuwe sponsors
+
+Open **Clubzaken → Reputatie**. Nieuwe zeges leveren 12 punten op, een gelijkspel 5 en verlies 1. Eigen reglementair verlies geeft niets. Na tien volledig bijgehouden wedstrijden krijg je bij de seizoensafsluiting ook een bonus voor de eindpositie. Je ziet de volgende mijlpaal, punten per bron en de laatste 40 prestaties.
+
+Bij 100 punten komt **Regionale partner** beschikbaar bij Sponsors; bij 300 punten **Landelijke partner**. Je kiest zelf of je het contract afsluit. Bestaande sponsorafspraken blijven gelden tot het einde van het seizoen. Reputatie kan niet gekocht worden en beïnvloedt geen spelersvaardigheden.
+
+Oudere carrières beginnen met nul reputatie, vanaf hun huidige speeldag. Bestaande uitslagen, clubkas en sponsors blijven behouden; er worden geen punten achteraf uitgedeeld. Dit zijn spelregels voor jouw carrière, geen waarderingen van de echte clubs. Lees [de reputatieregels](docs/reputation.md).
+
+## Persoonlijke trainingsplannen en zichtbare groei
 
 Open **Training → Spelerontwikkeling**. Kies een speler, een vaardigheid en een hogere doelwaarde tot 99. Bewaren traint nog niet. Je ziet hoeveel individuele sessies of speelminuten naar verwachting nodig zijn. **Train volgens plan** gebruikt dezelfde individuele sessie als de bestaande speler- en keepertraining, met dezelfde conditiekosten.
 
@@ -58,7 +66,7 @@ Bestaande carrières krijgen geen blessures achteraf. Een al lopende wedstrijd u
 
 ## Clubbeheer en carrière
 
-- **Clubzaken:** inkomsten en uitgaven, salarissen, contracten verlengen, spelers verkopen aan een andere club, faciliteiten, trainers, scouts en drie sponsorcontracten.
+- **Clubzaken:** inkomsten en uitgaven, salarissen, contracten verlengen, spelers verkopen aan een andere club, faciliteiten, trainers, scouts en vijf sponsorcontracten.
 - **Training:** een individuele ontwikkelsessie naast de bestaande teamtraining; faciliteiten en trainers verbeteren het effect.
 - **Voorbeschouwing:** tegenstander, vorm, eerdere ontmoetingen, vergelijking van de basiself en vooraf instelbare automatische wedstrijdinstructies.
 - **Tactiek:** tien formaties en vier snelle speelstijlen. Automatisch een voorsprong bewaken, aanvallen bij een achterstand of vermoeide spelers wisselen is optioneel.
@@ -90,7 +98,7 @@ De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare 
 
 ## Interfacecontrole
 
-De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 133 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies en 52 opeenvolgende seizoenen.
+De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 149 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden en 52 opeenvolgende seizoenen.
 
 Zie [het controleverslag](docs/browser-check.md) voor de geteste flows en beperkingen. Gebruik voor bestaande saves dezelfde browser en hetzelfde adres als voorheen: `localhost` en `127.0.0.1` hebben elk hun eigen browseropslag.
 

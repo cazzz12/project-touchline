@@ -21,7 +21,7 @@ Clubzaken toont een begroting en de laatste 500 boekingen, inclusief saldo na ie
 
 Nieuwe spelerscontracten lopen tot en met het huidige seizoen + 2. Een contract is te verlengen zodra er hoogstens het volgende seizoen over is. Verlengen kost geen tekenbonus; het salaris stijgt met 8% (naar boven afgerond) en de looptijd wordt opnieuw het huidige seizoen + 2. Een verlopen speler blijft geregistreerd, maar moet vóór deelname in de basiself of op de bank verlengen. Er is een knop om alle aflopende contracten samen te verlengen.
 
-Verkoop eerst bekijken, een kopende club kiezen, vervolgens bevestigen. Annuleren verandert niets. De vijf andere clubs bieden 65% van de gegenereerde transferwaarde. Er blijven minimaal 18 inzetbare spelers en twee inzetbare keepers achter. Kopende clubs kunnen maximaal 55 spelers hebben. De speler behoudt zijn ID, opgebouwde statistieken en eventuele spelblessure. Basiself, bank en aanvoerder worden zo nodig aangevuld. De koper biedt in dit prototype altijd dezelfde prijs: er is nog geen onderhandeling of clubbegroting voor tegenstanders.
+Verkoop eerst bekijken, een kopende club kiezen, vervolgens bevestigen. Annuleren verandert niets. De vijf andere clubs bieden 65% van de gegenereerde transferwaarde. Er blijven minimaal 18 inzetbare spelers en twee inzetbare keepers achter. Kopende clubs kunnen maximaal 55 spelers hebben. De speler behoudt zijn ID, opgebouwde statistieken en eventuele spelblessure. Basiself, bank en aanvoerder worden zo nodig aangevuld. De directe verkoop gebruikt een vaste prijs en het beschikbare tegenstanderbudget. Voor onderhandelen en ontvangen biedingen gebruik je Scouting & transfers.
 
 Contracten, aankopen, verkopen en investeringen zijn tijdens een lopende wedstrijd geblokkeerd.
 
@@ -37,7 +37,7 @@ Faciliteiten starten op niveau 1, maximaal 5. Staf begint op 0, maximaal 3. Een 
 | Trainingsstaf | 16.000 | +1 ontwikkelpunt per niveau |
 | Scoutingstaf | 18.000 | −1.500 scoutingkosten per niveau |
 
-Individuele training is één extra sessie per speeldag voor één inzetbare speler en één vaardigheid. Het effect is trainingsniveau + stafniveau; de speler verliest 3 conditiepunten. Vaardigheden komen niet boven 99. Dit is een eerste ontwikkelsysteem, nog geen leeftijdscurve, potentieel of jeugdsysteem. Sinds 0.6.0 beïnvloedt het herstelcentrum ook blessurerisico en rust tussen speeldagen; zie [fitheid en inzetbaarheid](fitness.md).
+Individuele training is één extra sessie per speeldag voor één inzetbare speler en één vaardigheid. Het effect is trainingsniveau + stafniveau; de speler verliest 3 conditiepunten. Vaardigheden komen niet boven 99. Persoonlijke plannen zijn vanaf 0.11.0 beschikbaar; een leeftijdscurve, potentieel- of jeugdsysteem ontbreekt nog. Sinds 0.6.0 beïnvloedt het herstelcentrum ook blessurerisico en rust tussen speeldagen; zie [fitheid en inzetbaarheid](fitness.md).
 
 ## Sponsors
 
@@ -76,3 +76,7 @@ Direct verkopen gebruikt nu het transferbudget van de gekozen koper. Zonder vold
 ## Persoonlijke ontwikkelplannen vanaf 0.11.0
 
 **Training → Spelerontwikkeling** toont groeidoelen, beginwaarden en vooruitgang per bron. Trainen volgens plan deelt de bestaande individuele sessie met speler- en keepertraining. Actieve plannen geven daarnaast groei per 180 werkelijk gespeelde minuten, pas na de wedstrijd. Zie [de ontwikkelregels](development.md) voor tellers, transfers en savebehoud.
+
+## Clubreputatie vanaf 0.12.0
+
+**Clubzaken → Reputatie** toont verdiende punten, mijlpalen en recente prestaties. Nieuwe resultaten geven 12 punten voor winst, 5 voor gelijkspel en 1 voor verlies; eigen reglementair verlies geeft nul. Alleen volledig bijgehouden nieuwe seizoenen krijgen een eindbonus. Vanaf 100 en 300 punten komen respectievelijk Regionale partner en Landelijke partner beschikbaar. Bestaande sponsorcontracten veranderen niet. Zie [de reputatieregels](reputation.md) voor bedragen, voorwaarden en savebehoud.
