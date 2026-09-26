@@ -1,4 +1,4 @@
-# Fitheid en inzetbaarheid — bijgewerkt voor 0.8.0
+# Fitheid en inzetbaarheid — bijgewerkt voor 0.17.0
 
 Deze regels simuleren uitsluitend gebeurtenissen binnen de eigen Touchline-carrière. Blessures, conditie en herstel beschrijven niet de werkelijke gezondheid van de genoemde spelers.
 
@@ -12,7 +12,17 @@ Een speler met een actieve spelblessure mag niet in de wedstrijdselectie staan. 
 
 ## Blessures
 
-Na het eindsignaal kan een gebruikte speler een spelblessure krijgen. Er vallen tijdens de lopende wedstrijd nog geen spelers door blessures uit. Ongebruikte reserves kunnen geen nieuwe blessure krijgen. Het risico stijgt bij een lage beginconditie en meer gespeelde minuten. De uitkomst is reproduceerbaar: herladen verandert of geneest de blessure niet.
+In nieuw gestarte wedstrijden kunnen eigen spelers én de tegenstander een **lichte tik** krijgen tussen minuut 1 en 89. Alleen spelers die op dat moment op het veld staan doen mee aan die kans. Een gewisselde of al weggestuurde speler krijgt geen latere wedstrijdblessure. Maximaal twee spelers per club krijgen zo'n tik per wedstrijd; dezelfde speler hoogstens één keer.
+
+Bij een eigen tik pauzeert de klok automatisch. **Kies wissel** selecteert de getroffen speler en focust de reservekeuze, zonder een spelactie uit te voeren. Met **Wissel** bevestig je een gewone wissel. **Hervatten** laat de speler doorspelen. De lichte tik verlaagt de effectieve conditie voor de volgende wedstrijdminuten met 15 punten, met een bodem van 10%. Het wijzigt geen basisvaardigheden. Heb je drie wissels gebruikt of geen reserve meer, dan blijft doorspelen mogelijk. Een tik veroorzaakt geen lege veldplaats of reglementair verlies.
+
+De tegenstander speelt in deze eerste versie door met dezelfde conditieaftrek. Automatische blessurewissels voor computerclubs en zware blessures met gedwongen uitval ontbreken nog. Het bestaande automatisch wisselen van vermoeide eigen spelers kan, indien aangezet, na hervatten reageren op de lagere conditie.
+
+Na afloop krijgt een speler met zo'n tik één speeldag herstel, ook wanneer hij is gewisseld. Dit wordt pas verwerkt bij de gewone wedstrijdafrekening; tijdens de wedstrijd bewaart het verslag de gebeurtenis. Een tik wordt niet nogmaals door de controle na afloop toegewezen. Herladen geeft geen nieuwe worp en herstelt geen blessure.
+
+Na het eindsignaal kunnen andere gebruikte spelers nog een spelblessure krijgen. Ongebruikte reserves kunnen geen nieuwe blessure krijgen. Het risico stijgt bij een lage beginconditie en meer gespeelde minuten. De vier clubs buiten de livewedstrijd houden hun bestaande afhandeling na het eindsignaal.
+
+Voor de livewedstrijd is de kans per speler per gespeelde minuut de bestaande risicofunctie voor 90 minuten, gedeeld door 180. De gewone nacontrole krijgt voor beide clubs een halve kans, zodat wedstrijdmeldingen niet simpelweg boven op de volledige oude kans komen. Door grenzen en onafhankelijke worpen is dit geen exact gelijke totale kans. Het medische niveau verlaagt beide kansen. De blessureworp gebruikt een aparte vaste seed en verbruikt geen toeval uit de berekening van schoten of kaarten.
 
 | Gebeurtenis in het spel | Uitval op medisch niveau 1 |
 | --- | --- |
@@ -20,9 +30,9 @@ Na het eindsignaal kan een gebruikte speler een spelblessure krijgen. Er vallen 
 | Spierklachten | 2 speeldagen |
 | Enkelklachten | 3 speeldagen |
 
-De speler mist de volgende één tot drie speeldagen. Na elke werkelijk afgeronde speeldag gaat er één af. Een nieuwe blessure wordt niet meteen op dezelfde speeldag ingekort. Conditieherstel en hersteltraining wissen de blessure niet. Geblesseerden slaan vaardigheids- en fysieke teamtraining over en kunnen niet individueel trainen.
+Een na afloop vastgestelde blessure duurt één tot drie speeldagen. Een lichte tik uit de livewedstrijd duurt altijd één speeldag. Na elke werkelijk afgeronde speeldag gaat er één af. Een nieuwe blessure wordt niet meteen op dezelfde speeldag ingekort. Conditieherstel en hersteltraining wissen de blessure niet. Geblesseerden slaan vaardigheids- en fysieke teamtraining over en kunnen niet individueel trainen.
 
-Alle zes clubs gebruiken deze regels. Om de kleine minicompetitie speelbaar te houden ontstaan geen nieuwe blessures die een club onder 18 inzetbare spelers of twee inzetbare keepers brengen. Een verkoop van een inzetbare speler mag dezelfde grens niet doorbreken. Schorsingen kunnen de beschikbare selectie wel onder die grens brengen; dan geldt de regeling voor [ondertal](discipline.md). Een geblesseerde speler kan worden verkocht; zijn resterende hersteltijd volgt zijn vaste ID naar de nieuwe club. Lange blessures en medische stafspecialisten ontbreken nog.
+Alle zes clubs gebruiken herstel en de blessuregrenzen. Om de kleine minicompetitie speelbaar te houden ontstaan geen nieuwe blessures die een club onder 18 inzetbare spelers of twee inzetbare keepers brengen. Een verkoop van een inzetbare speler mag dezelfde grens niet doorbreken. Schorsingen kunnen de beschikbare selectie wel onder die grens brengen; dan geldt de regeling voor [ondertal](discipline.md). Een geblesseerde speler kan worden verkocht; zijn resterende hersteltijd volgt zijn vaste ID naar de nieuwe club. Lange blessures en medische stafspecialisten ontbreken nog.
 
 ## Herstelcentrum
 
@@ -44,4 +54,4 @@ Bij het starten van een volgend seizoen krijgen alle spelers 100% conditie en ve
 
 Het bestaande saveformaat en de opslagsleutel blijven behouden. Een aanvullend medisch gegevensblok wordt alleen ingevuld als het ontbreekt. Oudere saves krijgen geen blessures en geen conditieherstel achteraf. Opstarten schrijft niet naar browseropslag.
 
-Lopende wedstrijden uit een oudere versie behouden hun gespeelde minuten, selectie, verwachte tegenstander en oude conditieafrekening. Alleen nieuw gestarte wedstrijden gebruiken de nieuwe regels. Backups behouden resterende hersteltijd; ongeldige medische gegevens worden afgewezen voordat de huidige carrière wordt vervangen.
+Lopende wedstrijden uit een oudere versie behouden hun gespeelde minuten, selectie, verwachte tegenstander en oude conditieafrekening. Alleen nieuw gestarte wedstrijden gebruiken de nieuwe regels. De vlag `injuryRules: 1` wordt bij aftrap bewaard, nooit achteraf aan een lopende wedstrijd toegevoegd. Backups controleren onder andere speleridentiteit, gespeelde minuten, zijde, uniek blessuremoment, maximale aantallen en de vaste duur van de lichte tik. Backups behouden resterende hersteltijd; ongeldige medische gegevens worden afgewezen voordat de huidige carrière wordt vervangen.

@@ -1,6 +1,6 @@
 # Project Touchline
 
-Versie **0.16.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
+Versie **0.17.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
@@ -10,7 +10,13 @@ Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als
 
 Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers gebruiken spelcredits. Verwijderde browsergegevens wissen je voortgang. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
 
-## Nieuw: postvak voor de manager
+## Nieuw: lichte blessures tijdens wedstrijden
+
+Bij een lichte tik aan een eigen speler pauzeert de wedstrijd automatisch. De medische melding toont wie klachten heeft en biedt **Kies wissel**. Die knop selecteert de geblesseerde speler en brengt je naar de reserves; pas **Wissel** voert de wissel uit. Je kunt ook hervatten: de speler speelt dan door met 15 punten minder effectieve conditie, tot minimaal 10%. De gewone limiet van drie wissels blijft gelden.
+
+De speler mist de volgende speeldag, ook als je hem wisselt. Moment, leesbare melding, speelminuten en hersteltijd blijven na herladen bewaard. Tegenstanders kunnen dezelfde lichte tik krijgen en spelen daarmee door. Langere spelblessures kunnen zoals voorheen na afloop worden vastgesteld. Een reeds lopende wedstrijd uit een oudere save behoudt zijn oude regels. Lees [de blessure- en herstelregels](docs/fitness.md).
+
+## Postvak voor de manager
 
 Open **Postvak** voor ontvangen biedingen, geaccepteerde aankoopbiedingen en tegenbiedingen, aflopende contracten, blessures, schorsingen en bereikte trainingsdoelen. Ook een negatieve clubkas, ontbrekende sponsor, open wedstrijd en voltooid seizoen krijgen een melding wanneer dat van toepassing is. De teller in het menu toont ongelezen berichten.
 
@@ -124,7 +130,7 @@ De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare 
 
 ## Interfacecontrole
 
-De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 208 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden, gerichte scouting, shortlist, spelersvergelijking, onderlinge clubtransfers, postvakfilters, leesstatus, veilige doorklikroutes, stadionprijzen, bezoekersaantallen, ticketafrekening en 52 opeenvolgende seizoenen.
+De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 219 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, medische coachpauzes, hervatten en wisselen bij lichte klachten, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden, gerichte scouting, shortlist, spelersvergelijking, onderlinge clubtransfers, postvakfilters, leesstatus, veilige doorklikroutes, stadionprijzen, bezoekersaantallen, ticketafrekening en 52 opeenvolgende seizoenen.
 
 Zie [het controleverslag](docs/browser-check.md) voor de geteste flows en beperkingen. Gebruik voor bestaande saves dezelfde browser en hetzelfde adres als voorheen: `localhost` en `127.0.0.1` hebben elk hun eigen browseropslag.
 

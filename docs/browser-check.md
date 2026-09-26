@@ -271,3 +271,18 @@ Beperkingen: één browserengine en gesimuleerd mobiel formaat. De automatische 
 Alle **208 automatische tests** slagen. Veertien nieuwe controles dekken savebehoud en oude lopende wedstrijden, actuele groepen en urgentie, gewijzigde of verdwenen berichten, contracten, transferstatus, geen betalingen door lezen, wedstrijdpauze, filters, bulkmarkering, backups, limieten, ongeldige sleutels, HTML-escaping en schermroutes. De historische carrièrevingerafdruktest negeert alleen het nieuwe lege inboxveld; bestaande spelresultaten blijven gelijk.
 
 Beperkingen: één browserengine en een gesimuleerd mobiel formaat. Het postvak toont lokale actuele zaken, geen historisch nieuwsarchief of pushmeldingen. Online accounts, e-mail, wallet en packs zijn niet toegevoegd of getest.
+
+## Vervolg: lichte wedstrijdblessures (0.17.0, 26 september 2026)
+
+- Getest met een nieuwe PSV-carrière op poort 43141. De eigen Ajax-carrière is alleen herladen en via navigatie bekeken.
+- PSV–FC Twente op 4× gestart. De wedstrijd pauzeerde automatisch op minuut 27, stand 1–1, bij een lichte tik van Mauro Júnior. Medische melding, tijdlijn en wissellijst toonden dezelfde speler; zijn effectieve conditie was 69%. Herladen behield de minuut, stand en pauze.
+- De medische melding staat direct onder de score. Desktop en mobiel 390 × 844 gecontroleerd. Op mobiel bleef de melding binnen het scherm: panelbreedte en scrollWidth beide 287 px; pagina en viewport beide 375 px. De tijdelijke viewport is hersteld.
+- Kies wissel selecteerde Mauro Júnior en focuste Speler in zonder de wedstrijd of clubkas te veranderen. Ryan Flamingo gekozen en pas met Wissel bevestigd. Na herladen bleven minuut 27, één gebruikte wissel en de tekst van het veld behouden.
+- Bij rust stond het 1–1 op minuut 45. In minuut 53 ontstond een tweede lichte tik, nu bij invaller Ryan Flamingo. De automatische pauze werkte opnieuw. Daarna zonder nieuwe wissel hervat; Ryan speelde door met lagere effectieve conditie.
+- Eindstand 2–2. Het verslag toonde beide blessuremomenten en voor beide spelers één gemiste speeldag. De clubkas was 131.705 credits; na herladen bleef dat bedrag gelijk. Het postvak toonde de groep met twee geblesseerden.
+- Geen fouten of waarschuwingen in de opgevraagde browserconsoles. Testtab gesloten en aparte testserver gestopt. Een bewijsbeeld van de medische pauze is opgeslagen.
+- Het voortgangsoverzicht van de hoofdcarrière was vóór en na herladen exact gelijk: Ajax, seizoen 1, 9/10 wedstrijden, 27 spelers en 84.666 credits. Geen wedstrijd, wissel, training of aankoop in die carrière uitgevoerd.
+
+Alle **219 automatische tests** slagen. Elf nieuwe tests dekken exacte v0.16-carrièrevingerafdrukken, deterministische pauze en herladen, normale en automatische wissels, juiste speelminuten, doorspelen na drie wissels, tijdelijke conditieaftrek, tegenstanderblessures, selectiegrenzen, eenmalige afhandeling, herstel na de volgende speeldag, ongeldige importgegevens, HTML-escaping en schermbediening. Oudere compatibiliteitsfixtures laten de nieuwe aftrapvlag weg en houden hun oorspronkelijke verwachte hashes. De bestaande UI-test verwerkt nu ook de extra medische pauze.
+
+Beperkingen: alleen lichte tikken kunnen tijdens de livewedstrijd optreden. De computertegenstander speelt daarmee door; zware blessures met gedwongen uitval en gerichte blessurewissels door computerclubs ontbreken nog. De vier overige clubs verwerken blessures na afloop. Geen fysieke mobiele apparaten of andere browserengines getest. Het zijn spelregels, geen medische gegevens over echte spelers.

@@ -30,7 +30,7 @@ test('migration starts an empty journal without changing a save, budget or pendi
 test('v0.13 live matches retain exact club rosters, finances and match history after reload',()=>{
   // Generated with v0.13.0 at commit bbab591 before introducing leagueMarketRules.
   for(const [club,expected] of [['Ajax','83c7350b29e314f0bc356d2cf240a7a0bfa9ac145d15ddbd0d5edfea279ea75b'],['PSV','a8ebd6b8d15f9f3ca3f643f3a8b438e3f3292a6f4d7e4412dc9b83b7b2fda2b8']]){
-    let g=newGame(club);beginMatch(g);delete g.pending.stadiumRules;delete g.pending.stadiumGate;delete g.pending.leagueMarketRules;delete g.leagueMarket;advance(g,32);g=parseBackup(exportBackup(g));advance(g);
+    let g=newGame(club);beginMatch(g);delete g.pending.injuryRules;delete g.pending.stadiumRules;delete g.pending.stadiumGate;delete g.pending.leagueMarketRules;delete g.leagueMarket;advance(g,32);g=parseBackup(exportBackup(g));advance(g);
     const data={clubs:g.clubs,credits:g.credits,results:g.results,lastMatch:g.lastMatch,management:g.management,medical:g.medical,discipline:g.discipline,clubMarket:g.clubMarket,transferDesk:g.transferDesk,scoutingDesk:g.scoutingDesk};
     assert.equal(createHash('sha256').update(JSON.stringify(data)).digest('hex'),expected);assert.equal(g.leagueMarket.history.length,0);check(g);
     next(g);assert.equal(g.leagueMarket.lastRound,2);assert.ok(g.leagueMarket.history.length<=1);

@@ -1,3 +1,4 @@
+import {liveFitness,rollMatchInjuries} from './match-injuries.js';
 import {recordSkillGain,settleDevelopment} from './development.js';
 import {settleReputation,closeReputationSeason} from './reputation.js';
 import {stadiumQuote,settleStadium} from './stadium.js';
@@ -180,7 +181,7 @@ export function beginMatch(game){
   const opponent=recommendedSquad(game,other,'4-3-3').lineupIds;
   expireTransferOffers(game);
   game.reportOpen=false;
-  game.pending={home,away,stadiumRules:1,stadiumGate:home===0?{season:game.season,round:game.round+1,opponent:away,...stadiumQuote(game)}:null,leagueMarketRules:1,reputationRules:1,developmentRules:1,medicalRules:1,keeperRules:1,disciplineRules:1,keeperMinutes:{},opponentKeeperMinutes:{},opponentPlayed:{},bookings:[{},{}],dismissed:[[],[]],
+  game.pending={home,away,injuryRules:1,stadiumRules:1,stadiumGate:home===0?{season:game.season,round:game.round+1,opponent:away,...stadiumQuote(game)}:null,leagueMarketRules:1,reputationRules:1,developmentRules:1,medicalRules:1,keeperRules:1,disciplineRules:1,keeperMinutes:{},opponentKeeperMinutes:{},opponentPlayed:{},bookings:[{},{}],dismissed:[[],[]],
     minute:0,startedSelection:own.lineupIds.filter(Boolean),opponentStarted:opponent.filter(Boolean),selection:[...own.lineupIds],bench:[...own.benchIds],captainId:own.captainId,opponentSelection:opponent,
     abandoned:forfeitingSides(home===0?[own.lineupIds,opponent]:[opponent,own.lineupIds]),used:[],subs:0,played:{},stats:[{...emptyStats(),yellowCards:0,redCards:0},{...emptyStats(),yellowCards:0,redCards:0}],events:[],coaching:[],paused:true};return game.pending;
 }
@@ -202,9 +203,9 @@ export function applyAutoInstructions(game){
   }
   if(rules.subTired&&p.minute>=60&&p.subs<3){
     const players=game.clubs[0].players;
-    const tired=p.selection.map((id,slot)=>({player:players.find(v=>v.id===id),slot})).filter(({player})=>player&&matchFitness(player,p.played[player.id]||0)<60).sort((a,b)=>matchFitness(a.player,p.played[a.player.id]||0)-matchFitness(b.player,p.played[b.player.id]||0));
+    const tired=p.selection.map((id,slot)=>({player:players.find(v=>v.id===id),slot})).filter(({player})=>player&&liveFitness(game,player,p.played[player.id]||0)<60).sort((a,b)=>liveFitness(game,a.player,p.played[a.player.id]||0)-liveFitness(game,b.player,p.played[b.player.id]||0));
     for(const {player,slot} of tired){
-      const reserve=p.bench.map(id=>players.find(v=>v.id===id)).filter(v=>positionFit(v.position,formations[game.tactics.formation][slot])>=.93&&v.fitness>matchFitness(player,p.played[player.id]||0)).sort((a,b)=>b.fitness-a.fitness)[0];
+      const reserve=p.bench.map(id=>players.find(v=>v.id===id)).filter(v=>positionFit(v.position,formations[game.tactics.formation][slot])>=.93&&v.fitness>liveFitness(game,player,p.played[player.id]||0)).sort((a,b)=>b.fitness-a.fitness)[0];
       if(reserve){p.paused=true;makeSubstitution(game,player.id,reserve.id);p.paused=false;p.coaching.at(-1).text='Auto-instructie · '+p.coaching.at(-1).text;break;}
     }
   }
@@ -214,7 +215,7 @@ export function advanceMatch(game){
   if(p.abandoned?.length)return finishMatch(game);
   applyAutoInstructions(game);
   const minute=p.minute+1,mySide=p.home===0?0:1;
-  const clubs=[game.clubs[p.home],game.clubs[p.away]].map((club,side)=>({...club,players:club.players.map(player=>({...player,fitness:matchFitness(player,side===mySide?(p.played[player.id]||0):(p.disciplineRules===1?(p.opponentPlayed[player.id]||0):p.minute))}))}));
+  const clubs=[game.clubs[p.home],game.clubs[p.away]].map((club,side)=>({...club,players:club.players.map(player=>({...player,fitness:liveFitness(game,player,side===mySide?(p.played[player.id]||0):(p.disciplineRules===1?(p.opponentPlayed[player.id]||0):p.minute))}))}));
   const own=p.selection,other=p.opponentSelection;
   const part=simulate({seed:73001+(game.season||1)*100000+game.round*1000+minute,clubs,homeTactics:mySide===0?game.tactics:{},awayTactics:mySide===1?game.tactics:{},homeSelection:mySide===0?own:other,awaySelection:mySide===1?own:other,startMinute:minute,endMinute:minute,keeperRules:p.keeperRules??0,disciplineRules:p.disciplineRules??0,bookings:p.bookings,dismissed:p.dismissed});
   if(p.keeperRules===1&&own[0])p.keeperMinutes[own[0]]=(p.keeperMinutes[own[0]]||0)+1;
@@ -230,6 +231,7 @@ export function advanceMatch(game){
   }
   p.stats.forEach((s,i)=>{statKeys.forEach(key=>s[key]+=part.stats[i][key]);s.xg=Number(s.xg.toFixed(2));s.possession=Math.round(100*s.possessions/minute);s.passAccuracy=s.passes?Math.round(100*s.completed/s.passes):0;});
   p.events.push(...part.events.map(event=>({...event,score:p.stats.map(s=>s.goals)})));
+  rollMatchInjuries(game);
   if(minute===45||minute===90)p.paused=true;
   if(minute===90||p.abandoned?.length)return finishMatch(game);return null;
 }
@@ -240,7 +242,7 @@ export function finishMatch(game){
     const [home,away]=fixtures[i];
     const matchClubs=[game.clubs[home],game.clubs[away]];
     const result=home===p.home&&away===p.away?{
-      clubs:matchClubs.map(c=>c.name),
+      clubs:matchClubs.map(c=>c.name),...(p.injuryRules===1?{injuryRules:1}:{}),
       teams:[home===0?p.selection:p.opponentSelection,away===0?p.selection:p.opponentSelection].map((ids,side)=>ids.filter(Boolean).map(id=>(p.developmentRules===1?{...matchClubs[side].players.find(player=>player.id===id)}:matchClubs[side].players.find(player=>player.id===id)))),
       stats:structuredClone(p.stats),events:structuredClone(p.events),coaching:structuredClone(p.coaching),played:{...p.played},captainId:p.captainId,
       ...(p.disciplineRules===1?{disciplineRules:1,minute:p.minute,abandoned:[...p.abandoned],dismissed:structuredClone(p.dismissed),bookings:structuredClone(p.bookings),playedBySide:[home,away].map(index=>({... (index===0?p.played:p.opponentPlayed)})),startedSelections:[home,away].map(index=>[...(index===0?p.startedSelection:p.opponentStarted)])}:{}),
@@ -256,7 +258,7 @@ export function finishMatch(game){
   const stadiumReport=settleStadium(game,own,p);if(stadiumReport)own.stadiumReport=stadiumReport;
   own.reward=reward;own.settlement=settleMatch(game,own);game.points+=doubleForfeit(own)?0:own.goals[side]>own.goals[them]?3:own.goals[side]===own.goals[them]?1:0;
   if(p.disciplineRules===1)own.disciplineReport=settleDiscipline(game,details);
-  if(p.medicalRules===1)own.medicalReport=settleFitness(game,minutesByClub);
+  if(p.medicalRules===1)own.medicalReport=settleFitness(game,minutesByClub,p.injuryRules===1?{clubs:[p.home,p.away],events:p.events.filter(e=>e.type==='injury')}:null);
   else for(const player of game.clubs[0].players)player.fitness=p.played[player.id]?matchFitness(player,p.played[player.id]):Math.min(player.fitness+3,100);
   if(p.developmentRules===1)own.developmentReport=settleDevelopment(game,p);
   if(p.reputationRules===1)own.reputationReport=settleReputation(game,own,p);

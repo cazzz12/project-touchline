@@ -10,7 +10,7 @@ import {parseBackup,exportBackup} from '../public/storage.js';
 const advance=(g,n)=>{while(g.pending&&g.pending.minute<n){g.pending.paused=false;advanceMatch(g);}};
 const ban=(g,id,remaining=1)=>{g.round=Math.max(1,g.round);g.discipline.suspensions[id]={remaining,reason:'red',season:g.season,round:g.round};};
 function redGame(){const g=newGame();g.season=3;delete g.reputation;g.captainId=g.lineupIds[10];for(const c of Object.values(g.management.contracts))c.untilSeason=5;beginMatch(g);advance(g,64);return g;}
-function makeLegacy(g){for(const key of ['stadiumRules','stadiumGate','leagueMarketRules','reputationRules','developmentRules','disciplineRules','opponentKeeperMinutes','opponentPlayed','opponentStarted','bookings','dismissed','abandoned'])delete g.pending[key];for(const s of g.pending.stats){delete s.yellowCards;delete s.redCards;}}
+function makeLegacy(g){for(const key of ['injuryRules','stadiumRules','stadiumGate','leagueMarketRules','reputationRules','developmentRules','disciplineRules','opponentKeeperMinutes','opponentPlayed','opponentStarted','bookings','dismissed','abandoned'])delete g.pending[key];for(const s of g.pending.stats){delete s.yellowCards;delete s.redCards;}}
 
 test('a foul can receive yellow, second yellow or direct red; dismissed players cannot be booked again',()=>{
   const bookings={},dismissed=[];

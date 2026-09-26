@@ -51,7 +51,7 @@ export function applyRecommendedSquad(game){
 
 // One settlement per completed round. Use a separate seed so injuries never
 // consume the match engine's random stream or change already-played minutes.
-export function settleFitness(game,minutesByClub){
+export function settleFitness(game,minutesByClub,live=null){
   ensureFitness(game);const number=roundNumber(game)+1;
   if(game.medical.lastRound>=number)return null;
   const report={injured:[],recovered:[]},oldInjuries=new Set(Object.keys(game.medical.injuries));
@@ -60,11 +60,17 @@ export function settleFitness(game,minutesByClub){
     injury.remaining--;
     if(injury.remaining===0){delete game.medical.injuries[p.id];if(club===game.clubs[0])report.recovered.push(p.name);}
   }
+  // Persist new live knocks after serving old injuries; no same-day recovery.
+  for(const e of live?.events||[]){
+    game.medical.injuries[e.playerId]={kind:e.kind,remaining:e.remaining,season:game.season,round:game.round+1};
+    oldInjuries.add(e.playerId);
+    if(live.clubs[e.side]===0)report.injured.push({name:e.player,kind:e.kind,remaining:e.remaining});
+  }
   for(const [index,club] of game.clubs.entries()){
     const level=medicalLevel(game,index),minutes=minutesByClub[index]||{};
     for(const p of club.players){
       const played=minutes[p.id]||0,random=rng(seedFor(`${game.season}:${game.round}:${p.id}`));
-      if(!oldInjuries.has(p.id)&&random()<injuryRisk(p,played,level)){
+      if(!oldInjuries.has(p.id)&&random()<injuryRisk(p,played,level)*(live?.clubs.includes(index) ? .5 : 1)){
         const available=availablePlayers(game,index);
         // Keep this small local league playable without fictional emergency players.
         if(available.length>18&&(p.position!=='GK'||available.filter(p=>p.position==='GK').length>2)){
