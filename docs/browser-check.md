@@ -244,3 +244,15 @@ De ingebouwde Chromium-browser is gecontroleerd op het bestaande desktopformaat 
 Alle **181 automatische tests** slagen. Vijftien nieuwe tests controleren migratie, ongewijzigde resultaten en financiën van v0.13-wedstrijden, eenmalige verwerking, behoud van budgettotalen, vaste speleridentiteit, shortlistverwijzingen, reserve- en budgetgrenzen, geen herhaalde verhuizing binnen een seizoen, vijftig bewaarde transacties met volledige totalen over acht seizoenen, ongeldige imports en de bediening van journaal en filters. Bestaande tests zijn aangepast waar ze veronderstelden dat computerclubs hun volledige budget onbesteed hielden; de financiële en selectiegrenzen blijven gecontroleerd. Oudere compatibiliteitsvingerafdrukken blijven gelijk.
 
 Beperkingen: één browserengine en gesimuleerd mobiel formaat. De automatische clubs gebruiken een eenvoudige selectie- en budgetregel; salarissen en volledige langetermijnplanning van computerclubs zijn niet gemodelleerd. Online transacties en Solana zijn niet in deze uitbreiding getest of gebouwd.
+
+## Vervolg: stadion, ticketprijzen en bezoekers (0.15.0, 26 september 2026)
+
+- Getest met een afzonderlijke Ajax-carrière op poort 43139; de gebruikerscarrière op poort 3000 is niet gebruikt voor aankopen, wedstrijden of prijswijzigingen.
+- Clubzaken → Stadion: vier prijsopties en rekenregels zichtbaar. Ticketprijs 3 gekozen zonder kosten; stadion van niveau 1 naar 2 uitgebreid voor 36.000 credits. Na herladen bleef de kas 84.000, de capaciteit 7.500 en de prijs 3.
+- Verwachting bij aftrap: 35% bezetting, 2.625 bezoekers en 7.875 credits. Prijs- en uitbreidingsknoppen tijdens de wedstrijd geblokkeerd, ook na Opslaan & sluiten.
+- Wedstrijd Ajax–FC Twente: rust op 45 minuten met 1–1; herladen behoudt de gepauzeerde wedstrijd. Daarna eindstand 2–2. Eindverslag toont 2.625 bezoekers en precies 7.875 credits; netto speeldagresultaat 12.795, clubkas 96.795.
+- Na sluiten van het verslag toont Stadion één thuisduel met dezelfde aantallen. Na opnieuw herladen zijn schermwaarden en totalen identiek. De volgende uitwedstrijd toont nul ticketinkomsten.
+- Mobiel 390 × 844 gecontroleerd. Ticketknoppen verkleind en tekstomloop verbeterd; alle vier prijskaarten hebben scrollWidth gelijk aan clientWidth (140 px). Pagina blijft binnen het scherm; bezoekershistorie scrolt binnen de tabel.
+- `npm.cmd test`: 194 tests slagen. Nieuwe controles omvatten lege migratie zonder kaswijziging, oude v0.14-wedstrijden met exact dezelfde gehele carrière, prijzen en reputatie/formulegrenzen, bevroren aftrapafspraken, geen dubbele inkomsten, uitwedstrijden, reglementaire uitslagen, vijf seizoenen bezoekershistorie, ongeldige imports en schermbediening.
+- Echte mobiele apparaten en andere browsers zijn niet getest. Capaciteiten, ticketprijzen en bezoekers blijven fictieve spelwaarden. Er zijn geen accounts of echte betalingen toegevoegd.
+- Gebruikerscarrière opnieuw geopend op poort 3000: Ajax, seizoen 1, 8 gespeelde wedstrijden, 27 spelers en 101.446 credits behouden. Bestaand stadionniveau 2 geeft 7.500 spelplaatsen; de bezoekersmeting begint na speeldag 8. Alleen navigatie uitgevoerd.

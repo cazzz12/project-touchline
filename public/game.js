@@ -1,5 +1,6 @@
 import {recordSkillGain,settleDevelopment} from './development.js';
 import {settleReputation,closeReputationSeason} from './reputation.js';
+import {stadiumQuote,settleStadium} from './stadium.js';
 import {validCriteria,matchesCriteria,defaultCriteria} from './scouting-state.js';
 import {settleClubMarket,completeIncomingSale} from './club-market.js';
 import { formations, lineUp, positionFit, rng, simulate } from './engine.js';
@@ -90,7 +91,7 @@ export function migrateSave(old){
   }
   if(old.version!==2&&old.version!==3)return null;
   const selected=clubNames.includes(old.clubs[0]?.name)?old.clubs[0].name:'Ajax',fresh=newGame(selected,old.color);
-  return ensureManagement({...fresh,management:undefined,reputation:undefined,leagueMarket:undefined,credits:old.credits,round:old.round,results:old.results||[],points:old.points||0,tactics:old.tactics||fresh.tactics,trainingUsed:false,news:[`Je club speelt nu als ${selected} met echte spelersnamen. Uitslagen en credits zijn bewaard.`,...(old.news||[])].slice(0,20)});
+  return ensureManagement({...fresh,management:undefined,reputation:undefined,leagueMarket:undefined,stadium:undefined,credits:old.credits,round:old.round,results:old.results||[],points:old.points||0,tactics:old.tactics||fresh.tactics,trainingUsed:false,news:[`Je club speelt nu als ${selected} met echte spelersnamen. Uitslagen en credits zijn bewaard.`,...(old.news||[])].slice(0,20)});
 }
 export function setStarter(game,slot,id){
   if(game.pending||unavailablePlayer(game,id)||!Number.isInteger(slot)||slot<0||slot>10||!game.clubs[0].players.some(p=>p.id===id))return false;
@@ -179,7 +180,7 @@ export function beginMatch(game){
   const opponent=recommendedSquad(game,other,'4-3-3').lineupIds;
   expireTransferOffers(game);
   game.reportOpen=false;
-  game.pending={home,away,leagueMarketRules:1,reputationRules:1,developmentRules:1,medicalRules:1,keeperRules:1,disciplineRules:1,keeperMinutes:{},opponentKeeperMinutes:{},opponentPlayed:{},bookings:[{},{}],dismissed:[[],[]],
+  game.pending={home,away,stadiumRules:1,stadiumGate:home===0?{season:game.season,round:game.round+1,opponent:away,...stadiumQuote(game)}:null,leagueMarketRules:1,reputationRules:1,developmentRules:1,medicalRules:1,keeperRules:1,disciplineRules:1,keeperMinutes:{},opponentKeeperMinutes:{},opponentPlayed:{},bookings:[{},{}],dismissed:[[],[]],
     minute:0,startedSelection:own.lineupIds.filter(Boolean),opponentStarted:opponent.filter(Boolean),selection:[...own.lineupIds],bench:[...own.benchIds],captainId:own.captainId,opponentSelection:opponent,
     abandoned:forfeitingSides(home===0?[own.lineupIds,opponent]:[opponent,own.lineupIds]),used:[],subs:0,played:{},stats:[{...emptyStats(),yellowCards:0,redCards:0},{...emptyStats(),yellowCards:0,redCards:0}],events:[],coaching:[],paused:true};return game.pending;
 }
@@ -252,6 +253,7 @@ export function finishMatch(game){
     const match={home,away,goals:awardedGoals(result),round:game.round+1,...(result.abandoned?.length?{forfeit:[...result.abandoned]}:{})};game.results.push(match);if(home===0||away===0)own={...match,detail:result};
   }
   const side=own.home===0?0:1,them=1-side,reward=own.forfeit?.includes(side)?0:own.goals[side]>own.goals[them]?35000:own.goals[side]===own.goals[them]?18000:10000;
+  const stadiumReport=settleStadium(game,own,p);if(stadiumReport)own.stadiumReport=stadiumReport;
   own.reward=reward;own.settlement=settleMatch(game,own);game.points+=doubleForfeit(own)?0:own.goals[side]>own.goals[them]?3:own.goals[side]===own.goals[them]?1:0;
   if(p.disciplineRules===1)own.disciplineReport=settleDiscipline(game,details);
   if(p.medicalRules===1)own.medicalReport=settleFitness(game,minutesByClub);

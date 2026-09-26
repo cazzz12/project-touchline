@@ -1,4 +1,4 @@
-# Clubbeheer en carrière — 0.5.0
+# Clubbeheer en carrière — bijgewerkt voor 0.15.0
 
 Deze systemen werken lokaal met spelcredits. Geen van de bedragen, salarissen, contracten, stadionniveaus of sponsors beschrijft de echte club. De gewone competitie blijft uitsluitend bestaande clubs en echte spelersnamen gebruiken.
 
@@ -9,7 +9,7 @@ Een afgeronde speeldag boekt voor je eigen club één keer de wedstrijdbonus, th
 | Post | Spelregel |
 | --- | --- |
 | Wedstrijdbonus | 35.000 winst, 18.000 gelijk, 10.000 verlies |
-| Thuisinkomsten | 3.000 + 3.000 × stadionniveau; uitwedstrijden leveren dit niet op |
+| Thuisinkomsten | Bezoekers × gekozen ticketprijs; zie [stadionregels](stadium.md). Uitwedstrijden leveren dit niet op; al lopende oude wedstrijden behouden hun vaste bedrag |
 | Startsalaris per speler | Maximaal van 100 en (algemene rating − 40) × 15, per speeldag |
 | Onderhoud | 500 × stadionniveau + 250 × trainingsniveau + 250 × herstelniveau |
 | Stafkosten | 500 × elk niveau van trainings- en scoutingstaf, per speeldag |
@@ -31,7 +31,7 @@ Faciliteiten starten op niveau 1, maximaal 5. Staf begint op 0, maximaal 3. Een 
 
 | Onderdeel | Basisbedrag | Effect |
 | --- | --- | --- |
-| Stadionvoorzieningen | 18.000 | +3.000 thuisinkomsten per niveau |
+| Stadionvoorzieningen | 18.000 | +2.500 spelplaatsen per niveau; bezetting en ticketprijs bepalen de opbrengst |
 | Trainingscomplex | 14.000 | +1 ontwikkelpunt per niveau boven 1 |
 | Herstelcentrum | 10.000 | +1 conditiepunt bij herstel per niveau boven 1 |
 | Trainingsstaf | 16.000 | +1 ontwikkelpunt per niveau |

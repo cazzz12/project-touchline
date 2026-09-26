@@ -2,6 +2,7 @@ import {ensureDevelopment,recordSkillGain} from './development.js';
 import {ensureReputation} from './reputation.js';
 import {ensureScoutingDesk} from './scouting-state.js';
 import {ensureLeagueMarket} from './league-market-state.js';
+import {ensureStadium,ticketIncome} from './stadium.js';
 import {ensureFitness,injuryFor,availablePlayers,unavailablePlayer} from './fitness.js';
 import {ensureClubMarket,clubBudget,recordClubBudget,closePlayerOffers} from './club-market-state.js';
 import {ensureTransferDesk,releaseReason} from './transfer-state.js';
@@ -18,7 +19,7 @@ export const sponsors = {
   national:{name:'Landelijke partner',perMatch:3500,perWin:6500,target:'Top 3',bonus:45000,top:3,reputation:300}
 };
 export const facilities = {
-  stadium:{name:'Stadionvoorzieningen',baseCost:18000,max:5,description:'Meer inkomsten bij thuiswedstrijden. Dit zijn spelniveaus, geen echte stadioncapaciteiten.'},
+  stadium:{name:'Stadionvoorzieningen',baseCost:18000,max:5,description:'2.500 extra plaatsen per niveau voor nieuwe thuiswedstrijden. Bekijk ticketprijzen en bezoekers bij Stadion. Dit zijn spelcapaciteiten.'},
   training:{name:'Trainingscomplex',baseCost:14000,max:5,description:'Een extra ontwikkelpunt per niveau boven niveau 1 bij vaardigheidstraining.'},
   medical:{name:'Herstelcentrum',baseCost:10000,max:5,description:'Meer conditieherstel, lager blessurerisico en vanaf niveau 3 kortere spelblessures.'}
 };
@@ -53,6 +54,7 @@ export function ensureManagement(game){
   ensureReputation(game);
   ensureScoutingDesk(game);
   ensureLeagueMarket(game);
+  ensureStadium(game);
   return ensureDevelopment(ensureClubMarket(ensureTransferDesk(ensureDiscipline(ensureKeeperSkills(ensureFitness(game))))));
 }
 export function recordCash(game,amount,category,label){
@@ -67,11 +69,13 @@ export function payroll(game){return game.clubs[0].players.reduce((sum,p)=>sum+g
 export function maintenance(game){const m=game.management;return m.facilities.stadium*500+m.facilities.training*250+m.facilities.medical*250+(m.staff.coach+m.staff.scout)*500;}
 export function matchBudget(game,home,won=false){
   const m=game.management,sponsor=m.sponsor?.season===game.season?sponsors[m.sponsor.kind]:null;
-  return {tickets:home?3000+m.facilities.stadium*3000:0,sponsor:sponsor?sponsor.perMatch+(won?sponsor.perWin:0):0,wages:payroll(game),maintenance:maintenance(game)};
+  return {tickets:ticketIncome(game,home),sponsor:sponsor?sponsor.perMatch+(won?sponsor.perWin:0):0,wages:payroll(game),maintenance:maintenance(game)};
 }
 export function settleMatch(game,match){
   const side=match.home===0?0:1,won=match.goals[side]>match.goals[1-side],draw=!doubleForfeit(match)&&match.goals[side]===match.goals[1-side];
   const budget=matchBudget(game,match.home===0,won);
+  // A match already in progress before stadium rules retains its fixed income.
+  budget.tickets=match.stadiumReport?.revenue??(match.home===0?3000+game.management.facilities.stadium*3000:0);
   const rows=[[match.reward,'prize','Wedstrijdbonus'],[budget.tickets,'tickets','Thuiswedstrijdinkomsten'],[budget.sponsor,'sponsor','Sponsorbetaling'],[-budget.wages,'wages','Spelerssalarissen'],[-budget.maintenance,'facilities','Faciliteiten en staf']];
   const entries=rows.filter(([amount])=>amount!==0).map(([amount,category,label])=>recordCash(game,amount,category,label));
   game.management.xp+=won?120:draw?70:40;

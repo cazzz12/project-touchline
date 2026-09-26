@@ -53,4 +53,4 @@ De bestaande contracten Zekerheid, Overwinningen en Titelambitie veranderen niet
 - Historie bewaart maximaal 40 regels. Verwijderde oude regels blijven in het beginsaldo en alle totalen meetellen. Een transfer of expliciete selectie-update wist de clubreputatie niet.
 - Importcontrole bewaakt onder meer tijdstippen, puntentotalen, de volgorde van historische regels, de actuele seizoensteller, geldige reputatieregels en de vereiste punten voor nieuwe sponsorcontracten.
 
-Dit is een lokaal progressiesysteem. Het is geen beveiligde online ranglijst, commercieel reputatiemodel of bewijs van realistische spelbalans. Invloed op supporters, scouting, transferbereidheid en stadionbezoek is nog niet gebouwd.
+Dit is een lokaal progressiesysteem. Het is geen beveiligde online ranglijst, commercieel reputatiemodel of bewijs van realistische spelbalans. Sinds 0.15.0 verhoogt reputatie de verwachte bezetting bij nieuwe thuiswedstrijden: +1 procentpunt per 25 punten, maximaal +20. Zie [stadion en kaartverkoop](stadium.md). Invloed op scouting en transferbereidheid volgt later.

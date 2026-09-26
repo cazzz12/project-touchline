@@ -9,6 +9,7 @@ import {developmentSkills,skillsFor} from './development.js';
 import {resultPoints,seasonPoints,reputationOutcome} from './reputation.js';
 import {validCriteria,matchesCriteria} from './scouting-state.js';
 import {cost} from './game.js';
+import {validStadium,validStadiumGate} from './stadium.js';
 
 export const RECOVERY_KEY = `${KEY}-before-import`;
 export const MAX_BACKUP_BYTES = 2 * 1024 * 1024;
@@ -224,6 +225,7 @@ function cardTotals(p,known){
 // Validate before a file is allowed to replace browser storage. Migration operates
 // on the parsed copy, never on the active in-memory career or the stored text.
 function validate(game) {
+  if(!validStadium(game))invalid();
   if (!record(game) || !Array.isArray(game.clubs) || game.clubs.length !== 6
     || !unique(game.clubs.map(c => c?.name))
     || !game.clubs.every(c => record(c) && clubNames.includes(c.name) && list(c.players, player, 55) && c.players.length >= 18)) invalid();
@@ -241,6 +243,13 @@ function validate(game) {
     || game.benchIds.some(id => game.lineupIds.includes(id)) || !captain(game.captainId,game.lineupIds)||!management(game)||!medical(game)||!discipline(game)||!transferDesk(game)||!clubMarket(game)||!development(game)||!reputation(game)||!scoutingDesk(game)||!leagueMarket(game)) invalid();
   if (game.lastMatch != null) {
     const r = game.lastMatch;
+    if(r.stadiumReport!==undefined){
+      const q=r.stadiumReport;
+      if(!validStadiumGate(q,true)||r.home!==0||q.opponent!==r.away||q.round!==r.round
+        ||!Object.entries(game.stadium.history.at(-1)||{}).every(([key,value])=>q[key]===value)||!game.stadium.history.length
+        ||q.cancelled!==(r.detail?.minute===0)
+        ||(r.settlement?.entries.filter(e=>e.category==='tickets').reduce((n,e)=>n+e.amount,0)??0)!==q.revenue)invalid();
+    }
     if(r.reputationReport!==undefined&&(!record(r.reputationReport)||r.reputationReport.gain!==resultPoints[reputationOutcome(r)]||!integer(r.reputationReport.total,r.reputationReport.gain,game.reputation.points)))invalid();
     if(r.developmentReport!==undefined&&(!developmentReport(r.developmentReport)||!r.developmentReport.every(o=>r.detail?.played?.[o.id]===o.minutes)))invalid();
     if(r.disciplineReport!==undefined&&!disciplineReport(r.disciplineReport))invalid();
@@ -268,6 +277,11 @@ function validate(game) {
     if(p.developmentRules!==undefined&&p.developmentRules!==1)invalid();
     if(p.reputationRules!==undefined&&p.reputationRules!==1)invalid();
     if(p.leagueMarketRules!==undefined&&p.leagueMarketRules!==1)invalid();
+    if(p.stadiumRules!==undefined&&p.stadiumRules!==1)invalid();
+    if(p.stadiumRules===1){
+      if(p.home===0){const q=p.stadiumGate;if(!validStadiumGate(q)||q.season!==game.season||q.round!==game.round+1||q.opponent!==p.away||q.price!==game.stadium.ticketPrice||q.level!==game.management.facilities.stadium)invalid();}
+      else if(p.stadiumGate!==null)invalid();
+    }else if(p.stadiumGate!==undefined)invalid();
     if(p.keeperRules!==undefined&&p.keeperRules!==1)invalid();
     if(p.keeperRules===1){
       if(!record(p.keeperMinutes)||!Object.entries(p.keeperMinutes).every(([id,n])=>own.has(id)&&integer(n,1,p.played[id]??0))||Object.values(p.keeperMinutes).reduce((a,b)=>a+b,0)!==p.minute)invalid();

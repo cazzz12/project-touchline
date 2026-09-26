@@ -7,6 +7,22 @@ import {recordCash,saleOffer,renewExpiring} from '../public/management.js';
 import {clubTransferQuote,releaseReason} from '../public/transfers.js';
 
 let instance=0;
+test('stadium choices persist for free, upgrades change capacity and match locks reject changes',async t=>{
+  const g=newGame(),h=await boot(t,g),before=h.state();
+  h.click({office:'stadium'});assert.match(h.app.innerHTML,/Stadion & supporters/);assert.match(h.app.innerHTML,/3\.000 \/ 5\.000/);assert.deepEqual(h.state(),before);
+  h.click({ticketPrice:'3'});assert.equal(h.state().stadium.ticketPrice,3);assert.equal(h.state().credits,before.credits);assert.match(h.app.innerHTML,/1\.750 \/ 5\.000/);
+  h.click({upgrade:'stadium',group:'facilities'});assert.equal(h.state().management.facilities.stadium,2);assert.equal(h.state().credits,before.credits-36000);assert.match(h.app.innerHTML,/2\.625 \/ 7\.500/);
+  const restored=await boot(t,h.state());restored.click({office:'stadium'});assert.match(restored.app.innerHTML,/2\.625 \/ 7\.500/);
+  restored.click({action:'play'});const live=restored.state();restored.click({ticketPrice:'4'});assert.deepEqual(restored.state(),live);
+  restored.click({action:'save-close'});restored.click({office:'stadium'});assert.match(restored.app.innerHTML,/Vastgelegd bij aftrap/);assert.match(restored.app.innerHTML,/data-ticket-price="4" disabled/);
+});
+test('home receipts appear in the match report, office and finance ledger without a second payment',async t=>{
+  const g=newGame();playRound(g);const h=await boot(t,g);assert.match(h.app.innerHTML,/3\.000 bezoekers op de tribune/);
+  h.click({action:'close'});const saved=h.state();h.click({office:'stadium'});assert.match(h.app.innerHTML,/1 duels · 3\.000 bezoekers · 6\.000 credits/);
+  assert.match(h.app.innerHTML,/Bij deze uitwedstrijd ontvang je geen ticketinkomsten/);assert.deepEqual(h.state(),saved);
+  h.click({office:'finances'});assert.match(h.app.innerHTML,/BEKIJK STADION & TICKETS/);assert.match(h.app.innerHTML,/Thuiswedstrijdinkomsten/);
+  const restored=await boot(t,h.state());restored.click({office:'stadium'});assert.deepEqual(restored.state(),saved);
+});
 test('transfer journal filters and club navigation are read-only and survive reload',async t=>{
   const g=newGame();playRound(g);g.reportOpen=false;const trade=g.leagueMarket.history[0];assert.ok(trade);
   const h=await boot(t,g),before=h.state();h.click({transferJournal:''});assert.match(h.app.innerHTML,/Recente verhuizingen/);assert.match(h.app.innerHTML,new RegExp(trade.name));assert.deepEqual(h.state(),before);

@@ -4,6 +4,8 @@ import {compareCandidate} from './scouting.js';
 import {scoutingDeskView,scoutingReportView} from './scouting-views.js';
 import {setDevelopmentPlan,stopDevelopmentPlan,skillsFor} from './development.js';
 import {reputationReportView} from './reputation-views.js';
+import {chooseTicketPrice} from './stadium.js';
+import {stadiumReportView} from './stadium-views.js';
 import {developmentView,developmentProfile,developmentReportView,trainingTabs} from './development-views.js';
 import {trainAccordingToPlan} from './management.js';
 import {incomingTransfersView,incomingNotice,incomingCount} from './club-market-views.js';
@@ -135,7 +137,7 @@ function liveModal(){
   <div class="live-feed">${timeline.slice(0,20).map(e=>`<div class="live-event ${e.type}"><b>${e.minute}' ${e.type==='goal'?'⚽':e.type==='coaching'?'⇄':e.type==='yellow'?'🟨':e.type==='red'?'🟥':'•'}</b><span>${esc(e.text)}<small>${esc(e.sub)}</small></span></div>`).join('')||'<p class="muted">Nog geen kansen. De wedstrijd is open.</p>'}</div>
   ${!full&&pending.paused?`<section class="halftime"><h3>Coach je elftal</h3><div class="halftime-tactics"><label>Formatie<select data-live-formation>${Object.keys(formations).map(f=>`<option ${f===game.tactics.formation?'selected':''}>${f}</option>`).join('')}</select></label>${[['mentality','Aanval'],['pressing','Pressing'],['tempo','Tempo']].map(([key,label])=>`<label>${label} <b>${game.tactics[key]}</b><input type="range" min="0" max="100" value="${game.tactics[key]}" data-live-tactic="${key}"></label>`).join('')}</div><p class="muted">Aanvoerder: ${esc(players.find(p=>p.id===pending.captainId)?.name||'—')} · ${pending.subs}/3 wissels gebruikt</p><div class="sub-row"><select id="sub-out" aria-label="Speler uit"><option value="">Wissel uit…</option>${selection.filter(Boolean).map(id=>{const p=players.find(player=>player.id===id);return `<option value="${id}">${esc(p.name)} · ${p.position} · ${matchFitness(p,pending.played[id]||0)}%</option>`;}).join('')}</select><select id="sub-in" aria-label="Speler in"><option value="">Wissel in…</option>${bench.map(id=>{const p=players.find(player=>player.id===id);return `<option value="${id}">${esc(p.name)} · ${p.position} · ${p.fitness}%</option>`;}).join('')}</select><button data-action="sub" ${pending.subs>=3?'disabled':''}>WISSEL</button></div><p class="muted">Een gewisselde speler kan niet terugkeren. Wissels en tactiek gelden vanaf de volgende minuut.</p></section>`:''}
   ${!full?liveDisciplineView(game):disciplineReportView(report.disciplineReport)}
-  ${full?keeperReportView(report.detail)+fitnessReport(report.medicalReport)+developmentReportView(report.developmentReport)+reputationReportView(report.reputationReport)+leagueMarketNotice(game,true):''}
+  ${full?stadiumReportView(report.stadiumReport)+keeperReportView(report.detail)+fitnessReport(report.medicalReport)+developmentReportView(report.developmentReport)+reputationReportView(report.reputationReport)+leagueMarketNotice(game,true):''}
   ${storageError?storageNotice():''}
   ${message?`<p class="match-feedback" role="status">${esc(message)}</p>`:''}
   ${full?'<button class="primary" data-action="close">VERDER MET MIJN CLUB →</button>':pending.paused?'<button class="report-button" data-action="save-close">OPSLAAN & SLUITEN</button>':'<p class="muted">Opgeslagen per minuut. Pauzeer om in te grijpen.</p>'}</section></div>`;
@@ -231,6 +233,7 @@ $('#app').addEventListener('click',e=>{
     render();return;
   }
   if(b.dataset.office){officeSection=b.dataset.office;tab='cluboffice';saleCandidate=null;message='';render();return;}
+  if(b.dataset.ticketPrice){const ok=chooseTicketPrice(game,Number(b.dataset.ticketPrice));message=ok?'Ticketprijs bewaard voor je volgende thuiswedstrijd.':'Prijs wijzigen is nu niet mogelijk.';if(ok)save();render();return;}
   if(b.dataset.upgrade){message=upgradeClub(game,b.dataset.group,b.dataset.upgrade)?'Investering afgerond. Het effect is direct actief.':'Investering nu niet beschikbaar.';save();render();return;}
   if(b.dataset.sponsor){message=chooseSponsor(game,b.dataset.sponsor)?'Sponsorcontract afgesloten.':'Je kunt dit contract nu niet afsluiten.';save();render();return;}
   if(b.dataset.renew){message=renewContract(game,b.dataset.renew)?'Contract verlengd. Het nieuwe salaris geldt vanaf de volgende speeldag.':'Dit contract kan nu niet verlengd worden.';save();render();return;}
