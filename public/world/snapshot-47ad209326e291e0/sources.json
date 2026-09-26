@@ -1,0 +1,1380 @@
+{
+  "snapshot": "world-2026-09-26-47ad209326e291e0",
+  "sources": [
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings",
+      "retrievedAt": "2026-09-26T21:16:38.049Z",
+      "sha256": "07fc2346a0da5018cdec1d521eef2dde958714a37a1721b43fe0751aabd44504"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=0",
+      "retrievedAt": "2026-09-26T21:16:38.769Z",
+      "sha256": "bab115a094f579f797dbaabba207045ff76f95e64cbd027f84dedd922bc60d40"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=100",
+      "retrievedAt": "2026-09-26T21:16:39.385Z",
+      "sha256": "ea01b7f87902c3c3e19a97696627e776284c6b632eb4aadb92156835177af276"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=200",
+      "retrievedAt": "2026-09-26T21:16:39.974Z",
+      "sha256": "99da609ca8f37ba6b292a7b0f9b9d6b2d3809862e1413b8e3d8279c675bff058"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=300",
+      "retrievedAt": "2026-09-26T21:16:40.579Z",
+      "sha256": "c16e6ed3bc54a05d46779b65ec891dcdc36b085de1dbea1bfa97215be2f04556"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=400",
+      "retrievedAt": "2026-09-26T21:16:41.074Z",
+      "sha256": "0924b98f98c6ad40cd5c913161e819598c1c71210f949e09d28964c6b285140f"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=500",
+      "retrievedAt": "2026-09-26T21:16:41.552Z",
+      "sha256": "400cea84e5cf3082546e5bb8966c9017d09e04ed79743aabb37dd51db0ad14fe"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=600",
+      "retrievedAt": "2026-09-26T21:16:42.026Z",
+      "sha256": "466f2e529d935e5d0021e472d6afc8766eefb1d751e2fd4a04825f883ebd098d"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=700",
+      "retrievedAt": "2026-09-26T21:16:42.669Z",
+      "sha256": "d4d3aebb0775e2599e9fc3249ab0177e2b3a53a6b535011ef92b1cd735bc019b"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=800",
+      "retrievedAt": "2026-09-26T21:16:43.128Z",
+      "sha256": "dc5a55749e463cb76ead34686a98b9d19f36d7af22671f1a7d267089878d2832"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=900",
+      "retrievedAt": "2026-09-26T21:16:43.588Z",
+      "sha256": "a078fc1d16fb0952aa1a40dc0f8d30e6855ea6f3be3053a1909be5bf85eed5ba"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=1000",
+      "retrievedAt": "2026-09-26T21:16:44.033Z",
+      "sha256": "732eaf9e8033145803141489937bb1520cda4d6ae3854bf76d21674d3d82d0af"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=1100",
+      "retrievedAt": "2026-09-26T21:16:44.519Z",
+      "sha256": "673f2cfacb37eac01ba1795171bc74d13f2c4d20ea5acbc85ae6ef10fb693f8d"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=1200",
+      "retrievedAt": "2026-09-26T21:16:44.973Z",
+      "sha256": "ad2f7b10455a1b3bce93b20e1929712958103eb196586dee9001258df24d67d3"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=1300",
+      "retrievedAt": "2026-09-26T21:16:45.498Z",
+      "sha256": "cdd0a2143ce2e4446ac3aef978588f93a28badd925fc101a19752711142ba546"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=1400",
+      "retrievedAt": "2026-09-26T21:16:45.939Z",
+      "sha256": "fc3afd8f5048d15c37e1532851e7e083412052edb34697ec2f2bf025a96968bb"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=1500",
+      "retrievedAt": "2026-09-26T21:16:46.399Z",
+      "sha256": "c851530141113bad36eaeada796edffb73d5d75bc227f21dabdd0dd1a93ccb21"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=1600",
+      "retrievedAt": "2026-09-26T21:16:46.848Z",
+      "sha256": "35c325c1cc661e95f8291b9ba9fefd061756765a187fa3829fb909c58aef1054"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=1700",
+      "retrievedAt": "2026-09-26T21:16:47.315Z",
+      "sha256": "d6dda6082ceb47b4053dc8eb89abaefc19373513fcc62a7de93a5749903dd01c"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=1800",
+      "retrievedAt": "2026-09-26T21:16:47.767Z",
+      "sha256": "b5ff142789ff3aae52c741168185750fc72f15dabe3eb029d3bcec043fa9b8c5"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=1900",
+      "retrievedAt": "2026-09-26T21:16:48.280Z",
+      "sha256": "f4d4d86c767c945ba7abc6e0948b59dfc82ebc54ba9da9588b5d3f57faf32ffe"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=2000",
+      "retrievedAt": "2026-09-26T21:16:48.829Z",
+      "sha256": "0523ae45f8fcc3e3321e766a2191f8001a191a05b93ee7eb99840348a4c68807"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=2100",
+      "retrievedAt": "2026-09-26T21:16:49.348Z",
+      "sha256": "16e82ad31eb1c85b1d136f0cb0897b8f99d84ed38cdbb1109123b4cb97d0650f"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=2200",
+      "retrievedAt": "2026-09-26T21:16:49.914Z",
+      "sha256": "65e72c42b1a2366d2e4e601379cb6576fb0611bed110afcc4bdc7517c1821e48"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=2300",
+      "retrievedAt": "2026-09-26T21:16:50.438Z",
+      "sha256": "d324d674c1fbfe36e3e7c73acb3ba003f6ac007366d107f22e0d4e33620ef893"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=2400",
+      "retrievedAt": "2026-09-26T21:16:51.114Z",
+      "sha256": "24dc2e2963ed368f360347e9b757341c5f7551c80ce07d74e015ef1b1e66fc62"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=2500",
+      "retrievedAt": "2026-09-26T21:16:51.661Z",
+      "sha256": "a3345ce21db61c715b5104307eebf9ad5fe6eb2e1cda7b68b3e344bedc436fe4"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=2600",
+      "retrievedAt": "2026-09-26T21:16:52.207Z",
+      "sha256": "099202fe07045f879bd54ee8d1c9a844d774849a59cbe9e7ee37e31a4352c744"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=2700",
+      "retrievedAt": "2026-09-26T21:16:52.921Z",
+      "sha256": "7dc76f415d702ba8acc11266e194eace3689c2517f9fb3c1657c96f60649c8a9"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=2800",
+      "retrievedAt": "2026-09-26T21:16:53.950Z",
+      "sha256": "a77cabc65adb934340cd21bcf4127e82cd521953febf6a90ea03ab4fe6ed0f24"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=2900",
+      "retrievedAt": "2026-09-26T21:16:54.477Z",
+      "sha256": "e04c337af4928622aabc6b5fae4493e0df87d4e016c8dcb043d9b1d62b318c4c"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=3000",
+      "retrievedAt": "2026-09-26T21:16:55.007Z",
+      "sha256": "545a515db038f7219fb434c5952d0b1fd5a4d28973e1094c6cf230efe69cf001"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=3100",
+      "retrievedAt": "2026-09-26T21:16:55.528Z",
+      "sha256": "b2892cec8693e1b9b29466a77eb71c3dd346f8c4ad4b26e471f6e0f2ae1810a2"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=3200",
+      "retrievedAt": "2026-09-26T21:16:56.077Z",
+      "sha256": "b29015ce9e13d8db6d6422687d73be5d3bd338053d5cc67872412e48afea9f3b"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=3300",
+      "retrievedAt": "2026-09-26T21:16:56.685Z",
+      "sha256": "ae8d96510be4e8c6bd1aca147c3dda90142063009c4bf88a0cad1c67e62a4607"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=3400",
+      "retrievedAt": "2026-09-26T21:16:57.192Z",
+      "sha256": "3cdcf38e4e7c88d1f1b27889466a6ec42c8cc567cb9c966487bb9a96be03bf20"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=3500",
+      "retrievedAt": "2026-09-26T21:16:57.661Z",
+      "sha256": "53ecd05bb9b7d54b6ba1b5f1319522c1cdc15114bbd4a928d265609e9ad8e03f"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=3600",
+      "retrievedAt": "2026-09-26T21:16:58.184Z",
+      "sha256": "eb2c5bfd3c3ab66c3338a8e7915139d1366729d7bc2c1b1648661f2f51e9cbb0"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=3700",
+      "retrievedAt": "2026-09-26T21:16:58.692Z",
+      "sha256": "14c2cdd38b75a465706e3fc6ff6482fa453bdf1b52590ed2057c67ec33475774"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=3800",
+      "retrievedAt": "2026-09-26T21:16:59.300Z",
+      "sha256": "46f7e4fd4e6cb38487a57bf7d61dd11af46829ec9b52077c6a5a42e6b47b4643"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=3900",
+      "retrievedAt": "2026-09-26T21:16:59.918Z",
+      "sha256": "8af6ef0e590b2bb54c624f5045c8aa9faed1c0420c9e087b57dd63500d218da6"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=4000",
+      "retrievedAt": "2026-09-26T21:17:00.466Z",
+      "sha256": "d79674dbdbb7898fb8f56195a6f0253cf2c178ae729e6693a4abb27b52ad5757"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=4100",
+      "retrievedAt": "2026-09-26T21:17:01.099Z",
+      "sha256": "b42ffcaed9951b8aa941ac231851aa9da4ba39cc90a3b3efad9653b5b45d308b"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=4200",
+      "retrievedAt": "2026-09-26T21:17:01.672Z",
+      "sha256": "84a495a560d99be51fcc7e2a02882d98e12c172abdd45398e73b3ea663598a76"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=4300",
+      "retrievedAt": "2026-09-26T21:17:02.233Z",
+      "sha256": "bae0ab4fc4be85b5e25adc7f800e8dafa1efe1c0393b53791e31884df0bb0a44"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=4400",
+      "retrievedAt": "2026-09-26T21:17:02.768Z",
+      "sha256": "1c99bc26e2995db89fdc9cbd77c7d617cbc4403c7f60e82e7cffed439fcde5b9"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=4500",
+      "retrievedAt": "2026-09-26T21:17:03.357Z",
+      "sha256": "04d0a0f494f767d476c054e4b1e7f7b39b88761c125c765d11c82a5f498f86a6"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=4600",
+      "retrievedAt": "2026-09-26T21:17:04.021Z",
+      "sha256": "91a1d608965a793a8cc94d00ec610030eaaa5e94cc10043c3f47b294fa75060e"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=4700",
+      "retrievedAt": "2026-09-26T21:17:04.580Z",
+      "sha256": "16f8cfe1140f684080dc89fc9bd0c2b7afca280fc91f65def3e43338ba07f894"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=4800",
+      "retrievedAt": "2026-09-26T21:17:05.145Z",
+      "sha256": "e9a1bbe191ff0bb6a0859b061e40fd5c385a63bba9d7eed9dff331e7af302b1d"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=4900",
+      "retrievedAt": "2026-09-26T21:17:05.663Z",
+      "sha256": "e6419174e6d43a332b9012182c61c59b5cc1f5e141c80c6571366e4d425b58fb"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=5000",
+      "retrievedAt": "2026-09-26T21:17:06.228Z",
+      "sha256": "a01ced9d76b7ac6e229498d8b1ddc5d8560ec5722c0f33f34e8bfa4c184b5d77"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=5100",
+      "retrievedAt": "2026-09-26T21:17:06.726Z",
+      "sha256": "87c12af3739cd1f9a21766cb962bc3fb837910a221a657092e1a1ec27b1d89dc"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=5200",
+      "retrievedAt": "2026-09-26T21:17:07.264Z",
+      "sha256": "2b21431eda667f7c879f54662b43d368e0ae1bd9d90b2c912fadabf5d91e8cb9"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=5300",
+      "retrievedAt": "2026-09-26T21:17:07.761Z",
+      "sha256": "bc3b971dddc19f39299b973754f2bac7b6dae8bfd47f6987fce69fb5db34a431"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=5400",
+      "retrievedAt": "2026-09-26T21:17:08.282Z",
+      "sha256": "0ff5f3bd1f26022aba4f50b3fe9d67baeecaeef7485aabf6af427419295277da"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=5500",
+      "retrievedAt": "2026-09-26T21:17:08.806Z",
+      "sha256": "263a05b9b72b8d48b840dfbb61118102851474102b44d02941209e86883ce3cf"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=5600",
+      "retrievedAt": "2026-09-26T21:17:09.346Z",
+      "sha256": "fbf2942642131fe38b9247eee486f512ab2c49d0bf2aee47cfd8a575c74ea86b"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=5700",
+      "retrievedAt": "2026-09-26T21:17:09.863Z",
+      "sha256": "ad5982dc5663db650184bda098cc2b790aad0d6cbcb581373b5601d6eba5e3d0"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=5800",
+      "retrievedAt": "2026-09-26T21:17:10.393Z",
+      "sha256": "5e6dc1e6cd89cdcee48bd1341b2282ab07f8bbdc0f1595e8f2c0314cae5677c5"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=5900",
+      "retrievedAt": "2026-09-26T21:17:11.006Z",
+      "sha256": "f258351e14d7bb4054d0716a66446942593e0165954d9777d40d18335db20b48"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=6000",
+      "retrievedAt": "2026-09-26T21:17:11.508Z",
+      "sha256": "20e861ee0bc7ba4612fd938361f517dc4dbebe07518bde2e69ee722f94fd4127"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=6100",
+      "retrievedAt": "2026-09-26T21:17:12.054Z",
+      "sha256": "835daa20f3c6de0e7831b6b2a7e97cc9dc76633cfc10faf4702ad71319e3c501"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=6200",
+      "retrievedAt": "2026-09-26T21:17:12.579Z",
+      "sha256": "1a3e759bdb235632567c4fa4899af3d3c73445bfe807e2a2c767203cd6720962"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=6300",
+      "retrievedAt": "2026-09-26T21:17:13.153Z",
+      "sha256": "14e4266053dd7b9d7ef45287a2965be44dfc28f57d24d62056b575d7cdc84f12"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=6400",
+      "retrievedAt": "2026-09-26T21:17:13.724Z",
+      "sha256": "d6a4701b5b181a6de62abc08a9da351c51077356f4acdcead63876d2eb39622f"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=6500",
+      "retrievedAt": "2026-09-26T21:17:14.283Z",
+      "sha256": "8ddee348d5a4afeeb3b261957af879718041b08d724e71135e7b8260decdf37d"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=6600",
+      "retrievedAt": "2026-09-26T21:17:14.822Z",
+      "sha256": "f0f2801a9552896c220fff0ba9b9463248bde26102487b6a688310961781efa1"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=6700",
+      "retrievedAt": "2026-09-26T21:17:15.337Z",
+      "sha256": "1078312cce3f191a79efeef8a37540de44075ccb9d67da3e62ac7a3a78e7bc66"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=6800",
+      "retrievedAt": "2026-09-26T21:17:15.951Z",
+      "sha256": "7d04690ec8574d493800bf8796c36ff9537d593bd6384a86e924c2a67c9e587e"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=6900",
+      "retrievedAt": "2026-09-26T21:17:16.482Z",
+      "sha256": "2e424a7e3b781a5570701a3fd9d70f0c37617dbd5ad41e93fc9a0f80a1b6650b"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=7000",
+      "retrievedAt": "2026-09-26T21:17:17.002Z",
+      "sha256": "d6b4044a126fb90101011e1e19b9f0f2fdf03a99971501576b4b8951abc35704"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=7100",
+      "retrievedAt": "2026-09-26T21:17:17.737Z",
+      "sha256": "dc9c2b9fbe0d58cb3d484244638005603ed7c80833819ce0136d731aa15bb0e2"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=7200",
+      "retrievedAt": "2026-09-26T21:17:18.269Z",
+      "sha256": "27c43d0b11ae49af8a4160d0f0dbf03698579fc7939587ddf501486c74f0225e"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=7300",
+      "retrievedAt": "2026-09-26T21:17:18.995Z",
+      "sha256": "26eee5dc153b6de94b3d54c31c3053894a55d8ce55b5881722d347c50825d46d"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=7400",
+      "retrievedAt": "2026-09-26T21:17:19.506Z",
+      "sha256": "db1b7106ff7c307c8a8127804c704041065e58be0a575e879aa7c7d0cd2caf04"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=7500",
+      "retrievedAt": "2026-09-26T21:17:20.145Z",
+      "sha256": "70a2464dc12e162b8cf3715eb2e0775a229a61aed3584180bde271c214b6f885"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=7600",
+      "retrievedAt": "2026-09-26T21:17:20.851Z",
+      "sha256": "9fc4a020b277a9da5742ede67973ae5a68c1f2722525ee49a809ea17ba66ae2e"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=7700",
+      "retrievedAt": "2026-09-26T21:17:21.392Z",
+      "sha256": "a2ea0d654476e1b063be31c6e4c0ea417b36eacc154d2f2e3188074a46a1cb48"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=7800",
+      "retrievedAt": "2026-09-26T21:17:21.948Z",
+      "sha256": "f4fd736a0b1afc02b415635aad0095dbcb34f6d8ea9bd3770c548215c832ef00"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=7900",
+      "retrievedAt": "2026-09-26T21:17:22.525Z",
+      "sha256": "d1e7e9d51f22b4cc89c2eb330f2b49fea84adafb9ecc82b59ff8de0a189ca057"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=8000",
+      "retrievedAt": "2026-09-26T21:17:23.048Z",
+      "sha256": "765d301b415da4b82f9425e13fa0417060f12e98c3e7a705b32990cd0ca10fc3"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=8100",
+      "retrievedAt": "2026-09-26T21:17:23.568Z",
+      "sha256": "ba3e89e21e5c9adb93281872a1e0fc92c365c34dc64ed92177e356450c06e92c"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=8200",
+      "retrievedAt": "2026-09-26T21:17:24.099Z",
+      "sha256": "b5b316f8f0d93adb7e8f20070b510f88087118eff67017eef132f58fb4bc2257"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=8300",
+      "retrievedAt": "2026-09-26T21:17:24.616Z",
+      "sha256": "72df0528b39b40289cb6735c476094f30bd85112fde093c914ad01bac6eb5c16"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=8400",
+      "retrievedAt": "2026-09-26T21:17:25.161Z",
+      "sha256": "3c66a570cc303209e2cadebafbcba5c783af21d074e274a52f706fb65f6f401b"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=8500",
+      "retrievedAt": "2026-09-26T21:17:25.813Z",
+      "sha256": "d083e0aee5ee942d7868cd482fbe3f62583b45d63026bae10c1242e797eb3964"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=8600",
+      "retrievedAt": "2026-09-26T21:17:26.324Z",
+      "sha256": "75ff0dae11940910acb27beeb761ba1beb7893f4b10b04d066b8171838d6a7c9"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=8700",
+      "retrievedAt": "2026-09-26T21:17:27.001Z",
+      "sha256": "5fa118ef9457f8f4a0eca992cde19a1a193aba8f5c892773bed81c962be0e23a"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=8800",
+      "retrievedAt": "2026-09-26T21:17:27.528Z",
+      "sha256": "6a2ec36e57cd3a2db7a0c68edba6a61123bc76a7ea14f1f888ffe86bff306975"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=8900",
+      "retrievedAt": "2026-09-26T21:17:28.071Z",
+      "sha256": "761e87c589480d9ff5d617a10d6b7edeb0b52a7a41f3b9e852ca3f00543447a7"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=9000",
+      "retrievedAt": "2026-09-26T21:17:28.732Z",
+      "sha256": "90a3570df66a22acc87534c1ac9c7cf81c296379328f7a8a2700b3e29a1c0923"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=9100",
+      "retrievedAt": "2026-09-26T21:17:29.259Z",
+      "sha256": "ec0cb832c2b37303735dcfe6f8ab11d1e933355d3112da1833eb33d7804cc6fc"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=9200",
+      "retrievedAt": "2026-09-26T21:17:29.777Z",
+      "sha256": "9bf9c6ed9405ed6a5be08b374faacbc3bba6678d1ab58aa6c078b2e90a5869dd"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=9300",
+      "retrievedAt": "2026-09-26T21:17:30.379Z",
+      "sha256": "bbad0ef170ec0458d78c06ddae8c879127974e9f8625cfb469d2260bc07d4fef"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=9400",
+      "retrievedAt": "2026-09-26T21:17:30.879Z",
+      "sha256": "fc8304a608be9bda80e2d6977d7c2c15663675637e9147ccaa2881cf07361216"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=9500",
+      "retrievedAt": "2026-09-26T21:17:31.433Z",
+      "sha256": "79a3d292571121a93782751a15d1c804645c3859b2a9f4db199d68e68c78d7c5"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=9600",
+      "retrievedAt": "2026-09-26T21:17:31.954Z",
+      "sha256": "4678ae4928edf1df402c78a47d7808bb56349fdfe861e1ac84e73ca8a575714c"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=9700",
+      "retrievedAt": "2026-09-26T21:17:32.487Z",
+      "sha256": "b6adf94bd18fdbde90e985b707e37d0ee187db73a11db673785ccf099db0ff19"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=9800",
+      "retrievedAt": "2026-09-26T21:17:33.066Z",
+      "sha256": "8ec4e97ae6cfad14e004a2cffbf691521310a65003120bf592f07d7bf92c0c59"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=9900",
+      "retrievedAt": "2026-09-26T21:17:33.578Z",
+      "sha256": "7c9a3109b93f03f96315f606f099441dc6a4a2040709328a420b1b8382a18ccb"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=10000",
+      "retrievedAt": "2026-09-26T21:17:34.087Z",
+      "sha256": "07653589e68c3fc9a7ac7c9f65e90c076c00219c08e63c3825e3a653232754d6"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=10100",
+      "retrievedAt": "2026-09-26T21:17:34.595Z",
+      "sha256": "74eb06bac79828cac9c66910d5e13a1e6f5b7a064ca9424083f5b1f0c44639fa"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=10200",
+      "retrievedAt": "2026-09-26T21:17:35.114Z",
+      "sha256": "1a14f5c50b5af0aabe1748be38da906583b1c3f795484217749af36373cb7564"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=10300",
+      "retrievedAt": "2026-09-26T21:17:35.609Z",
+      "sha256": "d0c4ed24f44fcb26f6eb7348746387d13b7aecf8a32d2d83725b67e230b47543"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=10400",
+      "retrievedAt": "2026-09-26T21:17:36.308Z",
+      "sha256": "345030ac580d64f25a84888cab29ce0a3467fa52fc1d4e740f58b726bc386823"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=10500",
+      "retrievedAt": "2026-09-26T21:17:36.816Z",
+      "sha256": "a36a1b1c56fcf0fdaf6523375ab47891bf8ae3a597c16135dfa8836a2be72f27"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=10600",
+      "retrievedAt": "2026-09-26T21:17:37.353Z",
+      "sha256": "9ad7bfd8b4eae04f4cd04ce055c16b691d392457a5fc118a2fe1001d569b9141"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=10700",
+      "retrievedAt": "2026-09-26T21:17:37.845Z",
+      "sha256": "03af7a130b2b31b7d6be60ddd67229ff295aea02e3d98584343778887ec8e498"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=10800",
+      "retrievedAt": "2026-09-26T21:17:38.330Z",
+      "sha256": "c26d9193b19f02d4b868c8b34c3a732e00f3161cb4002a838ee74f20c3966898"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=10900",
+      "retrievedAt": "2026-09-26T21:17:38.832Z",
+      "sha256": "c968a993e70eb3e5df09df3c61f5e04e78b8d057ad7f53a610b2a6d03d4d7f3e"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=11000",
+      "retrievedAt": "2026-09-26T21:17:39.325Z",
+      "sha256": "f9b312462bd1013a2d4d0a16d0a6d8148cf46cec1c99b50aad7e1c871331369a"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=11100",
+      "retrievedAt": "2026-09-26T21:17:39.857Z",
+      "sha256": "e0a787261ff8afa16dc6b4d03854f59d183c0c2354e5d45b62bc3d9867923f15"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=11200",
+      "retrievedAt": "2026-09-26T21:17:40.461Z",
+      "sha256": "c01c7c2bcf3d176ec9bb45ca34d3958736defaa456e3dbace8b67bd0caad9784"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=11300",
+      "retrievedAt": "2026-09-26T21:17:41.002Z",
+      "sha256": "7f3ee772828a62a601a221b25a03510b89de6fc980ba19ced0b3e66c98d47344"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=11400",
+      "retrievedAt": "2026-09-26T21:17:41.648Z",
+      "sha256": "d3597e6bbfdb5e40e0780d34d4184b62ff0d25fb9f392e63b27f0c17d52d3404"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=11500",
+      "retrievedAt": "2026-09-26T21:17:42.190Z",
+      "sha256": "36d8ef892bbad1c1b9501cd66d231d2ff15e9b16f72bdcb280d94ef2450fd5c4"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=11600",
+      "retrievedAt": "2026-09-26T21:17:42.791Z",
+      "sha256": "13d882f5c8c336e1eead3a6aaf9f73efae640ab02bd37c55ff1596b365e73dbe"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=11700",
+      "retrievedAt": "2026-09-26T21:17:43.319Z",
+      "sha256": "c326fd7bd80b1f75bc700591eb767a1b227884927f2fb6060c133acc939c2bd1"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=11800",
+      "retrievedAt": "2026-09-26T21:17:43.833Z",
+      "sha256": "51e7b950dff220283bc2e62283f5bf4a939e31788899f28ad7a4e92d52470436"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=11900",
+      "retrievedAt": "2026-09-26T21:17:44.349Z",
+      "sha256": "290dafeeff92c81b406a63a09e19f9c2bef74349e30e9f6567ee46697b982e9f"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=12000",
+      "retrievedAt": "2026-09-26T21:17:44.863Z",
+      "sha256": "35ec5bcafff1efcfbd18c940036564c5a0845ecd1bc0a78901adece4407f831c"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=12100",
+      "retrievedAt": "2026-09-26T21:17:45.415Z",
+      "sha256": "16cab82401061e9de50581dce91bccf117b09b524dd92b754f89f861cf4b691d"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=12200",
+      "retrievedAt": "2026-09-26T21:17:45.915Z",
+      "sha256": "ccd7a07f8630bb8206d0249db0be4ab58fddb1a57cf335151f6057c94a764864"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=12300",
+      "retrievedAt": "2026-09-26T21:17:46.436Z",
+      "sha256": "30a0bbf709cf4f58a26495dd11513193f6b0facbb18dd0e0e87b15bd61ed7fb2"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=12400",
+      "retrievedAt": "2026-09-26T21:17:46.943Z",
+      "sha256": "b39c7b5a51b362b294fd67024e0e2e12ef6b1175677ed65c141f37de9aba74f6"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=12500",
+      "retrievedAt": "2026-09-26T21:17:47.639Z",
+      "sha256": "8e7fcc0f9cb5b9990a47d89ceded8a6bf3b1efa84888836055d3a5d5fee603ab"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=12600",
+      "retrievedAt": "2026-09-26T21:17:48.133Z",
+      "sha256": "e2956f49e5e7c4267578ca4eaeb0006be947ad3adbe69826fa94102a7e892d48"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=12700",
+      "retrievedAt": "2026-09-26T21:17:48.627Z",
+      "sha256": "7d9527776d0aded953807912c7f421c091a6e5cc5dd22185f874186a7a7d0fa2"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=12800",
+      "retrievedAt": "2026-09-26T21:17:49.149Z",
+      "sha256": "e17f6a496271446a3343eb830610ee6d49de8479a03b514a29b7cab698c24ed3"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=12900",
+      "retrievedAt": "2026-09-26T21:17:49.666Z",
+      "sha256": "0030df3659a8ece59ee5a5b1819fbaba2b02c4290ed4544a1fa6b0ff0152b399"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=13000",
+      "retrievedAt": "2026-09-26T21:17:50.207Z",
+      "sha256": "d9d80cbf15020b24a28dc4b1afd5618737cb3d9f410199ba8149f0050c6dd6eb"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=13100",
+      "retrievedAt": "2026-09-26T21:17:50.738Z",
+      "sha256": "9a4b6694479043561e9b7bca8f1a6b31294fd326463c00ff94415cddc7d931fa"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=13200",
+      "retrievedAt": "2026-09-26T21:17:51.244Z",
+      "sha256": "02ca1eadc02cb5816498125354ed536982e48d876ef7c8d856f405305c18b2a1"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=13300",
+      "retrievedAt": "2026-09-26T21:17:51.732Z",
+      "sha256": "3fab0f535c1718db2f05d39b405d1d0e323f7914c3bbf245919e706e841a9643"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=13400",
+      "retrievedAt": "2026-09-26T21:17:52.235Z",
+      "sha256": "9c3d7f61d3926ce5246b6b1760e0bb1da9ff19e52b087bd6b414153b79209744"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=13500",
+      "retrievedAt": "2026-09-26T21:17:52.745Z",
+      "sha256": "87790f41f2c4238c49a227c3bb073e2784478aeb37ac9a76624777e74ec52492"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=13600",
+      "retrievedAt": "2026-09-26T21:17:53.247Z",
+      "sha256": "807d9049d3b74ccbf97520b432b967af7818266664248c556d037ed273249e18"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=13700",
+      "retrievedAt": "2026-09-26T21:17:53.743Z",
+      "sha256": "8a269ed8f6711718e35535b3cd92d0708192a81971909f714c92b25cc391bce5"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=13800",
+      "retrievedAt": "2026-09-26T21:17:54.246Z",
+      "sha256": "3bc654cd20fee830144941b9581b8a90f7ad4a680350203ede8987b0e6ef7f2c"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=13900",
+      "retrievedAt": "2026-09-26T21:17:54.777Z",
+      "sha256": "2f53da99469f724b0b00997a7803bac43f476ab78ab656f997ebcc81260b3a71"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=14000",
+      "retrievedAt": "2026-09-26T21:17:55.308Z",
+      "sha256": "22d1d1d94e03ad01c7ada82c70ff004d13364e072c69f1b9d63a5cbf236da54f"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=14100",
+      "retrievedAt": "2026-09-26T21:17:55.836Z",
+      "sha256": "a8fb9de2c48d7816356aef00c9ab90e2a43845d9f1eb323e68ed9e5269c1321d"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=14200",
+      "retrievedAt": "2026-09-26T21:17:56.371Z",
+      "sha256": "970cb3dd2d7a6068665b40c77897309028a4d9b5cfb33d4f744d2cfa0590bcaa"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=14300",
+      "retrievedAt": "2026-09-26T21:17:56.875Z",
+      "sha256": "3d8dcc6abf436a555b41eb7bb1899c6e6878849c473ac695ac58d1031d7ea9bb"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=14400",
+      "retrievedAt": "2026-09-26T21:17:57.458Z",
+      "sha256": "1071515d632afe2f25bc4b8e32f0076e9e57f27ec9de24a086d0882ab66304ce"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=14500",
+      "retrievedAt": "2026-09-26T21:17:57.959Z",
+      "sha256": "d8866625cd9344bfb7c71774a19b6a9ab7c37171af2581ee3a66255d86095495"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=14600",
+      "retrievedAt": "2026-09-26T21:17:58.475Z",
+      "sha256": "480e947b6997e2bc56b42ac03d9c830351886e00ae865cefcf5f86289fcc15ba"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=14700",
+      "retrievedAt": "2026-09-26T21:17:58.975Z",
+      "sha256": "a93c77089052c80465bb01bf61ea402a3b03c43d06f39b83979d50d430819a14"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=14800",
+      "retrievedAt": "2026-09-26T21:17:59.494Z",
+      "sha256": "0dd3c9d6bd21032310967750ce9afb8588d1f118e055355afe0682b76b6caf62"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=14900",
+      "retrievedAt": "2026-09-26T21:18:00.017Z",
+      "sha256": "91d017eb205fe2a0deff879f3ed5436ebe3f0d56c8e7495589e053643adae741"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=15000",
+      "retrievedAt": "2026-09-26T21:18:00.717Z",
+      "sha256": "ad5bfc3b5c37067c845697b22db7b905abfc90e15067bbdc89b9f791b3e418ed"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=15100",
+      "retrievedAt": "2026-09-26T21:18:01.309Z",
+      "sha256": "471bac0070342b32aa313e0228a2f3752208e07b9630a8bfb8c6fa5dfe551a56"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=15200",
+      "retrievedAt": "2026-09-26T21:18:01.899Z",
+      "sha256": "d9b92d3c2394aac7477be10465d2b5c2ec0a255b4e85f974990469aaacd6acd1"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=15300",
+      "retrievedAt": "2026-09-26T21:18:02.581Z",
+      "sha256": "893fd67f2c6f90fb967398102ed0bae734738d7dbea888c77c83892749ccccf5"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=15400",
+      "retrievedAt": "2026-09-26T21:18:03.170Z",
+      "sha256": "cc15fad59e5a90192203e7d86bfae01aee049fa9e4bcab1d7752bad769a9a751"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=15500",
+      "retrievedAt": "2026-09-26T21:18:03.764Z",
+      "sha256": "09f1837e04936417132287eac15f66b4fbe196fb57b61a23c300ab9d62afece7"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=15600",
+      "retrievedAt": "2026-09-26T21:18:04.285Z",
+      "sha256": "688c9cb18cc8d6665350845005ae38724f38fa89a02ce297ee85301df723b2a6"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=15700",
+      "retrievedAt": "2026-09-26T21:18:04.791Z",
+      "sha256": "81ff03212fbe0ed6e36584bfc68e8b2f613c8442772588ad67b3c3d9c7d53516"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=15800",
+      "retrievedAt": "2026-09-26T21:18:05.301Z",
+      "sha256": "338a25b5488cd824defa013f36755bf69b622aa4dedc123031ef02c581e5d9d8"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=15900",
+      "retrievedAt": "2026-09-26T21:18:05.791Z",
+      "sha256": "887526a91e79b0826ac006d48150c8d76a77680812cc188f6fe6b89e33758ccf"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=16000",
+      "retrievedAt": "2026-09-26T21:18:06.360Z",
+      "sha256": "8d387d9bf214d861b095f6011b3ba4f89f9b4359858ecaf23b0b15075249d2e8"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=16100",
+      "retrievedAt": "2026-09-26T21:18:06.856Z",
+      "sha256": "f2255ef1fdd476f0c89dfa5498727803c0029da7244b91fed90c0ae67d5416c3"
+    },
+    {
+      "url": "https://drop-api.ea.com/rating/ea-sports-fc?locale=en&gender=0&limit=100&offset=16200",
+      "retrievedAt": "2026-09-26T21:18:07.325Z",
+      "sha256": "c8223e099cb0228d6e0d3bcdaf883d9c80d6519ccd1f403c92fc0993e468f618"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=1,2,5,7,9,10,11,13,14,18,144,1799,1808,1925,1943,8,106,1800,1952,94&page=1",
+      "retrievedAt": "2026-09-26T21:18:10.034Z",
+      "sha256": "e68fdd776ff5437e2e921c4267dd5689306625a7275224945eb4a4bd3260acbc"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=1,2,5,7,9,10,11,13,14,18,144,1799,1808,1925,1943,8,106,1800,1952,94&page=2",
+      "retrievedAt": "2026-09-26T21:18:12.425Z",
+      "sha256": "d95d77444749a63b9530e4c344b41d16ce9bdd3f3d682b7edde325ca18621dc3"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=1,2,5,7,9,10,11,13,14,18,144,1799,1808,1925,1943,8,106,1800,1952,94&page=3",
+      "retrievedAt": "2026-09-26T21:18:14.338Z",
+      "sha256": "f42a5bb6fc0ed8e2914e8709e3a06d174f35259b9c49deda6b171165f7da15d5"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=1,2,5,7,9,10,11,13,14,18,144,1799,1808,1925,1943,8,106,1800,1952,94&page=4",
+      "retrievedAt": "2026-09-26T21:18:16.296Z",
+      "sha256": "bbd884abd7b00d23b26dd05bf4935bde4e4eb7e957acfe75cec248a7faa25cb5"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=1,2,5,7,9,10,11,13,14,18,144,1799,1808,1925,1943,8,106,1800,1952,94&page=5",
+      "retrievedAt": "2026-09-26T21:18:18.790Z",
+      "sha256": "4205253b24db63aafe1d60de6040c57210963547ebdde3b8a6ddfaebbf7c389c"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=1,2,5,7,9,10,11,13,14,18,144,1799,1808,1925,1943,8,106,1800,1952,94&page=6",
+      "retrievedAt": "2026-09-26T21:18:20.760Z",
+      "sha256": "34cfd73f94fdb711f045eb0fb902e089c847fae99f61fcfa8a44021a2e90529d"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=1,2,5,7,9,10,11,13,14,18,144,1799,1808,1925,1943,8,106,1800,1952,94&page=7",
+      "retrievedAt": "2026-09-26T21:18:22.616Z",
+      "sha256": "aa6721fcb917843046e099f4327bfaeea3c3d614bd4d870f2f7485066fa71799"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=240,241,242,243,448,449,450,452,456,457,461,463,468,479,480,481,483,573,1853,1860&page=1",
+      "retrievedAt": "2026-09-26T21:20:16.953Z",
+      "sha256": "2e734735bedc1d67c982c3ff1788655387ad8a6bc3a895067910d808c4e7ad59"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=240,241,242,243,448,449,450,452,456,457,461,463,468,479,480,481,483,573,1853,1860&page=2",
+      "retrievedAt": "2026-09-26T21:20:19.099Z",
+      "sha256": "e1a3863d5cf5611a4b28edc76403180dcbacdcd019bb2ea556b1231d3f41f588"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=240,241,242,243,448,449,450,452,456,457,461,463,468,479,480,481,483,573,1853,1860&page=3",
+      "retrievedAt": "2026-09-26T21:20:21.361Z",
+      "sha256": "2006ea0ff02a2e8ff805ec61b01765d2d4ed5f32b450f2f71350c6740fba6f36"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=240,241,242,243,448,449,450,452,456,457,461,463,468,479,480,481,483,573,1853,1860&page=4",
+      "retrievedAt": "2026-09-26T21:20:23.512Z",
+      "sha256": "91bbee3a86a683e558240b05665e373fa436f09675690fbd6276ecb3b2c229ef"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=240,241,242,243,448,449,450,452,456,457,461,463,468,479,480,481,483,573,1853,1860&page=5",
+      "retrievedAt": "2026-09-26T21:20:25.394Z",
+      "sha256": "27f6c4044e905a9b062f6ac0703bd487cb9133d2a507696dfe96d9fdbf8d4634"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=240,241,242,243,448,449,450,452,456,457,461,463,468,479,480,481,483,573,1853,1860&page=6",
+      "retrievedAt": "2026-09-26T21:20:27.402Z",
+      "sha256": "42dcfe520b762243df44724f02e2096cc7aeb595457308b3594a2918e048de04"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=45,48,50,52,54,189,55,347,1745,1842,110374,110556,115841,115845,131682,131681,111974,111811,205,111657&page=1",
+      "retrievedAt": "2026-09-26T21:20:29.245Z",
+      "sha256": "b37883c75db08f178b6f4b01ef47f2e6a50c39308e3982ed47e9954e70cb6e8f"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=45,48,50,52,54,189,55,347,1745,1842,110374,110556,115841,115845,131682,131681,111974,111811,205,111657&page=2",
+      "retrievedAt": "2026-09-26T21:20:31.159Z",
+      "sha256": "6ca858d8f37726f7d78533e1a3d1af11575136b882e9972688690403425aff3e"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=45,48,50,52,54,189,55,347,1745,1842,110374,110556,115841,115845,131682,131681,111974,111811,205,111657&page=3",
+      "retrievedAt": "2026-09-26T21:20:33.191Z",
+      "sha256": "d5b99c5e6d68be953ebc819150aecd3ac3861acd8be09cdd6b734198d653d2cb"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=45,48,50,52,54,189,55,347,1745,1842,110374,110556,115841,115845,131682,131681,111974,111811,205,111657&page=4",
+      "retrievedAt": "2026-09-26T21:20:35.175Z",
+      "sha256": "344ea493c4696133b2c80102d13983573e3173e4dfdc1de364405d24bec77b7c"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=45,48,50,52,54,189,55,347,1745,1842,110374,110556,115841,115845,131682,131681,111974,111811,205,111657&page=5",
+      "retrievedAt": "2026-09-26T21:20:38.228Z",
+      "sha256": "46d8c180a795289f04cdb7943cd313d58efab2a30ef28d533ee5d5b09e148c39"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=45,48,50,52,54,189,55,347,1745,1842,110374,110556,115841,115845,131682,131681,111974,111811,205,111657&page=6",
+      "retrievedAt": "2026-09-26T21:20:40.261Z",
+      "sha256": "41ffd233850103294c11e683c2e0191504c2afa69e122a99a67228b22689bf91"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=112172,28,31,21,22,32,23,25,36,38,169,1824,1831,10029,100409,34,580,10030&page=1",
+      "retrievedAt": "2026-09-26T21:20:42.327Z",
+      "sha256": "09e2cc76eaf2f14e98a7094694783c0eb24d72f27c4cd1381f92776f1d562da7"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=112172,28,31,21,22,32,23,25,36,38,169,1824,1831,10029,100409,34,580,10030&page=2",
+      "retrievedAt": "2026-09-26T21:20:43.978Z",
+      "sha256": "5dd63489e5c6d13c9bca78615e709e72ace771a088e00737790aa59108579c03"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=112172,28,31,21,22,32,23,25,36,38,169,1824,1831,10029,100409,34,580,10030&page=3",
+      "retrievedAt": "2026-09-26T21:20:46.096Z",
+      "sha256": "7bab02c13a02874a6b7b5e22d04f88bbfd85834c839bd1efb814fdadb9cae949"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=112172,28,31,21,22,32,23,25,36,38,169,1824,1831,10029,100409,34,580,10030&page=4",
+      "retrievedAt": "2026-09-26T21:20:48.092Z",
+      "sha256": "42e90ae2dcec161b14a0b9ab1954bee1a56bb40e7911af3ed43c632eb618896c"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=112172,28,31,21,22,32,23,25,36,38,169,1824,1831,10029,100409,34,580,10030&page=5",
+      "retrievedAt": "2026-09-26T21:20:50.613Z",
+      "sha256": "8832997d6bdd18002352df3a88ad3ce1e1872e9ee514ab823890ebe94b2c4848"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=112172,28,31,21,22,32,23,25,36,38,169,1824,1831,10029,100409,34,580,10030&page=6",
+      "retrievedAt": "2026-09-26T21:20:52.562Z",
+      "sha256": "9c4855e9c84d1b9215f8246aefc89084029803409ef799a1a308cf6a5ff18bce"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=57,64,65,66,69,72,73,74,76,217,219,378,1530,1738,1809,111817,294,1739&page=1",
+      "retrievedAt": "2026-09-26T21:20:54.456Z",
+      "sha256": "dc4e1b1d4141c919d6a0c55879cc7728331e2226168a4e53df838ca0a72fa0e8"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=57,64,65,66,69,72,73,74,76,217,219,378,1530,1738,1809,111817,294,1739&page=2",
+      "retrievedAt": "2026-09-26T21:20:56.690Z",
+      "sha256": "40c361849a5157c1d9058c1196005b6dea71a4041acb1f3a789c8f30d1503886"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=57,64,65,66,69,72,73,74,76,217,219,378,1530,1738,1809,111817,294,1739&page=3",
+      "retrievedAt": "2026-09-26T21:20:58.509Z",
+      "sha256": "5d6b82adb8cc8dba12b3f028e27b75be4fd6e26740a51d782818778b25d33a4c"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=57,64,65,66,69,72,73,74,76,217,219,378,1530,1738,1809,111817,294,1739&page=4",
+      "retrievedAt": "2026-09-26T21:21:00.502Z",
+      "sha256": "e5765fb252414eadce49c812841be405816d8d429a47aad077217414dd7519a7"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=57,64,65,66,69,72,73,74,76,217,219,378,1530,1738,1809,111817,294,1739&page=5",
+      "retrievedAt": "2026-09-26T21:21:02.625Z",
+      "sha256": "40e03760f3025f8b3d740846c824d6f611f830852c01e88eb203b4bd7027852a"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=245,246,247,634,1903,1906,1908,1910,1913,1914,1971,100632,100646,647,650,1907,1915,100638&page=1",
+      "retrievedAt": "2026-09-26T21:21:04.495Z",
+      "sha256": "5a41fa4b2860c31c2593ee4ca89373800aa1e157f7c8f488706d4a1f68740195"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=245,246,247,634,1903,1906,1908,1910,1913,1914,1971,100632,100646,647,650,1907,1915,100638&page=2",
+      "retrievedAt": "2026-09-26T21:21:06.802Z",
+      "sha256": "0302456f64831ef0394d1a35eb43b1a4b68504ce9964efe1214e233275c12812"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=245,246,247,634,1903,1906,1908,1910,1913,1914,1971,100632,100646,647,650,1907,1915,100638&page=3",
+      "retrievedAt": "2026-09-26T21:21:08.772Z",
+      "sha256": "76bdde591f5538ef1835b5e7aba8d42ec9ee1bfba54e76d0e9323abf06623503"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=245,246,247,634,1903,1906,1908,1910,1913,1914,1971,100632,100646,647,650,1907,1915,100638&page=4",
+      "retrievedAt": "2026-09-26T21:21:10.678Z",
+      "sha256": "32cac4b8036b5034b939d00606a7e30fb127b32bea6b8cd171bc14172aa1a34c"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=245,246,247,634,1903,1906,1908,1910,1913,1914,1971,100632,100646,647,650,1907,1915,100638&page=5",
+      "retrievedAt": "2026-09-26T21:21:12.475Z",
+      "sha256": "ea7809cb0f7bb8320641312fe7755c9719bea3263b99f0713d0351ff5013d551"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=234,236,237,718,744,1438,1887,1888,1891,1896,1900,10020,112513,112809,114510,717,1893,112587&page=1",
+      "retrievedAt": "2026-09-26T21:21:15.240Z",
+      "sha256": "cb57c12164e3fd51c8b7098f8ef7b65755e22a4262752566ec87db4594299279"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=234,236,237,718,744,1438,1887,1888,1891,1896,1900,10020,112513,112809,114510,717,1893,112587&page=2",
+      "retrievedAt": "2026-09-26T21:21:17.402Z",
+      "sha256": "1138cba3078bbfaceaf386b4c6eb75facb55428172ae6a5db225d0579c437da9"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=234,236,237,718,744,1438,1887,1888,1891,1896,1900,10020,112513,112809,114510,717,1893,112587&page=3",
+      "retrievedAt": "2026-09-26T21:21:20.147Z",
+      "sha256": "c358352cb0e30bbd449906301b9d806651b0ad87212025379a1b756aa0f62d34"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=234,236,237,718,744,1438,1887,1888,1891,1896,1900,10020,112513,112809,114510,717,1893,112587&page=4",
+      "retrievedAt": "2026-09-26T21:21:21.991Z",
+      "sha256": "c73e54af18a57b62971787d4a0b4daa35e5c84c24db7602da6782db04b661f48"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=234,236,237,718,744,1438,1887,1888,1891,1896,1900,10020,112513,112809,114510,717,1893,112587&page=5",
+      "retrievedAt": "2026-09-26T21:21:24.728Z",
+      "sha256": "b5ae8cf41ddeab3d19a567d64b606a4dd2656e49c8adc4a66b27732acb5c1e2e"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=229,230,231,232,670,673,674,680,681,1750,2014,100081,100087,110724,15005,132231,37,110913&page=1",
+      "retrievedAt": "2026-09-26T21:21:26.678Z",
+      "sha256": "55bb6c63f3f37efa0bd9cc86dd7c4065877842f5ce542c6b0a723e4de091f73a"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=229,230,231,232,670,673,674,680,681,1750,2014,100081,100087,110724,15005,132231,37,110913&page=2",
+      "retrievedAt": "2026-09-26T21:21:28.509Z",
+      "sha256": "2e73d9681551a31af74a9b6f2b353a1ec1409408662bbf10c613f983b2c3c537"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=229,230,231,232,670,673,674,680,681,1750,2014,100081,100087,110724,15005,132231,37,110913&page=3",
+      "retrievedAt": "2026-09-26T21:21:30.567Z",
+      "sha256": "3f11e1abd301d7e0aa2d7be532d028081138390666e28543d1b82e21d8f4f14d"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=229,230,231,232,670,673,674,680,681,1750,2014,100081,100087,110724,15005,132231,37,110913&page=4",
+      "retrievedAt": "2026-09-26T21:21:33.369Z",
+      "sha256": "737384b2ab2b781e93d89c141d035f9ca1e6ea301eb622895a5f87708caf2716"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=229,230,231,232,670,673,674,680,681,1750,2014,100081,100087,110724,15005,132231,37,110913&page=5",
+      "retrievedAt": "2026-09-26T21:21:35.250Z",
+      "sha256": "294f1a8360b2edc34fd5957d89fe4027da9bc7b94095830ba3077add88414d1a"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=229,230,231,232,670,673,674,680,681,1750,2014,100081,100087,110724,15005,132231,37,110913&page=6",
+      "retrievedAt": "2026-09-26T21:21:36.951Z",
+      "sha256": "708be24914f780bf387c57e16bab7869496b9db5a643942a5cdb78c2f0b0d93b"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=325,326,327,436,748,101014,101026,101033,101037,110776,111339,113142,131174,101025,101032,749,132392,132868&page=1",
+      "retrievedAt": "2026-09-26T21:21:38.815Z",
+      "sha256": "34a89de5bf36d192c11bf142742d50af78e5d4ae2e14af4dc72638c7c0503789"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=325,326,327,436,748,101014,101026,101033,101037,110776,111339,113142,131174,101025,101032,749,132392,132868&page=2",
+      "retrievedAt": "2026-09-26T21:21:40.725Z",
+      "sha256": "b83350e0917f128f829bfc229dc6b77e0da67bc294d974b9fd40a23fbfc74e09"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=325,326,327,436,748,101014,101026,101033,101037,110776,111339,113142,131174,101025,101032,749,132392,132868&page=3",
+      "retrievedAt": "2026-09-26T21:21:42.501Z",
+      "sha256": "f8929c1822959173c85ff35ba5d1315e05e1bb0207b975489cd56c721b3f540d"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=325,326,327,436,748,101014,101026,101033,101037,110776,111339,113142,131174,101025,101032,749,132392,132868&page=4",
+      "retrievedAt": "2026-09-26T21:21:44.564Z",
+      "sha256": "96a644f7c132f3f69eae323aca96ea29fe8f0adf9122e9f824e6714449f36b82"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=325,326,327,436,748,101014,101026,101033,101037,110776,111339,113142,131174,101025,101032,749,132392,132868&page=5",
+      "retrievedAt": "2026-09-26T21:21:46.407Z",
+      "sha256": "496977f252b36843c92274b92fd0cae2dd4cb0af4afdadd81ae7bce1b89286d4"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=77,78,80,81,82,83,86,180,181,100804,100805,79&page=1",
+      "retrievedAt": "2026-09-26T21:21:48.541Z",
+      "sha256": "cc6131868f65da8276e9523261209970d59dcfb163c6a8873155ac84372b933c"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=77,78,80,81,82,83,86,180,181,100804,100805,79&page=2",
+      "retrievedAt": "2026-09-26T21:21:50.560Z",
+      "sha256": "a3ce5408b25ca4c2fd6000f3e8db8fd6761ae78c3892a59ffe5d235f834aae19"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=77,78,80,81,82,83,86,180,181,100804,100805,79&page=3",
+      "retrievedAt": "2026-09-26T21:21:52.498Z",
+      "sha256": "d0d85702de51854c2393fa17e070727e52dbf8dd7291961d8529faf870654977"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=77,78,80,81,82,83,86,180,181,100804,100805,79&page=4",
+      "retrievedAt": "2026-09-26T21:21:54.685Z",
+      "sha256": "dad8baf1902d4d24932eafa867d48fbe5aa0c7309f5bb728d482ecd848962f05"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=191,209,252,254,256,2017,15009,15040,111822,113616,780,781&page=1",
+      "retrievedAt": "2026-09-26T21:21:56.514Z",
+      "sha256": "1aa430e661480b8d5d1ed9c7276fa29c4bb587bd3482658e498b5d96dc65843e"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=191,209,252,254,256,2017,15009,15040,111822,113616,780,781&page=2",
+      "retrievedAt": "2026-09-26T21:21:58.754Z",
+      "sha256": "667285cb94b874e40a0f45b6dad02e1dfa736e44b293472103df620e8aa4e553"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=191,209,252,254,256,2017,15009,15040,111822,113616,780,781&page=3",
+      "retrievedAt": "2026-09-26T21:22:01.148Z",
+      "sha256": "506a838db8b9240ec6667c3ab8b875827647a16c72fedc843669d97535cab57d"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=191,209,252,254,256,2017,15009,15040,111822,113616,780,781&page=4",
+      "retrievedAt": "2026-09-26T21:22:03.208Z",
+      "sha256": "0238da60a8fb4abc393ed7148f63650140a17e2867e59925f3608dff98d98d71"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=322,324,894,896,897,898,900,1862,10032,110770,1715,286&page=1",
+      "retrievedAt": "2026-09-26T21:22:05.185Z",
+      "sha256": "5fbb29c3438dd130fed8b68037f832fd62cf8f52511ab8504fb0dc00e1541bdb"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=322,324,894,896,897,898,900,1862,10032,110770,1715,286&page=2",
+      "retrievedAt": "2026-09-26T21:22:07.079Z",
+      "sha256": "5edcf852b615f36dc8f405faecbcde1f3727ed8ef52677db31957b60172d172b"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=322,324,894,896,897,898,900,1862,10032,110770,1715,286&page=3",
+      "retrievedAt": "2026-09-26T21:22:10.146Z",
+      "sha256": "da4d62a511530eb743aab3a85e4a597c9283a6b7c408215e7d54b5dff2807139"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=322,324,894,896,897,898,900,1862,10032,110770,1715,286&page=4",
+      "retrievedAt": "2026-09-26T21:22:12.000Z",
+      "sha256": "258ecbe6579c06e874b6de2af8367da1b2006ed83ab847220634184c43cdfbca"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=605,607,111674,112096,112139,112387,112390,112391,112393,112883,113037,113057,131735,113222,131798,112389,113058,113224&page=1",
+      "retrievedAt": "2026-09-26T21:22:13.896Z",
+      "sha256": "8e0275a01b91abeaf9a20cb829988d58dd176d773805a2a97e9cec5464726f81"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=605,607,111674,112096,112139,112387,112390,112391,112393,112883,113037,113057,131735,113222,131798,112389,113058,113224&page=2",
+      "retrievedAt": "2026-09-26T21:22:15.863Z",
+      "sha256": "540311d670d4f853b713a3fa7df6bfc0cee044acb2a82d444bc74054fdbf4180"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=605,607,111674,112096,112139,112387,112390,112391,112393,112883,113037,113057,131735,113222,131798,112389,113058,113224&page=3",
+      "retrievedAt": "2026-09-26T21:22:17.829Z",
+      "sha256": "dc7039ce0dc2db9dbc4bfa5a0dd6602c31422e2e4e3c3beceb3c31cdd3d6597b"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=605,607,111674,112096,112139,112387,112390,112391,112393,112883,113037,113057,131735,113222,131798,112389,113058,113224&page=4",
+      "retrievedAt": "2026-09-26T21:22:20.786Z",
+      "sha256": "8e4c5060fb37995471f5e3a76778947262b238e1c3c15baceb19bea4ba0bfdea"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=605,607,111674,112096,112139,112387,112390,112391,112393,112883,113037,113057,131735,113222,131798,112389,113058,113224&page=5",
+      "retrievedAt": "2026-09-26T21:22:23.137Z",
+      "sha256": "8e91ba7f6a3039ada8452c0ef7952ecaea84ccab013d17953a8c8032118ad8b5"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=605,607,111674,112096,112139,112387,112390,112391,112393,112883,113037,113057,131735,113222,131798,112389,113058,113224&page=6",
+      "retrievedAt": "2026-09-26T21:22:24.927Z",
+      "sha256": "1bc1279559c3f142cd750eca137d6ed0c9b1798a82ca46344509958a831cd55f"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=980,982,1473,1474,1477,1478,2055,110765,112115,112258,112555,112554&page=1",
+      "retrievedAt": "2026-09-26T21:22:27.242Z",
+      "sha256": "406f0d0541e1de7598020bd32f8fa0f895beb0a089453f598f557cae903a35ea"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=980,982,1473,1474,1477,1478,2055,110765,112115,112258,112555,112554&page=2",
+      "retrievedAt": "2026-09-26T21:22:29.123Z",
+      "sha256": "8b8c46f08ac69496e45712f5655212cd6d125afbf2e4e8a8d4f3b82bda6c6421"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=980,982,1473,1474,1477,1478,2055,110765,112115,112258,112555,112554&page=3",
+      "retrievedAt": "2026-09-26T21:22:31.293Z",
+      "sha256": "7de876cacd5fce1f541bac1b06f202d0f07c27eab1696b9e614bb8ba7cbfd377"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=980,982,1473,1474,1477,1478,2055,110765,112115,112258,112555,112554&page=4",
+      "retrievedAt": "2026-09-26T21:22:33.327Z",
+      "sha256": "a6e2db984629f261e9f1fd2f8a87646a227b5b32b009805f6f0b8ae415510c52"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=980,982,1473,1474,1477,1478,2055,110765,112115,112258,112555,112554&page=5",
+      "retrievedAt": "2026-09-26T21:22:35.474Z",
+      "sha256": "03270c1f074e733647c92eea8f667e458daf270c4b1dbf836cee77a1c18d8448"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=110955,111724,111768,111774,111779,112163,112540,116360,116361,131173,131487,131488,131531,132305,132139,132784&page=1",
+      "retrievedAt": "2026-09-26T21:22:37.407Z",
+      "sha256": "d112b92e83a84fba5fae71bcb7d1c99460367d052acc50500728171e0c43c511"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=110955,111724,111768,111774,111779,112163,112540,116360,116361,131173,131487,131488,131531,132305,132139,132784&page=2",
+      "retrievedAt": "2026-09-26T21:22:39.004Z",
+      "sha256": "142d9aa5041a1765be79bcbed03d8a0e8d7df16459a65c4e8b5d64bfc95338cc"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=110955,111724,111768,111774,111779,112163,112540,116360,116361,131173,131487,131488,131531,132305,132139,132784&page=3",
+      "retrievedAt": "2026-09-26T21:22:40.926Z",
+      "sha256": "b76908a42bdc5e190d1056cae0c99fe52c95ef140ae25b7402378a64fb9d405e"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=110955,111724,111768,111774,111779,112163,112540,116360,116361,131173,131487,131488,131531,132305,132139,132784&page=4",
+      "retrievedAt": "2026-09-26T21:22:42.737Z",
+      "sha256": "67624c8d100656ec61d95a4f9b13f8130b3d554a7cc4b2d94d823e76331ca8ab"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=113040,113146,113257,113297,113298,113299,113300,113301,113302,115202,131461&page=1",
+      "retrievedAt": "2026-09-26T21:22:44.539Z",
+      "sha256": "8a59a60b5f46b314d2610848f4d8676b4ff1b3badf2b184726f84289ea7ff433"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=113040,113146,113257,113297,113298,113299,113300,113301,113302,115202,131461&page=2",
+      "retrievedAt": "2026-09-26T21:22:46.761Z",
+      "sha256": "e5f723a3a97df23a1a5ec383f80eb0ac352905c020c60c1453100260fbefcd22"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=113040,113146,113257,113297,113298,113299,113300,113301,113302,115202,131461&page=3",
+      "retrievedAt": "2026-09-26T21:22:48.270Z",
+      "sha256": "b8822919b63b264f17098d250555c1ea6225e29212e8b95d76b60f1a2c360329"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=687,688,689,691,693,694,695,696,697,698,101112,111065,111138,111139,111140,111144,111651,111928,112134,112606,112828,112885,112893,112996,113018,113149,114161,114162,114640,131439&page=1",
+      "retrievedAt": "2026-09-26T21:22:50.392Z",
+      "sha256": "08d66170aff0cad05aeff1b14e9d78dd451bbf2e4ca5bc70672170b56684f21c"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=687,688,689,691,693,694,695,696,697,698,101112,111065,111138,111139,111140,111144,111651,111928,112134,112606,112828,112885,112893,112996,113018,113149,114161,114162,114640,131439&page=2",
+      "retrievedAt": "2026-09-26T21:22:52.352Z",
+      "sha256": "d574b11df0fc0248a79441b7a75dd627263a0f7027127a0f571bf5ceab50db18"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=687,688,689,691,693,694,695,696,697,698,101112,111065,111138,111139,111140,111144,111651,111928,112134,112606,112828,112885,112893,112996,113018,113149,114161,114162,114640,131439&page=3",
+      "retrievedAt": "2026-09-26T21:22:54.377Z",
+      "sha256": "5bada3c91be7b3c4e187611f9cf02791f2510e6350d7908b8ca89682ccb5d5db"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=687,688,689,691,693,694,695,696,697,698,101112,111065,111138,111139,111140,111144,111651,111928,112134,112606,112828,112885,112893,112996,113018,113149,114161,114162,114640,131439&page=4",
+      "retrievedAt": "2026-09-26T21:22:56.176Z",
+      "sha256": "29e2ae35aac9d41c952a37d037a30a83c31003e71449588e00d87ec6ee697df8"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=687,688,689,691,693,694,695,696,697,698,101112,111065,111138,111139,111140,111144,111651,111928,112134,112606,112828,112885,112893,112996,113018,113149,114161,114162,114640,131439&page=5",
+      "retrievedAt": "2026-09-26T21:22:58.222Z",
+      "sha256": "90724617ebd7fe16e0fbca9ac2eff8f4e68e4c7cabf51fd95abc4f1fb8ae80e3"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=687,688,689,691,693,694,695,696,697,698,101112,111065,111138,111139,111140,111144,111651,111928,112134,112606,112828,112885,112893,112996,113018,113149,114161,114162,114640,131439&page=6",
+      "retrievedAt": "2026-09-26T21:23:00.211Z",
+      "sha256": "689aed090bb92925635af6f4050de1b522fac126bb1cf333d0a594db472680df"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=687,688,689,691,693,694,695,696,697,698,101112,111065,111138,111139,111140,111144,111651,111928,112134,112606,112828,112885,112893,112996,113018,113149,114161,114162,114640,131439&page=7",
+      "retrievedAt": "2026-09-26T21:23:02.241Z",
+      "sha256": "3a3678e743415371f571d38f5d8364e082550b388cabf8fa6aad423d00e03919"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=687,688,689,691,693,694,695,696,697,698,101112,111065,111138,111139,111140,111144,111651,111928,112134,112606,112828,112885,112893,112996,113018,113149,114161,114162,114640,131439&page=8",
+      "retrievedAt": "2026-09-26T21:23:04.693Z",
+      "sha256": "2c3ac8e852ac5a6474651fff3c70ae34725de0939042df17587428f16051f679"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=687,688,689,691,693,694,695,696,697,698,101112,111065,111138,111139,111140,111144,111651,111928,112134,112606,112828,112885,112893,112996,113018,113149,114161,114162,114640,131439&page=9",
+      "retrievedAt": "2026-09-26T21:23:06.587Z",
+      "sha256": "162157e8cd62b857c0002ee2318a69474ea30a545363a87de1ee948613a18f19"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=101084,101088,110093,110396,110404,110953,111020,111708,111711,111715,111716,112689,112713,112965,113044,115472,111707,112670,1013,1876,101083,111019,111022,111710,110580,1877,101085,110395,113050,115470&page=1",
+      "retrievedAt": "2026-09-26T21:23:08.580Z",
+      "sha256": "01d9bc044ff47bd9513c51f28b49bea0aa6df74b5ec2c2becc29efdbeca277d4"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=101084,101088,110093,110396,110404,110953,111020,111708,111711,111715,111716,112689,112713,112965,113044,115472,111707,112670,1013,1876,101083,111019,111022,111710,110580,1877,101085,110395,113050,115470&page=2",
+      "retrievedAt": "2026-09-26T21:23:10.404Z",
+      "sha256": "a3e2e6859f5d61c490f2df061c45082c1d3e715ea809a5334b470e20e04dcc53"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=101084,101088,110093,110396,110404,110953,111020,111708,111711,111715,111716,112689,112713,112965,113044,115472,111707,112670,1013,1876,101083,111019,111022,111710,110580,1877,101085,110395,113050,115470&page=3",
+      "retrievedAt": "2026-09-26T21:23:12.696Z",
+      "sha256": "8ebc0535b4714500db782161ce27dfa8088f9c13e285ab93ba25c82e68b0d67c"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=101084,101088,110093,110396,110404,110953,111020,111708,111711,111715,111716,112689,112713,112965,113044,115472,111707,112670,1013,1876,101083,111019,111022,111710,110580,1877,101085,110395,113050,115470&page=4",
+      "retrievedAt": "2026-09-26T21:23:14.877Z",
+      "sha256": "a337abf7fe97c355bdc1768b99004c0d1132ea8ec3296f475df09152a6fc78af"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=101084,101088,110093,110396,110404,110953,111020,111708,111711,111715,111716,112689,112713,112965,113044,115472,111707,112670,1013,1876,101083,111019,111022,111710,110580,1877,101085,110395,113050,115470&page=5",
+      "retrievedAt": "2026-09-26T21:23:16.695Z",
+      "sha256": "2a89dee06ce1c883ca222b786718288026b6444a9bc770164fc27fdd72291547"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=101084,101088,110093,110396,110404,110953,111020,111708,111711,111715,111716,112689,112713,112965,113044,115472,111707,112670,1013,1876,101083,111019,111022,111710,110580,1877,101085,110395,113050,115470&page=6",
+      "retrievedAt": "2026-09-26T21:23:18.537Z",
+      "sha256": "968b04a6cac15ed9475ede0c6c98235a342c01fd8154215dcae897c5c57aaa0e"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=101084,101088,110093,110396,110404,110953,111020,111708,111711,111715,111716,112689,112713,112965,113044,115472,111707,112670,1013,1876,101083,111019,111022,111710,110580,1877,101085,110395,113050,115470&page=7",
+      "retrievedAt": "2026-09-26T21:23:20.783Z",
+      "sha256": "d07d43f64a48924e6bdf0186fa47a0ee135ea1b16bfcd31dddffd8633997cd00"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=101084,101088,110093,110396,110404,110953,111020,111708,111711,111715,111716,112689,112713,112965,113044,115472,111707,112670,1013,1876,101083,111019,111022,111710,110580,1877,101085,110395,113050,115470&page=8",
+      "retrievedAt": "2026-09-26T21:23:23.095Z",
+      "sha256": "61fdec866d54bb2a8f9c3a1c726c30efcaaa78030edfb0ff7c5ccbabc22727f0"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=101084,101088,110093,110396,110404,110953,111020,111708,111711,111715,111716,112689,112713,112965,113044,115472,111707,112670,1013,1876,101083,111019,111022,111710,110580,1877,101085,110395,113050,115470&page=9",
+      "retrievedAt": "2026-09-26T21:23:24.744Z",
+      "sha256": "ebd7b60b24de9d066a83417876ac0fd87ecdf406b45489be937e05ab489a0617"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=1032,1878,1879,1880,1882,1970,101114,101116,101121,110144,110147,110150,110152,110781,111678,112678,113134,1881&page=1",
+      "retrievedAt": "2026-09-26T21:23:26.488Z",
+      "sha256": "b617652aec5db989f57dc578f2a549062c56be6d49f7870bbd479f47fccaa20a"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=1032,1878,1879,1880,1882,1970,101114,101116,101121,110144,110147,110150,110152,110781,111678,112678,113134,1881&page=2",
+      "retrievedAt": "2026-09-26T21:23:28.424Z",
+      "sha256": "3f260d05bb4e46d49ce236407ea3d5e0ca09d99921f6022f26231860e51ef8c1"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=1032,1878,1879,1880,1882,1970,101114,101116,101121,110144,110147,110150,110152,110781,111678,112678,113134,1881&page=3",
+      "retrievedAt": "2026-09-26T21:23:30.300Z",
+      "sha256": "fa1cb4d380ce459b240f0b4fe702e52bd03e188931f51fec9d43a82f60edfa72"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=1032,1878,1879,1880,1882,1970,101114,101116,101121,110144,110147,110150,110152,110781,111678,112678,113134,1881&page=4",
+      "retrievedAt": "2026-09-26T21:23:32.254Z",
+      "sha256": "d8b5ee1d03e95fc12c7c317b588056752eb73914278a82480a0eaceb74753c44"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=1032,1878,1879,1880,1882,1970,101114,101116,101121,110144,110147,110150,110152,110781,111678,112678,113134,1881&page=5",
+      "retrievedAt": "2026-09-26T21:23:34.399Z",
+      "sha256": "3824f1e08429b46912035a1d3255e93c5a4e2dcfc2a14d7c407b8775d6bba8ec"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=111393,111395,111396,111397,111398,111399,111400,111766,112224,112427,114604,131739&page=1",
+      "retrievedAt": "2026-09-26T21:23:36.303Z",
+      "sha256": "138031ff280a28cdbd4e068d8f794c8e02a8dc91bdcbbee6408f301535176623"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=111393,111395,111396,111397,111398,111399,111400,111766,112224,112427,114604,131739&page=2",
+      "retrievedAt": "2026-09-26T21:23:38.243Z",
+      "sha256": "c52b13a971313254250e6bc1a6937d7a949d6783821633be6080979d05bf84a1"
+    },
+    {
+      "url": "https://www.ea.com/games/ea-sports-fc/ratings?gender=0&team=111393,111395,111396,111397,111398,111399,111400,111766,112224,112427,114604,131739&page=3",
+      "retrievedAt": "2026-09-26T21:23:40.068Z",
+      "sha256": "e8ed53a0c588793e0a2b18886c50e440d736b138a2c77fb4807cd4b6a57c8d93"
+    }
+  ],
+  "clubAliases": {
+    "sources": [
+      "https://www.legaseriea.it/team",
+      "https://www.atleticodesanluis.mx/noticias/2375/Atltico-de-San-Luis-ya-conoce-su-calendario-para-el-Apertura-2026"
+    ],
+    "names": {
+      "110150": "Querétaro FC",
+      "110781": "Club León",
+      "112678": "Atlético de San Luis",
+      "113134": "FC Juárez",
+      "115845": "Atalanta",
+      "131681": "AC Milan",
+      "131682": "Inter"
+    },
+    "logos": {
+      "115845": "https://media-sdp.legaseriea.it/clubLogos/b5846a2413804c2e8cab8b773b18370a_light.webp",
+      "131681": "https://media-sdp.legaseriea.it/clubLogos/d0867ddf777c41789ca282b8276002b0_light.webp",
+      "131682": "https://media-sdp.legaseriea.it/clubLogos/b7421caff23448c49134fa4f9095ee09_light.webp"
+    }
+  }
+}

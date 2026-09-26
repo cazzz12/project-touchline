@@ -17,13 +17,14 @@ Object.assign(formations,{
   '5-3-2':['GK','RB','CB','CB','CB','LB','CM','CDM','CM','ST','ST'],
   '5-2-3':['GK','RB','CB','CB','CB','LB','CM','CM','RW','ST','LW']
 });
-const groups = { GK:'GK',RB:'DEF',CB:'DEF',LB:'DEF',CDM:'MID',CM:'MID',CAM:'MID',RM:'WING',LM:'WING',RW:'WING',LW:'WING',ST:'ST' };
+const groups = { GK:'GK',RB:'DEF',RWB:'DEF',CB:'DEF',LB:'DEF',LWB:'DEF',CDM:'MID',CM:'MID',CAM:'MID',RM:'WING',LM:'WING',RW:'WING',LW:'WING',ST:'ST',CF:'ST' };
 // Official squad pages only specify broad roles. Do not invent a preferred side.
 export function positionFit(position,role){
   if(position===role)return 1;
   if((position==='DEF'&&groups[role]==='DEF')||(position==='MID'&&['CDM','CM','CAM','LM','RM'].includes(role))||(position==='ATT'&&['RW','LW','ST'].includes(role)))return 1;
   return groups[position]&&groups[position]===groups[role]?.93:.78;
 }
+export const playerPositionFit=(player,role)=>Math.max(positionFit(player.position,role),...(player.alternatePositions||[]).map(position=>positionFit(position,role)));
 const clamp = (n,a,b) => Math.max(a,Math.min(b,n));
 const pick = (array, random) => array[Math.floor(random() * array.length)];
 export function createClubs(seed = 42) {
@@ -38,7 +39,7 @@ export function createClubs(seed = 42) {
   }));
 }
 function fit(player, role) {
-  const group = groups[role], suitability=positionFit(player.position,role),same=suitability===1?20:suitability===.93?8:-12;
+  const group = groups[role], suitability=playerPositionFit(player,role),same=suitability===1?20:suitability===.93?8:-12;
   const primary = group === 'GK' ? (player.defending + player.composure)/2 : group === 'DEF' ? player.defending : group === 'ST' ? (player.finishing + player.attack)/2 : (player.attack + player.passing)/2;
   return same + primary*.65 + player.fitness*.12 + player.morale*.08;
 }
@@ -73,7 +74,7 @@ export function simulate({ seed = 12345, homeTactics = {}, awayTactics = {}, clu
   const active = team => team.slice(1).filter(Boolean);
   const opponent = i => 1-i;
   const sample = (team) => pick(active(team),random);
-  const fit = (player,role) => positionFit(player.position,role);
+  const fit = (player,role) => playerPositionFit(player,role);
   for (let minute=startMinute; minute<=endMinute; minute++) {
     if(abandoned.length)break;
     minutePlayed=minute;

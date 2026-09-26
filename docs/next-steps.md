@@ -1,6 +1,12 @@
 # Wat blijft er te doen?
 
-Stand: **0.19.0, 26 september 2026**. De lokale manager blijft beschikbaar. Daarnaast is de eerste servergestuurde multiplayerproef gebouwd en met afzonderlijke accounts getest. De proef draait lokaal; er is nog geen publieke online release.
+Stand: **0.20.0, 26 september 2026**. De lokale manager blijft beschikbaar. Daarnaast is de eerste servergestuurde multiplayerproef gebouwd en met afzonderlijke accounts getest. De proef draait lokaal; er is nog geen publieke online release.
+
+## Werelddata
+
+Gebouwd: catalogus met 20 competities, 351 clubs en 9.636 spelers; FC 26-ratings met expliciete FC 27-aanvulling; zestien speelbare online competities met volledige heen-en-terugschema’s. Bestaande saves veranderen niet.
+
+Nog open: alle selecties tegen officiële clubbronnen controleren, ontbrekende spelers aanvullen, Portugal/Turkije/China/A-League speelbaar maken, Japan/Brazilië/Qatar/VAE aansluiten en de uitgebreide lokale carrière geschikt maken voor andere competities. Lees [de precieze dekking](world-data.md).
 
 ## Tot en met multiplayer bereikt
 

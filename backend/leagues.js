@@ -3,37 +3,38 @@ import {newGame,schedule,standings} from '../public/game.js';
 import {formations,lineUp,simulate} from '../public/engine.js';
 import {transaction} from './database.js';
 import {fail,digest} from './auth.js';
+import {worldRepository} from './world.js';
 
 const integer=(v,min,max)=>Number.isInteger(v)&&v>=min&&v<=max;
 const tactics={formation:'4-3-3',mentality:50,pressing:50,tempo:50};
 export function fields(value,keys){if(!value||Array.isArray(value)||typeof value!=='object'||Object.keys(value).some(k=>!keys.includes(k)))fail(400,'Ongeldige opdracht.');}
 const label=(s,max=50)=>typeof s==='string'&&s.trim().length>=2&&s.trim().length<=max&&!/[\x00-\x1f]/.test(s);
-function fresh(title){
-  const clubs=newGame().clubs;
-  return {schema:1,title,phase:'lobby',season:1,round:0,seed:randomBytes(4).readUInt32BE(),clubs,results:[],reports:[],offers:[],history:[],
+function fresh(title,world){
+  const clubs=world?.clubs||newGame().clubs;
+  return {schema:1,title,...(world?{catalog:world.catalog}:{}),phase:'lobby',season:1,round:0,seed:randomBytes(4).readUInt32BE(),clubs,results:[],reports:[],offers:[],history:[],
     managers:clubs.map(c=>({tactics:{...tactics},lineupIds:lineUp(c,'4-3-3',1).map(p=>p.id),credits:120000,trainedRound:-1,ready:false,ledger:[{season:1,round:0,amount:120000,label:'Startbudget',balance:120000}]}))};
 }
 function cash(state,i,amount,label){const m=state.managers[i];m.credits+=amount;m.ledger.push({season:state.season,round:state.round+1,amount,label,balance:m.credits});m.ledger=m.ledger.slice(-100);}
 function lineup(state,i){const m=state.managers[i];if(m.lineupIds.some(id=>!state.clubs[i].players.some(p=>p.id===id)))m.lineupIds=lineUp(state.clubs[i],m.tactics.formation,1).map(p=>p.id);}
 function settleRound(s){
   s.offers=[];s.reports=[];
-  for(const [home,away] of schedule()[s.round]){
+  for(const [home,away] of schedule(s.clubs.length)[s.round]){
     const result=simulate({seed:(s.seed+s.season*100003+s.round*101+home*7)>>>0,clubs:[s.clubs[home],s.clubs[away]],homeTactics:s.managers[home].tactics,awayTactics:s.managers[away].tactics,homeSelection:s.managers[home].lineupIds,awaySelection:s.managers[away].lineupIds,keeperRules:1});
     const goals=result.stats.map(v=>v.goals);s.results.push({home,away,goals,round:s.round+1});
     s.reports.push({home,away,goals,round:s.round+1,stats:result.stats,events:result.events});
     for(const [i,other] of [[home,away],[away,home]]){const n=i===home?0:1;cash(s,i,goals[n]>goals[1-n]?26000:goals[n]===goals[1-n]?18000:10000,`Wedstrijdbonus tegen ${s.clubs[other].name}`);}
   }
-  s.round++;s.managers.forEach(m=>{m.ready=false;});if(s.round===10)s.phase='complete';
+  s.round++;s.managers.forEach(m=>{m.ready=false;});if(s.round===schedule(s.clubs.length).length)s.phase='complete';
 }
 
-export function leagueService(db,{now=Date.now}={}){
+export function leagueService(db,{now=Date.now,world=worldRepository()}={}){
   const get=id=>{const row=db.prepare('SELECT * FROM leagues WHERE id=?').get(id);if(!row)fail(404,'Competitie niet gevonden.');return {...row,data:JSON.parse(row.state)};};
   const members=id=>db.prepare('SELECT m.account,m.club,a.name FROM members m JOIN accounts a ON a.id=m.account WHERE league=? ORDER BY club').all(id);
   const member=(id,user)=>{const m=db.prepare('SELECT club FROM members WHERE league=? AND account=?').get(id,user);if(!m)fail(403,'Je bent geen deelnemer aan deze competitie.');return m.club;};
   function view(id,user){
     const i=member(id,user),r=get(id),s=r.data,people=members(id);
-    return {id:r.id,code:r.code,version:r.version,owner:r.owner===user,myClub:i,title:s.title,phase:s.phase,season:s.season,round:s.round,clubs:s.clubs,
-      members:people.map(p=>({club:p.club,name:p.name,ready:s.managers[p.club].ready})),my:s.managers[i],table:standings(s),fixtures:s.round<10?schedule()[s.round]:[],results:s.results,reports:s.reports,history:s.history,
+    return {id:r.id,code:r.code,version:r.version,owner:r.owner===user,myClub:i,title:s.title,phase:s.phase,season:s.season,round:s.round,totalRounds:schedule(s.clubs.length).length,catalog:s.catalog||null,clubs:s.clubs,
+      members:people.map(p=>({club:p.club,name:p.name,ready:s.managers[p.club].ready})),my:s.managers[i],table:standings(s),fixtures:schedule(s.clubs.length)[s.round]||[],results:s.results,reports:s.reports,history:s.history,
       offers:s.offers.filter(o=>o.buyer===i||o.seller===i)};
   }
   function once(user,input,fn){
@@ -44,16 +45,18 @@ export function leagueService(db,{now=Date.now}={}){
       const result=fn();db.prepare('INSERT INTO operations VALUES (?,?,?,?,?)').run(user,input.id,fingerprint,JSON.stringify(result),now());return result;
     });
   }
-  function create(user,input){fields(input,['id','title','club']);if(!label(input.title)||!integer(input.club,0,5))fail(400,'Kies een naam en een echte club.');
+  function create(user,input){fields(input,['id','title','club','catalogId','catalogSnapshot']);if(!label(input.title)||!integer(input.club,0,39)||input.catalogId!==undefined&&typeof input.catalogId!=='string')fail(400,'Kies een naam en een echte club.');
     return once(user,input,()=>{
       if(db.prepare('SELECT count(*) AS n FROM members WHERE account=?').get(user).n>=10)fail(400,'Je kunt aan maximaal tien competities deelnemen.');
-      const id=randomUUID(),code=randomBytes(6).toString('hex').toUpperCase();db.prepare('INSERT INTO leagues VALUES (?,?,?,?,?)').run(id,user,code,1,JSON.stringify(fresh(input.title.trim())));db.prepare('INSERT INTO members VALUES (?,?,?)').run(id,user,input.club);return {id};
+      let selected;if(input.catalogId){if(input.catalogSnapshot!==world.index?.id)fail(409,'De clubgegevens zijn veranderd. Vernieuw de pagina en kies je club opnieuw.');try{selected=world.create(input.catalogId);}catch(error){fail(400,error.message);}}
+      const state=fresh(input.title.trim(),selected);if(input.club>=state.clubs.length)fail(400,'Kies een club uit deze competitie.');
+      const id=randomUUID(),code=randomBytes(6).toString('hex').toUpperCase();db.prepare('INSERT INTO leagues VALUES (?,?,?,?,?)').run(id,user,code,1,JSON.stringify(state));db.prepare('INSERT INTO members VALUES (?,?,?)').run(id,user,input.club);return {id};
     });
   }
-  function join(user,input){fields(input,['id','code','club']);if(typeof input.code!=='string'||!/^[A-F0-9]{12}$/i.test(input.code)||!integer(input.club,0,5))fail(400,'Controleer je competitiecode en club.');
+  function join(user,input){fields(input,['id','code','club']);if(typeof input.code!=='string'||!/^[A-F0-9]{12}$/i.test(input.code)||!integer(input.club,0,39))fail(400,'Controleer je competitiecode en club.');
     return once(user,input,()=>{
       const r=db.prepare('SELECT * FROM leagues WHERE code=?').get(input.code.toUpperCase());if(!r)fail(404,'Competitiecode niet gevonden.');
-      if(JSON.parse(r.state).phase!=='lobby')fail(409,'Deze competitie is al gestart.');
+      const state=JSON.parse(r.state);if(state.phase!=='lobby')fail(409,'Deze competitie is al gestart.');if(input.club>=state.clubs.length)fail(400,'Kies een club uit deze competitie.');
       if(db.prepare('SELECT 1 FROM members WHERE league=? AND (account=? OR club=?)').get(r.id,user,input.club))fail(409,'Deze club is bezet of je doet al mee.');
       if(db.prepare('SELECT count(*) AS n FROM members WHERE account=?').get(user).n>=10)fail(400,'Je kunt aan maximaal tien competities deelnemen.');
       db.prepare('INSERT INTO members VALUES (?,?,?)').run(r.id,user,input.club);db.prepare('UPDATE leagues SET version=version+1 WHERE id=?').run(r.id);return {id:r.id};
@@ -83,7 +86,7 @@ export function leagueService(db,{now=Date.now}={}){
             const p=s.clubs[i].players.find(p=>p.id===input.playerId);if(!p||!['attack','passing','defending','pace','finishing','composure'].includes(input.skill))fail(400,'Kies een eigen speler en vaardigheid.');
             if(m.trainedRound===s.round)fail(409,'Je hebt deze speeldag al getraind.');if(m.credits<1000||p[input.skill]>=99)fail(400,'Onvoldoende credits of vaardigheid al maximaal.');p[input.skill]++;m.trainedRound=s.round;cash(s,i,-1000,`Training ${p.name}`);
           }else if(input.type==='offer'){
-            const seller=input.seller;if(!integer(seller,0,5)||seller===i||!people.some(p=>p.club===seller))fail(400,'Bied op een speler van een andere menselijke manager.');
+            const seller=input.seller;if(!integer(seller,0,s.clubs.length-1)||seller===i||!people.some(p=>p.club===seller))fail(400,'Bied op een speler van een andere menselijke manager.');
             if(s.managers[seller].ready)fail(409,'Deze manager is al klaar voor de speeldag.');
             if(!s.clubs[seller].players.some(p=>p.id===input.playerId)||!integer(input.amount,1000,10000000)||input.amount>m.credits)fail(400,'Ongeldige speler of bedrag.');
             if(s.offers.filter(o=>o.buyer===i).length>=5||s.offers.some(o=>o.buyer===i&&o.playerId===input.playerId))fail(409,'Maximaal vijf biedingen en één bod per speler.');
@@ -102,6 +105,12 @@ export function leagueService(db,{now=Date.now}={}){
       db.prepare('UPDATE leagues SET version=version+1,state=? WHERE id=?').run(JSON.stringify(s),leagueId);return {id:leagueId};
     });
   }
-  return {create,join,act,view,list:user=>db.prepare('SELECT l.id,l.state,m.club FROM leagues l JOIN members m ON m.league=l.id WHERE m.account=?').all(user).map(r=>{const s=JSON.parse(r.state);return {id:r.id,title:s.title,phase:s.phase,club:s.clubs[r.club].name,round:s.round,season:s.season};}),
+  function lobby(code){
+    if(typeof code!=='string'||!/^[A-F0-9]{12}$/i.test(code))fail(400,'Controleer je competitiecode.');
+    const r=db.prepare('SELECT * FROM leagues WHERE code=?').get(code.toUpperCase());if(!r)fail(404,'Competitiecode niet gevonden.');const s=JSON.parse(r.state);
+    if(s.phase!=='lobby')fail(409,'Deze competitie is al gestart.');const occupied=new Set(members(r.id).map(m=>m.club));
+    return {code:r.code,title:s.title,clubs:s.clubs.map((c,i)=>({index:i,name:c.name,occupied:occupied.has(i)}))};
+  }
+  return {create,join,act,view,lobby,catalog:()=>world.index,list:user=>db.prepare('SELECT l.id,l.state,m.club FROM leagues l JOIN members m ON m.league=l.id WHERE m.account=?').all(user).map(r=>{const s=JSON.parse(r.state);return {id:r.id,title:s.title,phase:s.phase,club:s.clubs[r.club].name,round:s.round,totalRounds:schedule(s.clubs.length).length,season:s.season};}),
     rename:(user,name)=>{if(!label(name,30))fail(400,'Gebruik een managernaam van 2 tot 30 tekens.');db.prepare('UPDATE accounts SET name=? WHERE id=?').run(name.trim(),user);}};
 }

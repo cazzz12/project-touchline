@@ -39,11 +39,13 @@ export const initialClubs=clubData.map(club=>({name:club.name,players:club.playe
 })}));
 export const rating = p => Math.round((p.attack+p.passing+p.defending+p.pace+p.finishing+p.composure)/6);
 export const cost = p => Math.round((rating(p)-40)**2 * 145);
-export function schedule() {
-  let order=[0,1,2,3,4,5]; const rounds=[];
-  for(let round=0;round<5;round++) {
-    rounds.push(Array.from({length:3},(_,i)=>round%2 ? [order[5-i],order[i]] : [order[i],order[5-i]]));
-    order=[order[0],order[5],...order.slice(1,5)];
+export function schedule(count=6) {
+  if(!Number.isInteger(count)||count<2||count>40)throw new Error('Invalid club count');
+  let order=Array.from({length:count},(_,i)=>i);if(count%2)order.push(-1);
+  const size=order.length,rounds=[];
+  for(let round=0;round<size-1;round++) {
+    rounds.push(Array.from({length:size/2},(_,i)=>round%2 ? [order[size-1-i],order[i]] : [order[i],order[size-1-i]]).filter(pair=>!pair.includes(-1)));
+    order=[order[0],order[size-1],...order.slice(1,size-1)];
   }
   return [...rounds,...rounds.map(day=>day.map(([a,b])=>[b,a]))];
 }

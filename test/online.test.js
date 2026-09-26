@@ -28,6 +28,15 @@ test('configuration confines test codes to loopback and refuses incomplete produ
   assert.equal(configuration({}).dev,true);assert.throws(()=>configuration({HOST:'0.0.0.0'}));assert.throws(()=>configuration({TOUCHLINE_AUTH_MODE:'production'}));assert.throws(()=>configuration({TOUCHLINE_ORIGIN:'https://example.com'}));
   assert.equal(configuration({TOUCHLINE_AUTH_MODE:'production',TOUCHLINE_ORIGIN:'https://game.example',RESEND_API_KEY:'test-placeholder',TOUCHLINE_EMAIL_FROM:'login@example.test'}).dev,false);
 });
+test('world catalogue and invitation endpoints use server data and retain authentication and CSRF checks',async t=>{
+  const env=await setup(t),a=env.client(),b=env.client();assert.equal((await a.call('/api/catalog')).status,401);await a.login();await b.login('world@touchline.test');
+  const catalog=(await a.call('/api/catalog')).body;assert.equal(catalog.leagues.length,20);
+  const created=await a.call('/api/leagues',{id:randomUUID(),title:'Wereld API',club:29,catalogId:'mls',catalogSnapshot:catalog.id});assert.equal(created.status,200);
+  const state=await a.state(created.body.id),lobby=await b.call('/api/leagues/lobby',{code:state.code});assert.equal(lobby.status,200);assert.equal(lobby.body.clubs.length,30);assert.equal(lobby.body.clubs[29].occupied,true);assert.equal(lobby.body.clubs[0].players,undefined);
+  assert.equal((await b.call('/api/leagues/lobby',{code:state.code},{'X-CSRF-Token':'wrong'})).status,403);
+  assert.equal((await b.call('/api/leagues/join',{id:randomUUID(),code:state.code,club:29})).status,409);
+  assert.equal((await b.call('/api/leagues/join',{id:randomUUID(),code:state.code,club:28})).status,200);assert.equal((await b.state(created.body.id)).myClub,28);
+});
 test('email login uses a browser-bound single-use code, HttpOnly cookie and revocable session',async t=>{
   const env=await setup(t),a=env.client(),b=env.client(),c=await a.call('/api/auth/challenge',{kind:'email',identifier:'a@touchline.test'});
   assert.equal((await b.call('/api/auth/verify',{id:c.body.id,code:c.body.testCode})).status,400);

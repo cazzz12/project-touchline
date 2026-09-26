@@ -8,7 +8,7 @@ export function openDatabase(path){
   const db=new DatabaseSync(path,{timeout:5000});
   db.exec('PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL;');
   const version=db.prepare('PRAGMA user_version').get().user_version;
-  if(version>1){db.close();throw new Error('Deze database vraagt een nieuwere Touchline-versie.');}
+  if(version>2){db.close();throw new Error('Deze database vraagt een nieuwere Touchline-versie.');}
   if(version===0)transaction(db,()=>{
     db.exec(`
       CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -23,6 +23,13 @@ export function openDatabase(path){
       PRAGMA user_version=1;
     `);
     db.prepare('INSERT INTO settings VALUES (?,?)').run('auth-secret',randomBytes(32).toString('hex'));
+  });
+  if(version<2)transaction(db,()=>{
+    db.exec(`CREATE TABLE members_v2 (league TEXT NOT NULL REFERENCES leagues(id), account TEXT NOT NULL REFERENCES accounts(id), club INTEGER NOT NULL CHECK(club BETWEEN 0 AND 39), PRIMARY KEY(league,account), UNIQUE(league,club));
+      INSERT INTO members_v2 SELECT * FROM members;
+      DROP TABLE members;
+      ALTER TABLE members_v2 RENAME TO members;
+      PRAGMA user_version=2;`);
   });
   return db;
 }

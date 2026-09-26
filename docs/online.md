@@ -1,4 +1,4 @@
-# Accounts en eerste multiplayer — 0.19.0
+# Accounts en multiplayer — 0.20.0
 
 Deze versie voegt een afzonderlijke servergestuurde multiplayerproef toe aan het lokale spel. Open **Samen spelen** in het menu, of `/online`. De bestaande lokale carrière blijft op `/` staan. Browser-saves, lokale credits en backups worden niet naar de online economie geïmporteerd.
 
@@ -9,10 +9,10 @@ Node.js **24.4 of nieuwer** is vereist voor de ingebouwde SQLite-API; er zijn ge
 1. Stop een oude server met Ctrl+C en start vanuit de projectmap met `npm.cmd start`.
 2. Open `http://127.0.0.1:3000/online`.
 3. Gebruik bijvoorbeeld `ajax@touchline.test`. Klik **Vraag testcode aan**, voer de getoonde code in en meld je aan.
-4. Maak een competitie en kies Ajax. Bewaar de competitiecode.
+4. Kies een spelcompetitie, maak een competitie en kies je club. Voor de oorspronkelijke minicompetitie kun je Ajax kiezen. Bewaar de competitiecode.
 5. Open een andere browser of een privévenster voor `psv@touchline.test`. Twee gewone tabs delen cookies en zijn dus hetzelfde account. Dezelfde browser uitloggen en wisselen tussen testaccounts kan ook.
-6. Vul de code in en kies PSV. De organisator kan nu het seizoen starten.
-7. Beide managers kiezen hun elftal en tactiek en klikken **Klaar voor de speeldag**. De laatste gereedmelding verwerkt alle drie wedstrijden één keer.
+6. Vul de code in, klik **Controleer code** en kies een beschikbare club, bijvoorbeeld PSV in de minicompetitie. De organisator kan nu het seizoen starten.
+7. Beide managers kiezen hun elftal en tactiek en klikken **Klaar voor de speeldag**. De laatste gereedmelding verwerkt alle wedstrijden van die speeldag één keer.
 
 De standaardserver luistert alleen op `127.0.0.1`. De getoonde testcodes bewijzen geen eigendom van een echte mailbox en werken uitsluitend met adressen die eindigen op `.test`. Dit is geen publieke online release en geen manier om vrienden op internet uit te nodigen. Er worden geen echte e-mails of wallettransacties uitgevoerd door de tests.
 
@@ -21,9 +21,11 @@ De standaardserver luistert alleen op `127.0.0.1`. De getoonde testcodes bewijze
 - Accounts met eenmalige e-mailcodes, sessies, uitloggen, uitloggen op alle apparaten en managernaam.
 - Phantom-aanmelding via een cryptografisch gecontroleerd Solana-bericht. Een wallet en e-mailadres kunnen na een nieuwe bewijsstap aan hetzelfde account worden gekoppeld. Er is geen automatische samenvoeging van bestaande accounts.
 - Herstel via een nieuwe e-mailcode voor een gekoppeld adres. Een wallet-only account zonder gekoppelde e-mail kan niet worden hersteld als de wallet verloren gaat.
-- Competities met twee tot zes menselijke managers; overige clubs zijn computerclubs. Iedere manager heeft één unieke club per competitie. Maximaal tien competities per account.
-- Zes bestaande clubs en echte spelersnamen, handmatige basiself, tien formaties, drie tactiekwaarden en één individuele training per speeldag voor 1.000 spelcredits.
-- Tien gezamenlijke speeldagen, dezelfde ranglijst voor alle deelnemers, laatste wedstrijdverslagen, clubkassen, eigen transactielijst en doorstart naar een volgend seizoen. De laatste twintig seizoenseindstanden blijven bewaard.
+- Competities vanaf twee menselijke managers, tot het aantal clubs in de gekozen competitie; overige clubs zijn computerclubs. Iedere manager heeft één unieke club per competitie. Maximaal tien competities per account.
+- Keuze uit de oorspronkelijke zes clubs of zestien complete wereldcompetities uit de nieuwe catalogus. De catalogus bevat twintig competities; vier blijven alleen te bekijken wegens onvolledige bronselecties. Wereldcompetities gebruiken FC 26-basisratings en herkenbare FC 27-aanvullingen. Zie [bronnen en dekking](world-data.md).
+- Handmatige basiself, tien formaties, drie tactiekwaarden en één individuele training per speeldag voor 1.000 spelcredits. Primaire en alternatieve bronposities tellen mee voor de geschiktheid voor een rol. Training verandert spelwaarden, niet de bewaarde bronrating.
+- Een dubbele competitie: iedere club speelt thuis en uit tegen iedere andere club. Zes clubs geven tien speeldagen; twintig clubs geven 38 speeldagen en 380 wedstrijden. Oneven aantallen krijgen rustbeurten. Dit is ons spelschema, niet het officiële schema met eventuele conferenties of play-offs.
+- Dezelfde ranglijst voor alle deelnemers, laatste wedstrijdverslagen, clubkassen, eigen transactielijst en doorstart naar een volgend seizoen. De laatste twintig seizoenseindstanden blijven bewaard.
 - Biedingen tussen menselijke managers. De verkoper accepteert of weigert; de koper kan intrekken. Een bod reserveert geen geld. Acceptatie controleert het actuele saldo en verplaatst speler en credits in één database-transactie. Minimaal 18 spelers/twee keepers blijven bij de verkoper; maximaal 40 bij de koper. Een verkochte basisspeler veroorzaakt een nieuw automatisch gekozen elftal bij de verkoper, zodat geen ongeldige spelerreferentie blijft staan.
 - Automatisch verversen van competities, versienummers tegen verouderde wijzigingen en herhalen van een onzekere opdracht zonder dubbele verwerking. Een nog onbeantwoorde spelopdracht wordt in tabopslag bewaard voor opnieuw controleren na herladen. Andere ingelogde accounts nemen die opdracht niet over.
 
@@ -38,6 +40,8 @@ De economie is een testmodel: een startbudget van 120.000 spelcredits, wedstrijd
 ## Opslag, herstart en backup
 
 De database staat standaard in `data/touchline.sqlite`, buiten `public`. SQLite-transacties, WAL en volledige synchronisatie bewaren accounts, identiteiten, sessies, limieten, competities en verwerkte opdrachtcodes. Een herstart behoudt dezelfde gegevens. Schemawijzigingen gebruiken `PRAGMA user_version`; een onbekende nieuwere versie wordt geweigerd.
+
+Versie 0.20 gebruikt databaseschema 2. De automatische migratie verruimt de clubindex voor grotere competities en bewaart bestaande accounts, lidmaatschappen en competitiegegevens. Maak voor een update een backup. Bestaande competities houden hun opgeslagen selecties, ratings en uitslagen; de wereldcatalogus wordt alleen bij het maken van een nieuwe competitie gekopieerd. De lokale browsercarrière wordt niet omgezet. Catalogusbestanden staan in een versiegebonden map; het formulier stuurt de bekeken catalogusversie mee zodat een catalogusupdate niet ongemerkt een andere club kiest.
 
 Maak een consistente backup, ook terwijl de server draait:
 

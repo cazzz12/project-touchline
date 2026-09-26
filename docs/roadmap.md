@@ -2,7 +2,11 @@
 
 De aangeleverde concepttekst en `docs/concept.md` zijn inhoudelijk gelijk. Het oorspronkelijke document blijft intact. De latere keuzes van de gebruiker zijn leidend: in de gewone competitie alleen echte clubs en echte spelersnamen; eigen clubs pas in een toekomstige privéruimte met vrienden. Geen fictieve regens in de gewone competitie.
 
-## Lokale carrière en multiplayerproef in 0.19.0
+## Wereldcatalogus in 0.20.0
+
+20 competities, 351 clubs en 9.636 spelers, met posities, logo’s en EA-attributen. 6.838 FC 26-ratings plus 2.798 gemarkeerde FC 27-aanvullingen. Zestien competities speelbaar in multiplayer; bestaande lokale en online voortgang blijft behouden. EA-momentopname, geen volledig geverifieerde actuele officiële selecties. Zie [dekking en bronregels](world-data.md).
+
+## Lokale carrière en multiplayerproef
 
 | Conceptonderdelen | Huidige invulling |
 | --- | --- |

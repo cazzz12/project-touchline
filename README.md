@@ -1,6 +1,6 @@
 # Project Touchline
 
-Versie **0.19.0** — een speelbaar **voetbalmanager-prototype met lokale carrière en een eerste multiplayerproef** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
+Versie **0.20.0** — een speelbaar **voetbalmanager-prototype met lokale carrière en een eerste multiplayerproef** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
@@ -10,9 +10,17 @@ Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als
 
 De bestaande carrièremodus blijft lokale singleplayer. Browseropslag bevat je club en seizoen. Daarnaast is er nu een aparte servergestuurde multiplayerproef met accounts en een database; er zijn geen echte transacties of SOL rewards. Training, scouting en transfers gebruiken spelcredits. Verwijderde browsergegevens wissen je lokale carrière; servercompetities blijven bewaard. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
 
+## Wereldvoetbal
+
+Open **Wereldvoetbal** in het menu of `http://127.0.0.1:3000/world`. De catalogus bevat **20 competities, 351 clubs en 9.636 spelers** uit een EA-momentopname van 26 september 2026. Zoek op speler of club, filter op werelddeel, competitie en positie, en bekijk alle attributen in het spelersprofiel. **6.838 spelers gebruiken FC 26-basisratings; 2.798 krijgen een duidelijk gemarkeerde FC 27-aanvulling.**
+
+Bij **Samen spelen → Maak een competitie** kun je nu uit zestien speelbare wereldcompetities kiezen, tot dertig clubs. Het schema past zich aan, inclusief rustbeurten bij een oneven aantal clubs. De vier overige competities zijn wel te bekijken, maar hebben te kleine bronselecties om te starten. Dit zijn Touchline-competities; officiële conferenties, play-offs en promotie/degradatie worden nog niet nagebouwd.
+
+**Dit is geen garantie op alle actuele officiële selecties.** EA kan spelers en recente transfers missen. Japan, Brazilië, Qatar en de VAE ontbreken als volledige competities. De bron, editie en ontbrekende dekking blijven zichtbaar. Bestaande lokale saves en online competities houden hun spelers, trainingen, credits en uitslagen. De uitgebreide lokale carrière blijft de bestaande zesclubcompetitie. Lees [de werelddata en resterende dekking](docs/world-data.md).
+
 ## Nieuw: accounts en samen spelen
 
-Open **Samen spelen** in het menu of `http://127.0.0.1:3000/online`. Maak een competitie, laat een tweede manager via de competitiecode deelnemen en speel samen tien speeldagen. De server bewaart accounts, unieke clubkeuzes, opstellingen, tactiek, training, onderlinge biedingen, credits en uitslagen in SQLite. Zodra alle managers klaar zijn, rekent hij de speeldag één keer af. Herladen en een serverherstart behouden de voortgang.
+Open **Samen spelen** in het menu of `http://127.0.0.1:3000/online`. Maak een competitie, laat een tweede manager via de competitiecode deelnemen en speel samen een seizoen. De oorspronkelijke zesclubvariant heeft tien speeldagen; grotere competities hebben een passend langer schema. De server bewaart accounts, unieke clubkeuzes, opstellingen, tactiek, training, onderlinge biedingen, credits en uitslagen in SQLite. Zodra alle managers klaar zijn, rekent hij de speeldag één keer af. Herladen en een serverherstart behouden de voortgang.
 
 Standaard draait dit **uitsluitend als lokale test**. Gebruik een `.test`-adres, bijvoorbeeld `manager@touchline.test`; de testcode verschijnt in het scherm. Er worden geen echte e-mails verstuurd. De walletflow controleert een ondertekend Phantom-bericht en ondersteunt koppelen aan een account; echte walletbediening moet nog worden beproefd. Voor aanmelden via echte e-mail en spelen met vrienden via internet moeten hosting, HTTPS en de maildienst nog worden ingesteld.
 
@@ -148,7 +156,7 @@ De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare 
 
 ## Interfacecontrole
 
-De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 247 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, medische coachpauzes, blessurewissels door de computercoach, hervatten en wisselen bij lichte klachten, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden, gerichte scouting, shortlist, spelersvergelijking, onderlinge clubtransfers, postvakfilters, leesstatus, veilige doorklikroutes, stadionprijzen, bezoekersaantallen, ticketafrekening en 52 opeenvolgende seizoenen.
+De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 257 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, medische coachpauzes, blessurewissels door de computercoach, hervatten en wisselen bij lichte klachten, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden, gerichte scouting, shortlist, spelersvergelijking, onderlinge clubtransfers, postvakfilters, leesstatus, veilige doorklikroutes, stadionprijzen, bezoekersaantallen, ticketafrekening en 52 opeenvolgende seizoenen.
 
 Zie [het controleverslag](docs/browser-check.md) voor de geteste flows en beperkingen. Gebruik voor bestaande saves dezelfde browser en hetzelfde adres als voorheen: `localhost` en `127.0.0.1` hebben elk hun eigen browseropslag.
 
