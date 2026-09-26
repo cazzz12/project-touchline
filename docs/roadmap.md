@@ -2,7 +2,7 @@
 
 De aangeleverde concepttekst en `docs/concept.md` zijn inhoudelijk gelijk. Het oorspronkelijke document blijft intact. De latere keuzes van de gebruiker zijn leidend: in de gewone competitie alleen echte clubs en echte spelersnamen; eigen clubs pas in een toekomstige privéruimte met vrienden. Geen fictieve regens in de gewone competitie.
 
-## Uitgewerkt in de lokale versie 0.17.0
+## Uitgewerkt in de lokale versie 0.18.0
 
 | Conceptonderdelen | Huidige invulling |
 | --- | --- |
@@ -10,7 +10,7 @@ De aangeleverde concepttekst en `docs/concept.md` zijn inhoudelijk gelijk. Het o
 | 7–8: competitie en seizoenen | Zes echte clubs, tien fictieve speeldagen, blijvende eindstanden |
 | 9, 20–22: spelers en selectie | Bronselecties, clublogo's, spelersprofielen, basiself, zeven reserves, aanvoerder en tien formaties |
 | 14: keepers | Drie keepervaardigheden, invloed op schoten stoppen, training, keepervergelijking, reddingen en keepercarrières |
-| 23, 44–52: tactiek en wedstrijden | Drie tactiekschuiven, vier presets, xG, minutenklok, pauze, rust, wissels, hervatten, kaarten, ondertal, schorsingen en verslag |
+| 23, 44–52: tactiek en wedstrijden | Drie tactiekschuiven, vier presets, xG, minutenklok, pauze, rust, eigen wissels, blessurewissels door jouw computertegenstander, hervatten, kaarten, ondertal, schorsingen en verslag |
 | 27–30: ontwikkeling, conditie en blessures | Teamtraining, individuele training, persoonlijke groeidoelen, groei per 180 werkelijke speelminuten, ontwikkelhistorie, herstel tussen speeldagen, lichte klachten tijdens wedstrijden met coachpauze, keuze tussen wisselen en doorspelen, korte spelblessures, medisch niveau en een voorstel voor een fit elftal |
 | 32–35: contracten, transfers, scouting | Salaris en looptijd, verlengen, kopen, verkopen, bieden op spelers bij andere clubs, tegenbiedingen, ontvangen biedingen, eigen transferbudgetten voor tegenstanders, gericht scouten met een zoekprofiel, twintig spelers op een shortlist en vergelijken met eigen spelers; onderlinge transfers tussen computerclubs met eigen budgetten en transferjournaal |
 | 6, 39–43: reputatie, staf, analyse, stadion, financiën, sponsors | Verdiende clubreputatie met historie en mijlpalen, vijf sponsorcontracten waarvan twee via reputatie, stafniveaus, voorbeschouwing, faciliteiten, stadioncapaciteit, ticketkeuzes, bezoekers op basis van reputatie en vorm, kaartverkoophistorie en boekhouding |
@@ -30,9 +30,13 @@ Dit zijn compacte spelmechanieken. Ze vormen nog geen volledige uitvoering van i
 
 Voor die online fase scheiden we spelregels van schermbediening. Wallets en e-mail koppelen aan een account, niet rechtstreeks aan losse browser-saves. Aankopen krijgen servercontrole, eenmalige verwerking en herstel; een lokaal bericht dat een pack is gekocht mag nooit voldoende zijn. Dit beschrijft de toekomstige architectuur en is nog niet gebouwd.
 
+## Wat doen we hierna?
+
+De eerstvolgende prioriteit is de online server- en opslaglaag. Daarna volgen accounts, multiplayer, packs en mobiele distributie. Zie [het concrete overzicht met volgorde, open keuzes en gereedcriteria](next-steps.md). Verdere verfijning van de simulatie blijft mogelijk naast deze route.
+
 ## Nog uit te werken
 
-1. **Spelkwaliteit en data:** spelbalans over veel carrières, fijnere posities en betrouwbare leeftijdsdata, uitgebreidere keeperacties, zware wedstrijdblessures met gedwongen uitval en blessurewissels voor computerclubs, een langetermijnmodel voor leeftijd en potentieel, karaktertrekken, teamchemie en meer tactische instructies. Jeugdontwikkeling moet passen bij de keuze voor echte spelersnamen.
+1. **Spelkwaliteit en data:** spelbalans over veel carrières, fijnere posities en betrouwbare leeftijdsdata, uitgebreidere keeperacties, zware wedstrijdblessures met gedwongen uitval, een langetermijnmodel voor leeftijd en potentieel, karaktertrekken, teamchemie en meer tactische instructies. Jeugdontwikkeling moet passen bij de keuze voor echte spelersnamen.
 2. **Dieper clubbeheer:** uitgebreidere onderhandelingen met spelers, uitgebreidere transferstrategieën en langetermijnplanning voor de computerclubs, stafspecialisaties, verdere supportersinteractie en invloed van reputatie op scouting en transfers. Stadioncapaciteit, ticketprijzen en reputatiegestuurde bezoekers zijn vanaf 0.15.0 aanwezig.
 3. **Online basis:** accounts met e-mail- en walletaanmelding, centrale database, servergestuurde wedstrijden en transfers, saveconflicten, herstel, beveiliging en bescherming tegen manipulatie. Browseropslag is hiervoor geen autoriteit.
 4. **Samen spelen:** vrienden, privéruimtes en eigen clubs binnen die ruimtes, online competities en optionele pushmeldingen. Het lokale postvak is vanaf 0.16.0 aanwezig. De gewone competitie behoudt de echte clubs.

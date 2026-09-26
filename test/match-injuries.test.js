@@ -11,7 +11,7 @@ function injured(){const g=newGame('PSV');beginMatch(g);advance(g,27);assert.equ
 
 test('v0.16 pending careers finish with identical whole-career fingerprints after reload',()=>{
   for(const [club,hash] of [['Ajax','6cdba7b70fc4120892a9535ab5e0c838e9a514956e4b1c9e4b118fef519e8e1b'],['PSV','893951371d947bf1aa7252c359b8ae42c723e3cad1b76725a8d83c667cf8fbd9']]){
-    let g=newGame(club);beginMatch(g);delete g.pending.injuryRules;advance(g,32);g=parseBackup(exportBackup(g));assert.equal(g.pending.injuryRules,undefined);advance(g);
+    let g=newGame(club);beginMatch(g);delete g.pending.opponentCoach;delete g.pending.injuryRules;advance(g,32);g=parseBackup(exportBackup(g));assert.equal(g.pending.injuryRules,undefined);advance(g);
     assert.equal(createHash('sha256').update(JSON.stringify(g)).digest('hex'),hash);assert.deepEqual(parseBackup(exportBackup(g)),g);
   }
 });
@@ -56,7 +56,7 @@ test('events only affect actual participants, keepers retain depth, and opponent
     while(g.pending){g.pending.paused=false;advanceMatch(g);if(g.pending){
       for(const e of knocks(g)){const own=e.side===(g.pending.home===0?0:1),ids=own?g.pending.selection:g.pending.opponentSelection,minutes=own?g.pending.played:g.pending.opponentPlayed;assert.ok(minutes[e.playerId]>0);
         if(!own){enemyKnocks++;const player=g.clubs[e.side===0?g.pending.home:g.pending.away].players.find(p=>p.id===e.playerId);assert.ok(liveFitness(g,player,minutes[e.playerId])<fitnessAfterMinutes(player,minutes[e.playerId]));}
-        assert.ok(ids.includes(e.playerId)||g.pending.used.includes(e.playerId)||g.pending.dismissed[e.side].includes(e.playerId));
+        assert.ok(ids.includes(e.playerId)||(own?g.pending.used.includes(e.playerId):g.pending.opponentCoach?.changes.some(c=>c.outId===e.playerId))||g.pending.dismissed[e.side].includes(e.playerId));
       }
     }}
     for(let i=0;i<6;i++){const available=g.clubs[i].players.filter(p=>!injuryFor(g,p.id));assert.ok(available.length>=18);assert.ok(available.filter(p=>p.position==='GK').length>=2);}

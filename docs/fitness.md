@@ -1,4 +1,4 @@
-# Fitheid en inzetbaarheid — bijgewerkt voor 0.17.0
+# Fitheid en inzetbaarheid — bijgewerkt voor 0.18.0
 
 Deze regels simuleren uitsluitend gebeurtenissen binnen de eigen Touchline-carrière. Blessures, conditie en herstel beschrijven niet de werkelijke gezondheid van de genoemde spelers.
 
@@ -16,7 +16,7 @@ In nieuw gestarte wedstrijden kunnen eigen spelers én de tegenstander een **lic
 
 Bij een eigen tik pauzeert de klok automatisch. **Kies wissel** selecteert de getroffen speler en focust de reservekeuze, zonder een spelactie uit te voeren. Met **Wissel** bevestig je een gewone wissel. **Hervatten** laat de speler doorspelen. De lichte tik verlaagt de effectieve conditie voor de volgende wedstrijdminuten met 15 punten, met een bodem van 10%. Het wijzigt geen basisvaardigheden. Heb je drie wissels gebruikt of geen reserve meer, dan blijft doorspelen mogelijk. Een tik veroorzaakt geen lege veldplaats of reglementair verlies.
 
-De tegenstander speelt in deze eerste versie door met dezelfde conditieaftrek. Automatische blessurewissels voor computerclubs en zware blessures met gedwongen uitval ontbreken nog. Het bestaande automatisch wisselen van vermoeide eigen spelers kan, indien aangezet, na hervatten reageren op de lagere conditie.
+Vanaf 0.18.0 kiest jouw computertegenstander bij een lichte tik een passende, fittere reserve van zijn vaste bank, binnen drie wissels. Zonder geschikte reserve speelt hij door met dezelfde conditieaftrek. Zie [de computercoachregels](opponent-coach.md). Zware blessures met gedwongen uitval ontbreken nog. Het bestaande automatisch wisselen van vermoeide eigen spelers kan, indien aangezet, na hervatten reageren op de lagere conditie.
 
 Na afloop krijgt een speler met zo'n tik één speeldag herstel, ook wanneer hij is gewisseld. Dit wordt pas verwerkt bij de gewone wedstrijdafrekening; tijdens de wedstrijd bewaart het verslag de gebeurtenis. Een tik wordt niet nogmaals door de controle na afloop toegewezen. Herladen geeft geen nieuwe worp en herstelt geen blessure.
 

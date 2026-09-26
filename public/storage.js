@@ -1,3 +1,4 @@
+import {validOpponentCoach} from './opponent-coach.js';
 import { formations } from './engine.js';
 import { KEY, clubNames, migrateSave, nextFixture } from './game.js';
 import {injuryTypes,availablePlayers,injuryFor,roundNumber} from './fitness.js';
@@ -275,6 +276,8 @@ function validate(game) {
       || !events(r.detail.events) || !keeperReport(r.detail) || !coaching(r.detail.coaching || [])
       || (r.settlement!==undefined&&(!record(r.settlement)||!signedMoney(r.settlement.net)||!list(r.settlement.entries,cashEntry,8)))) invalid();
     if(!liveInjuries(r.detail,r.detail.playedBySide))invalid();
+    const enemy=r.home===0?1:0;
+    if(!validOpponentCoach(r.detail,{side:enemy,selection:r.detail.teams?.[enemy]?.map(p=>p.id),started:r.detail.startedSelections?.[enemy],played:r.detail.playedBySide?.[enemy]}))invalid();
     if(r.detail.disciplineRules!==undefined){
       const d=r.detail;
       if(d.disciplineRules!==1||!integer(d.minute,0,90)||!forfeits(d.abandoned)||(!d.abandoned.length&&d.minute!==90)||JSON.stringify(r.goals)!==JSON.stringify(awardedGoals(d))||JSON.stringify(r.forfeit||[])!==JSON.stringify(d.abandoned))invalid();
@@ -292,6 +295,8 @@ function validate(game) {
       || !unique([...p.selection.filter(Boolean), ...p.bench, ...p.used]) || !captain(p.captainId,p.selection)
       || !(p.disciplineRules===1?slots(p.opponentSelection,opponent):idList(p.opponentSelection, opponent, 11)) || !stats(p.stats) || !events(p.events) || !coaching(p.coaching)
       || !record(p.played) || !Object.entries(p.played).every(([id, minutes]) => own.has(id) && integer(minutes, 0, p.minute))) invalid();
+    if(!validOpponentCoach(p,{side:p.home===0?1:0,selection:p.opponentSelection,started:p.opponentStarted,played:p.opponentPlayed,players:game.clubs[p.home===0?p.away:p.home].players}))invalid();
+    if(p.opponentCoach&&p.opponentCoach.bench.some(id=>injuryFor(game,id)||suspensionFor(game,id)))invalid();
     if(!liveInjuries(p,p.home===0?[p.played,p.opponentPlayed]:[p.opponentPlayed,p.played],game))invalid();
     if(p.medicalRules!==undefined&&p.medicalRules!==1)invalid();
     if(p.developmentRules!==undefined&&p.developmentRules!==1)invalid();
@@ -305,7 +310,7 @@ function validate(game) {
     if(p.keeperRules!==undefined&&p.keeperRules!==1)invalid();
     if(p.keeperRules===1){
       if(!record(p.keeperMinutes)||!Object.entries(p.keeperMinutes).every(([id,n])=>own.has(id)&&integer(n,1,p.played[id]??0))||Object.values(p.keeperMinutes).reduce((a,b)=>a+b,0)!==p.minute)invalid();
-      if(!p.events.filter(e=>['goal','save','miss'].includes(e.type)).every(e=>text(e.keeper)&&text(e.keeperId)&&(e.side===(p.home===0?0:1)?e.keeperId===p.opponentSelection[0]:Object.hasOwn(p.keeperMinutes,e.keeperId))))invalid();
+      if(!p.events.filter(e=>['goal','save','miss'].includes(e.type)).every(e=>text(e.keeper)&&text(e.keeperId)&&(e.side===(p.home===0?0:1)?(p.opponentCoach?Object.hasOwn(p.opponentKeeperMinutes,e.keeperId):e.keeperId===p.opponentSelection[0]):Object.hasOwn(p.keeperMinutes,e.keeperId))))invalid();
     }else if(p.keeperMinutes!==undefined)invalid();
     if([...p.selection,...p.bench,...p.opponentSelection].some(id=>injuryFor(game,id)))invalid();
     if((p.startedSelection!==undefined&&!idList(p.startedSelection,own,p.disciplineRules===1?undefined:11))||['autoChased','autoProtected'].some(key=>p[key]!==undefined&&typeof p[key]!=='boolean'))invalid();

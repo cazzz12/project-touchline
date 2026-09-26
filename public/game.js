@@ -1,3 +1,4 @@
+import {coachOpponent} from './opponent-coach.js';
 import {liveFitness,rollMatchInjuries} from './match-injuries.js';
 import {recordSkillGain,settleDevelopment} from './development.js';
 import {settleReputation,closeReputationSeason} from './reputation.js';
@@ -178,10 +179,10 @@ export function beginMatch(game){
   const [home,away]=nextFixture(game),other=home===0?away:home,available=availablePlayers(game);
   if(available.length>=7&&(expiredMatchdayContracts(game).length||unavailableSelection(game).length||game.lineupIds.filter(Boolean).length<Math.min(11,available.length)))return null;
   const own=available.length<7?recommendedSquad(game):{lineupIds:[...game.lineupIds],benchIds:[...game.benchIds],captainId:game.captainId};
-  const opponent=recommendedSquad(game,other,'4-3-3').lineupIds;
+  const opponentSquad=recommendedSquad(game,other,'4-3-3'),opponent=opponentSquad.lineupIds;
   expireTransferOffers(game);
   game.reportOpen=false;
-  game.pending={home,away,injuryRules:1,stadiumRules:1,stadiumGate:home===0?{season:game.season,round:game.round+1,opponent:away,...stadiumQuote(game)}:null,leagueMarketRules:1,reputationRules:1,developmentRules:1,medicalRules:1,keeperRules:1,disciplineRules:1,keeperMinutes:{},opponentKeeperMinutes:{},opponentPlayed:{},bookings:[{},{}],dismissed:[[],[]],
+  game.pending={home,away,opponentCoach:{schema:1,bench:[...opponentSquad.benchIds],changes:[]},injuryRules:1,stadiumRules:1,stadiumGate:home===0?{season:game.season,round:game.round+1,opponent:away,...stadiumQuote(game)}:null,leagueMarketRules:1,reputationRules:1,developmentRules:1,medicalRules:1,keeperRules:1,disciplineRules:1,keeperMinutes:{},opponentKeeperMinutes:{},opponentPlayed:{},bookings:[{},{}],dismissed:[[],[]],
     minute:0,startedSelection:own.lineupIds.filter(Boolean),opponentStarted:opponent.filter(Boolean),selection:[...own.lineupIds],bench:[...own.benchIds],captainId:own.captainId,opponentSelection:opponent,
     abandoned:forfeitingSides(home===0?[own.lineupIds,opponent]:[opponent,own.lineupIds]),used:[],subs:0,played:{},stats:[{...emptyStats(),yellowCards:0,redCards:0},{...emptyStats(),yellowCards:0,redCards:0}],events:[],coaching:[],paused:true};return game.pending;
 }
@@ -232,6 +233,7 @@ export function advanceMatch(game){
   p.stats.forEach((s,i)=>{statKeys.forEach(key=>s[key]+=part.stats[i][key]);s.xg=Number(s.xg.toFixed(2));s.possession=Math.round(100*s.possessions/minute);s.passAccuracy=s.passes?Math.round(100*s.completed/s.passes):0;});
   p.events.push(...part.events.map(event=>({...event,score:p.stats.map(s=>s.goals)})));
   rollMatchInjuries(game);
+  coachOpponent(game);
   if(minute===45||minute===90)p.paused=true;
   if(minute===90||p.abandoned?.length)return finishMatch(game);return null;
 }
@@ -242,7 +244,7 @@ export function finishMatch(game){
     const [home,away]=fixtures[i];
     const matchClubs=[game.clubs[home],game.clubs[away]];
     const result=home===p.home&&away===p.away?{
-      clubs:matchClubs.map(c=>c.name),...(p.injuryRules===1?{injuryRules:1}:{}),
+      clubs:matchClubs.map(c=>c.name),...(p.opponentCoach?{opponentCoach:structuredClone(p.opponentCoach)}:{}),...(p.injuryRules===1?{injuryRules:1}:{}),
       teams:[home===0?p.selection:p.opponentSelection,away===0?p.selection:p.opponentSelection].map((ids,side)=>ids.filter(Boolean).map(id=>(p.developmentRules===1?{...matchClubs[side].players.find(player=>player.id===id)}:matchClubs[side].players.find(player=>player.id===id)))),
       stats:structuredClone(p.stats),events:structuredClone(p.events),coaching:structuredClone(p.coaching),played:{...p.played},captainId:p.captainId,
       ...(p.disciplineRules===1?{disciplineRules:1,minute:p.minute,abandoned:[...p.abandoned],dismissed:structuredClone(p.dismissed),bookings:structuredClone(p.bookings),playedBySide:[home,away].map(index=>({... (index===0?p.played:p.opponentPlayed)})),startedSelections:[home,away].map(index=>[...(index===0?p.startedSelection:p.opponentStarted)])}:{}),

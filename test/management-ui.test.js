@@ -8,6 +8,12 @@ import {clubTransferQuote,releaseReason} from '../public/transfers.js';
 import {inboxMessages} from '../public/inbox.js';
 
 let instance=0;
+test('computer substitutions stay visible in paused saves and the full report without another change',async t=>{
+  const g=newGame('AZ');for(let i=0;i<2;i++){applyRecommendedSquad(g);playRound(g);}applyRecommendedSquad(g);beginMatch(g);while(g.pending.minute<18){g.pending.paused=false;advanceMatch(g);}g.pending.paused=true;
+  const h=await boot(t,g);assert.match(h.app.innerHTML,/Wissels tegenstander/);assert.match(h.app.innerHTML,/Sami Ouaissa → Mikkel Bro Hansen/);assert.match(h.app.innerHTML,/tegenstander · van het veld/);
+  const before=h.state();h.click({action:'save-close'});const restored=await boot(t,h.state());assert.deepEqual(restored.state().pending,before.pending);assert.equal(restored.state().credits,before.credits);
+  while(g.pending){g.pending.paused=false;advanceMatch(g);}const report=await boot(t,g);assert.match(report.app.innerHTML,/1\/3 wissels gebruikt/);assert.match(report.app.innerHTML,/Sami Ouaissa → Mikkel Bro Hansen/);const settled=report.state();report.click({action:'close'});assert.deepEqual(report.state().lastMatch,settled.lastMatch);assert.equal(report.state().credits,settled.credits);
+});
 test('inbox filters are free, marking visible items affects only that category and persists after reload',async t=>{
   const g=newGame();playRound(g);g.reportOpen=false;const h=await boot(t,g),before=h.state();
   h.click({tab:'inbox'});assert.match(h.app.innerHTML,/Wat vraagt jouw aandacht/);h.click({inboxCategory:'transfers'});h.click({inboxStatus:'unread'});assert.deepEqual(h.state(),before);
