@@ -7,6 +7,7 @@ import {injuryFor,unavailableSelection,recommendedSquad,settleFitness,seasonRest
 import {suspensionFor,forfeitingSides,awardedGoals,settleDiscipline,doubleForfeit} from './discipline.js';
 import {availablePlayers,unavailablePlayer} from './fitness.js';
 import {ensureKeeperSkills,keeperMatchStats} from './keepers.js';
+import {expireTransferOffers} from './transfer-state.js';
 
 export const KEY = 'touchline-save-v2';
 export const clubNames = clubData.map(club=>club.name);
@@ -50,6 +51,7 @@ export function updateClubRosters(game){
   if(game.pending)throw new Error('Rond eerst je lopende wedstrijd af om de selecties bij te werken.');
   if(game.rosterVersion===ROSTER_VERSION)throw new Error('Deze carrière gebruikt de nieuwe selecties al.');
   const updated=structuredClone(game);
+  expireTransferOffers(updated);
   updated.clubs=game.clubs.map(club=>structuredClone(initialClubs.find(c=>c.name===club.name)));
   if(updated.discipline){const ids=new Set(updated.clubs.flatMap(c=>c.players.map(p=>p.id)));for(const key of ['yellows','suspensions'])updated.discipline[key]=Object.fromEntries(Object.entries(updated.discipline[key]).filter(([id])=>ids.has(id)));}
   if(updated.medical){const ids=new Set(updated.clubs.flatMap(c=>c.players.map(p=>p.id)));updated.medical.injuries=Object.fromEntries(Object.entries(updated.medical.injuries).filter(([id])=>ids.has(id)));}
@@ -165,6 +167,7 @@ export function beginMatch(game){
   if(available.length>=7&&(expiredMatchdayContracts(game).length||unavailableSelection(game).length||game.lineupIds.filter(Boolean).length<Math.min(11,available.length)))return null;
   const own=available.length<7?recommendedSquad(game):{lineupIds:[...game.lineupIds],benchIds:[...game.benchIds],captainId:game.captainId};
   const opponent=recommendedSquad(game,other,'4-3-3').lineupIds;
+  expireTransferOffers(game);
   game.reportOpen=false;
   game.pending={home,away,medicalRules:1,keeperRules:1,disciplineRules:1,keeperMinutes:{},opponentKeeperMinutes:{},opponentPlayed:{},bookings:[{},{}],dismissed:[[],[]],
     minute:0,startedSelection:own.lineupIds.filter(Boolean),opponentStarted:opponent.filter(Boolean),selection:[...own.lineupIds],bench:[...own.benchIds],captainId:own.captainId,opponentSelection:opponent,
@@ -251,6 +254,7 @@ export function newSeason(game) {
   if(game.round<10) return false;
   ensureManagement(game);const table=standings(game),place=table.findIndex(row=>row.i===0)+1;
   if(!archiveSeason(game,table))return false;
+  expireTransferOffers(game);
   const bonus=(7-place)*30000;recordCash(game,bonus,'prize','Seizoensbonus');
   game.news.unshift(`Seizoen afgerond op plaats ${place}. Seizoensbonus: ${bonus.toLocaleString('nl-NL')} credits.`);
   game.season=(game.season||1)+1;game.reportOpen=false;game.round=0;game.results=[];game.trainingUsed=false;game.scout=null;game.market=[];

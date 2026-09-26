@@ -3,8 +3,29 @@ function playRound(game){if(unavailableSelection(game).length)applyRecommendedSq
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {KEY,newGame,playRound as playRoundWithoutRotation,newSeason,beginMatch,advanceMatch} from '../public/game.js';
+import {recordCash} from '../public/management.js';
+import {clubTransferQuote,releaseReason} from '../public/transfers.js';
 
 let instance=0;
+test('club transfer UI filters, previews, saves a counteroffer and completes a purchase only after confirmation',async t=>{
+  const g=newGame();recordCash(g,1000000,'test','Synthetic UI budget');const h=await boot(t,g),p=g.clubs[1].players.find(p=>!releaseReason(g,1,p.id));
+  h.click({tab:'transfers'});assert.match(h.app.innerHTML,/Openstaande aanbiedingen/);
+  h.submit('club-transfer-filter',{seller:'1',role:'all',search:p.name});assert.match(h.app.innerHTML,/1 speler bij/);
+  const before=h.state();h.click({clubBid:p.id,seller:'1'});assert.match(h.app.innerHTML,/aria-label="Transferbod"/);assert.deepEqual(h.state(),before);
+  h.click({transferAction:'close-bid'});assert.deepEqual(h.state(),before);
+  h.click({clubBid:p.id,seller:'1'});const amount=Math.floor(clubTransferQuote(g,1,p.id).asking*.75);
+  h.submit('club-bid-form',{seller:'1',playerId:p.id,amount:String(amount)});
+  const o=h.state().transferDesk.offers[0];assert.equal(o.status,'counter');assert.equal(h.state().credits,before.credits);assert.match(h.app.innerHTML,/Tegenbod ontvangen/);
+  h.click({confirmClubPurchase:String(o.id)});assert.equal(h.state().credits,before.credits-o.price);assert.ok(h.state().clubs[0].players.some(v=>v.id===p.id));
+  assert.match(h.app.innerHTML,/Aangekocht/);const complete=h.state();h.click({confirmClubPurchase:String(o.id)});assert.deepEqual(h.state(),complete);
+});
+test('club transfer UI can withdraw without payment and retains access to scouting',async t=>{
+  const g=newGame();recordCash(g,1000000,'test','Synthetic UI budget');const h=await boot(t,g),p=g.clubs[1].players.find(p=>!releaseReason(g,1,p.id));
+  h.click({tab:'transfers'});h.submit('club-bid-form',{seller:'1',playerId:p.id,amount:String(clubTransferQuote(g,1,p.id).asking)});
+  const cash=h.state().credits;h.click({cancelClubBid:String(h.state().transferDesk.offers[0].id)});
+  assert.equal(h.state().credits,cash);assert.equal(h.state().transferDesk.offers[0].status,'withdrawn');
+  h.click({transferSection:'scouting'});assert.match(h.app.innerHTML,/STUUR SCOUTS/);h.click({action:'scout'});assert.equal(h.state().market.length,4);
+});
 async function boot(t,game=newGame('PSV')){
   const handlers={},entries=new Map([[KEY,JSON.stringify(game)]]),app={innerHTML:'',addEventListener:(type,fn)=>handlers[type]=fn};
   const old={document:globalThis.document,localStorage:globalThis.localStorage,FormData:globalThis.FormData};

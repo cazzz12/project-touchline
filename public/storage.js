@@ -3,6 +3,7 @@ import { KEY, clubNames, migrateSave, nextFixture } from './game.js';
 import {injuryTypes,availablePlayers,injuryFor,roundNumber} from './fitness.js';
 import { sponsors } from './management.js';
 import {suspensionFor,forfeitingSides,awardedGoals} from './discipline.js';
+import {openOffer} from './transfer-state.js';
 
 export const RECOVERY_KEY = `${KEY}-before-import`;
 export const MAX_BACKUP_BYTES = 2 * 1024 * 1024;
@@ -98,6 +99,19 @@ function discipline(game){
     && Object.entries(d.suspensions).every(([id,b])=>known.has(id)&&record(b)&&integer(b.remaining,1,2)&&['red','second-yellow','yellow-limit'].includes(b.reason)&&integer(b.season,1,game.season)&&integer(b.round,1,10)&&(b.season-1)*10+b.round<=roundNumber(game));
 }
 function disciplineReport(r){return record(r)&&list(r.banned,p=>record(p)&&text(p.id)&&text(p.name)&&integer(p.remaining,1,2)&&['red','second-yellow','yellow-limit'].includes(p.reason),55)&&list(r.served,text,55);}
+function transferDesk(game){
+  const d=game.transferDesk;
+  if(!record(d)||d.schema!==1||!integer(d.nextId,1)||!list(d.offers,o=>record(o)&&integer(o.id,1,d.nextId-1)&&text(o.playerId)&&text(o.name)
+    && integer(o.seller,1,5)&&o.sellerName===game.clubs[o.seller].name&&integer(o.season,1,game.season)&&integer(o.round,0,10)
+    && (o.season-1)*10+o.round<=roundNumber(game)&&integer(o.asking,1000,1e9)&&integer(o.amount,1,1e9)&&integer(o.price,0,1e9)
+    && integer(o.salary,100,1e9)&&o.untilSeason===o.season+2
+    && ['accepted','counter','rejected','withdrawn','expired','completed','superseded'].includes(o.status)
+    && (o.amount>=Math.ceil(o.asking*.9)?o.price===o.amount:o.amount>=Math.ceil(o.asking*.65)?o.price===Math.ceil(o.asking*.95):o.price===0)
+    && (o.status==='rejected'?o.price===0:o.price>0)
+    && (o.status!=='accepted'||o.price===o.amount)&&(o.status!=='counter'||o.price===Math.ceil(o.asking*.95))
+    && (!openOffer(o)||(!game.pending&&o.season===game.season&&o.round===game.round&&game.clubs[o.seller].players.some(p=>p.id===o.playerId&&p.name===o.name))),25))return false;
+  return unique(d.offers.map(o=>o.id))&&d.offers.filter(openOffer).length<=5&&unique(d.offers.filter(openOffer).map(o=>o.playerId));
+}
 function cardTotals(p,known){
   if(!Array.isArray(p.bookings)||p.bookings.length!==2||!Array.isArray(p.dismissed)||p.dismissed.length!==2)return false;
   return known.every((ids,side)=>record(p.bookings[side])&&Object.entries(p.bookings[side]).every(([id,n])=>ids.has(id)&&integer(n,1,2))
@@ -127,7 +141,7 @@ function validate(game) {
     || game.market.some(p => allIds.includes(p.id))
     || !['Recovery', 'Attacking', 'Defending', 'Fitness'].includes(game.training)
     || !slots(game.lineupIds, own) || !idList(game.benchIds, own)||game.benchIds.length>7
-    || game.benchIds.some(id => game.lineupIds.includes(id)) || !captain(game.captainId,game.lineupIds)||!management(game)||!medical(game)||!discipline(game)) invalid();
+    || game.benchIds.some(id => game.lineupIds.includes(id)) || !captain(game.captainId,game.lineupIds)||!management(game)||!medical(game)||!discipline(game)||!transferDesk(game)) invalid();
   if (game.lastMatch != null) {
     const r = game.lastMatch;
     if(r.disciplineReport!==undefined&&!disciplineReport(r.disciplineReport))invalid();

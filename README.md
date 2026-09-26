@@ -1,6 +1,6 @@
 # Project Touchline
 
-Versie **0.8.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
+Versie **0.9.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
@@ -10,7 +10,13 @@ Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als
 
 Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers gebruiken spelcredits. Verwijderde browsergegevens wissen je voortgang. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
 
-## Nieuw: kaarten, ondertal en schorsingen
+## Nieuw: bieden op spelers van andere clubs
+
+Onder **Scouting & transfers → Clubtransfers** kun je spelers uit de andere vijf clubs zoeken en een bod doen. De club accepteert, wijst af of doet een tegenbod. Een bod schrijft niets af: bekijk eerst het transferbedrag, salaris en contract, en kies daarna **Bevestig aankoop**. Intrekken kost niets. Openstaande aanbiedingen blijven na herladen bewaard en vervallen bij het starten van een wedstrijd of nieuw seizoen.
+
+De speler verhuist met zijn bestaande spelwaarden, blessures, schorsingen en carrièrestatistieken. Je kiest zelf zijn plaats in de opstelling. Verkopende clubs houden voldoende spelers en keepers over. Dit is een lokaal spelmodel met maximaal vijf open aanbiedingen; er worden geen echte biedingen verstuurd. Lees [de transferregels](docs/transfers.md).
+
+## Kaarten, ondertal en schorsingen
 
 Overtredingen kunnen geel of rood opleveren. Bij rood pauzeert de wedstrijd automatisch: de speler verlaat het veld en mag niet worden vervangen. Op het liveveld zie je de lege plek en kun je tijdens een pauze spelers naar een andere positie schuiven. Ondertal beïnvloedt balbezit, passing en kansen; speelminuten stoppen bij de rode kaart.
 
@@ -66,7 +72,7 @@ De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare 
 
 ## Interfacecontrole
 
-De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 89 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, automatische instructies en 52 opeenvolgende seizoenen.
+De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 103 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, automatische instructies en 52 opeenvolgende seizoenen.
 
 Zie [het controleverslag](docs/browser-check.md) voor de geteste flows en beperkingen. Gebruik voor bestaande saves dezelfde browser en hetzelfde adres als voorheen: `localhost` en `127.0.0.1` hebben elk hun eigen browseropslag.
 

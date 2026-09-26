@@ -1,4 +1,5 @@
 import {ensureFitness,injuryFor,availablePlayers,unavailablePlayer} from './fitness.js';
+import {ensureTransferDesk} from './transfer-state.js';
 import {ensureDiscipline,doubleForfeit} from './discipline.js';
 import {ensureKeeperSkills,keeperSkills,keeperAttributes} from './keepers.js';
 // Local career systems. Amounts and contracts are game rules, never real club data.
@@ -42,7 +43,7 @@ export function ensureManagement(game){
   if(m.schema!==1||!m.contracts||typeof m.contracts!=='object')return game;
   if(Array.isArray(m.ledger)&&m.ledger.length===0)m.ledgerOpening=game.credits;
   for(const p of game.clubs[0].players)if(!Object.hasOwn(m.contracts,p.id))m.contracts[p.id]={salary:Math.max(100,(overall(p)-40)*15),untilSeason:(game.season||1)+2};
-  return ensureDiscipline(ensureKeeperSkills(ensureFitness(game)));
+  return ensureTransferDesk(ensureDiscipline(ensureKeeperSkills(ensureFitness(game))));
 }
 export function recordCash(game,amount,category,label){
   ensureManagement(game);const m=game.management;

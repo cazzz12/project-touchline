@@ -142,3 +142,19 @@ Getest met een synthetische Ajax-carrière, door de agent gegenereerd uit de spe
 Alle **89 automatische tests** slagen. Nieuw: gele/direct rode/tweede gele kaarten, automatische pauze, ondertal, positie-aanpassingen zonder vervangende speler, exacte speelminuten en keeperminuten, schorsingen door kaartentelling, gemiste wedstrijden, training, transfers en seizoensovergang. Ook starten met tien spelers, afbreken onder zeven, dubbele reglementaire nederlaag, nul wedstrijdbonus voor de verliezer en afwijzen van inconsistente backups zijn afgedekt. Compatibiliteitscontroles vergelijken oude lopende wedstrijden met vooraf berekende 0.7.0-resultaten; de oudere 0.6.0-controles en 52-seizoenentest blijven slagen.
 
 Beperkingen: alleen Chromium met gesimuleerde mobiele afmetingen. Zeldzame situaties zoals een vijfde rode kaart en een dubbele reglementaire nederlaag zijn automatisch getest, niet handmatig in de browser uitgespeeld. Spelregels en kaartfrequenties zijn niet officieel of gekalibreerd; keeperovertredingen, strafschoppen, VAR en acute blessures ontbreken.
+
+# Aanvulling 0.9.0 — onderhandelen over clubtransfers
+
+Een nieuwe PSV-testcarrière gestart op een afzonderlijk lokaal adres (poort 43133), met het gewone startbudget. Desktop 1440 × 900 en mobiel 390 × 844 gecontroleerd. De eigen carrière is niet gebruikt voor biedingen, aankopen of wedstrijdtests.
+
+- Ajax geselecteerd en gefilterd op middenvelders en de naam Klaassen. Precies één speler bleef zichtbaar. Het bodformulier toonde vraagprijs 38.976, salaris 240 per speeldag en contract tot en met seizoen 3.
+- Een bod van 10.000 werd afgewezen. De historie toonde de afwijzing en de clubkas bleef 120.000.
+- Een nieuw bod van 30.000 leidde tot een tegenbod van 37.028. Na herladen stond dezelfde aanbieding nog open, met ongewijzigde clubkas en een voorspeld saldo van 82.972 na aankoop.
+- Op mobiel de aankoop bevestigd en opnieuw herladen. Klaassen stond bij PSV (29 spelers); Ajax had 26 spelers over. De clubkas was 82.972 en de boekhouding bevatte precies één afschrijving van 37.028. Het oude Ajax-rugnummer was verwijderd.
+- Een geaccepteerd bod van 25.000 op Mokio ingetrokken zonder betaling. Een volgend bod van 20.000 leverde een tegenbod van 24.444 op. Bij het starten van een wedstrijd verviel dat aanbod; de clubkas bleef 82.972 en transferknoppen werden tijdens het duel geblokkeerd.
+- Desktop- en mobiele voorwaarden, knoppen, filters en historie bleven binnen de paginabreedte. Geen horizontale pagina-overloop. Het bodveld krijgt bij openen focus en komt in beeld. Geen fouten of waarschuwingen in de opgevraagde browserconsole.
+- De eigen carrière op het oorspronkelijke adres geopend en herladen: clubkas en voortgang bleven gelijk. Alleen het bodformulier bekeken en geannuleerd; er is geen bod ingediend. Het bestaande scoutingrapport bleef beschikbaar naast Clubtransfers. De tijdelijke viewport is hersteld en de testtab gesloten.
+
+Alle **103 automatische tests** slagen. De veertien nieuwe controles dekken onder meer migratie van oudere saves, acceptatie/afwijzing/tegenbod, bewaren en hervatten, eenmalige betaling, salaris en contract, stabiele speleridentiteit, behoud van handmatige opstelling, uitval en historie, budgetcontrole, selectielimieten, intrekken, vervangen, verloop bij aftrap/seizoensovergang/selectie-update, begrensde historie en afwijzen van ongeldige onderhandelingsgegevens. De bestaande 52-seizoenentest blijft slagen.
+
+Beperkingen: lokale singleplayeronderhandelingen met vaste spelregels. Geen echte transfergegevens, online biedingen, eigen tegenstanderbudgetten of fysieke mobiele apparaten getest. De schermcontrole bevestigt de geteste flows; de markt is nog geen volledig gesimuleerde voetbaleconomie.
