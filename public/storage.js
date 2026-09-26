@@ -4,6 +4,7 @@ import {injuryTypes,availablePlayers,injuryFor,roundNumber} from './fitness.js';
 import { sponsors } from './management.js';
 import {suspensionFor,forfeitingSides,awardedGoals} from './discipline.js';
 import {openOffer} from './transfer-state.js';
+import {incomingOpen,MAX_CLUB_BUDGET} from './club-market-state.js';
 
 export const RECOVERY_KEY = `${KEY}-before-import`;
 export const MAX_BACKUP_BYTES = 2 * 1024 * 1024;
@@ -112,6 +113,25 @@ function transferDesk(game){
     && (!openOffer(o)||(!game.pending&&o.season===game.season&&o.round===game.round&&game.clubs[o.seller].players.some(p=>p.id===o.playerId&&p.name===o.name))),25))return false;
   return unique(d.offers.map(o=>o.id))&&d.offers.filter(openOffer).length<=5&&unique(d.offers.filter(openOffer).map(o=>o.playerId));
 }
+function clubMarket(game){
+  const m=game.clubMarket,stamp=roundNumber(game);
+  if(!record(m)||m.schema!==1||!integer(m.lastRound,0,stamp)||!integer(m.nextId,1)||!Array.isArray(m.clubs)||m.clubs.length!==5)return false;
+  if(!m.clubs.every((a,i)=>{
+    if(!record(a)||a.name!==game.clubs[i+1].name||!integer(a.balance,0,MAX_CLUB_BUDGET)||!integer(a.opening,0,MAX_CLUB_BUDGET)||!integer(a.nextEntry,1)
+      ||!list(a.ledger,e=>record(e)&&integer(e.id,1,a.nextEntry-1)&&integer(e.season,1,game.season)&&integer(e.round,0,10)&&(e.season-1)*10+e.round<=stamp&&signedMoney(e.amount)&&integer(e.balance,0,MAX_CLUB_BUDGET)&&text(e.label),100))return false;
+    let balance=a.opening,previous=0;
+    for(const e of a.ledger){balance+=e.amount;if(balance!==e.balance||e.id<=previous)return false;previous=e.id;}
+    return balance===a.balance;
+  }))return false;
+  if(!list(m.offers,o=>record(o)&&integer(o.id,1,m.nextId-1)&&text(o.playerId)&&text(o.name)&&integer(o.buyer,1,5)&&o.buyerName===game.clubs[o.buyer].name
+    && integer(o.valuation,1000,1e9)&&integer(o.price,1,1e9)&&o.price===Math.floor(o.valuation*.85)
+    && ['GK','DEF','MID','ATT'].includes(o.role)&&['quality','depth'].includes(o.reason)
+    && integer(o.season,1,game.season)&&integer(o.round,1,10)&&(o.season-1)*10+o.round<=m.lastRound
+    && ['open','rejected','completed','expired','unavailable'].includes(o.status)
+    && (!incomingOpen(o)||(!game.pending&&o.season===game.season&&o.round===game.round&&m.lastRound===stamp&&game.clubs[0].players.some(p=>p.id===o.playerId&&p.name===o.name))),25))return false;
+  const open=m.offers.filter(incomingOpen);
+  return unique(m.offers.map(o=>o.id))&&open.length<=3&&unique(open.map(o=>o.buyer))&&unique(open.map(o=>o.playerId));
+}
 function cardTotals(p,known){
   if(!Array.isArray(p.bookings)||p.bookings.length!==2||!Array.isArray(p.dismissed)||p.dismissed.length!==2)return false;
   return known.every((ids,side)=>record(p.bookings[side])&&Object.entries(p.bookings[side]).every(([id,n])=>ids.has(id)&&integer(n,1,2))
@@ -141,7 +161,7 @@ function validate(game) {
     || game.market.some(p => allIds.includes(p.id))
     || !['Recovery', 'Attacking', 'Defending', 'Fitness'].includes(game.training)
     || !slots(game.lineupIds, own) || !idList(game.benchIds, own)||game.benchIds.length>7
-    || game.benchIds.some(id => game.lineupIds.includes(id)) || !captain(game.captainId,game.lineupIds)||!management(game)||!medical(game)||!discipline(game)||!transferDesk(game)) invalid();
+    || game.benchIds.some(id => game.lineupIds.includes(id)) || !captain(game.captainId,game.lineupIds)||!management(game)||!medical(game)||!discipline(game)||!transferDesk(game)||!clubMarket(game)) invalid();
   if (game.lastMatch != null) {
     const r = game.lastMatch;
     if(r.disciplineReport!==undefined&&!disciplineReport(r.disciplineReport))invalid();

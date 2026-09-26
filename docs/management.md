@@ -68,3 +68,7 @@ Een zege levert 120 XP op, gelijkspel 70 en verlies 40. Iedere 1.000 XP geeft ee
 Bij het starten van een volgend seizoen blijven eindstand en uitslagen bewaard. De laatste 50 seizoenen blijven in detail zichtbaar; oudere totalen blijven meetellen. Spelers krijgen duels, basisplaatsen, minuten, goals en clubs in hun profiel. Doelpuntenmakers worden bij nieuwe wedstrijden op ID gekoppeld. Een transfer verwijdert de historie niet.
 
 Oudere saves krijgen alleen de ontbrekende onderdelen. Clubkas, resultaten en lopende wedstrijd blijven behouden. Beschikbare oude resultaten tellen mee voor de manager, maar ontbrekende individuele statistieken of verdwenen vorige seizoenen worden niet verzonnen. Dezelfde backup- en herstelknoppen bewaren ook de nieuwe onderdelen. Een oudere applicatieversie kan deze uitbreidingen niet volledig beheren; blijf na upgraden dezelfde of een nieuwere versie gebruiken.
+
+## Tegenstanderbudgetten vanaf 0.10.0
+
+Direct verkopen gebruikt nu het transferbudget van de gekozen koper. Zonder voldoende credits of selectieruimte is die club niet beschikbaar. Iedere verkoop boekt dezelfde opbrengst bij jou en uitgave bij de koper. Via **Scouting & transfers → Ontvangen biedingen** zie je ook spontane biedingen en alle tegenstanderbudgetten. Zie [de transferregels](transfers.md) voor bedragen, bevestiging en savebehoud.

@@ -158,3 +158,19 @@ Een nieuwe PSV-testcarrière gestart op een afzonderlijk lokaal adres (poort 431
 Alle **103 automatische tests** slagen. De veertien nieuwe controles dekken onder meer migratie van oudere saves, acceptatie/afwijzing/tegenbod, bewaren en hervatten, eenmalige betaling, salaris en contract, stabiele speleridentiteit, behoud van handmatige opstelling, uitval en historie, budgetcontrole, selectielimieten, intrekken, vervangen, verloop bij aftrap/seizoensovergang/selectie-update, begrensde historie en afwijzen van ongeldige onderhandelingsgegevens. De bestaande 52-seizoenentest blijft slagen.
 
 Beperkingen: lokale singleplayeronderhandelingen met vaste spelregels. Geen echte transfergegevens, online biedingen, eigen tegenstanderbudgetten of fysieke mobiele apparaten getest. De schermcontrole bevestigt de geteste flows; de markt is nog geen volledig gesimuleerde voetbaleconomie.
+
+# Aanvulling 0.10.0 — clubbudgetten en ontvangen biedingen (26 september 2026)
+
+Een nieuwe Ajax-testcarrière via de gewone interface gestart op poort 43134. De hoofdcarrière op poort 3000 is niet gebruikt voor wedstrijden, verkopen of imports. Getest in Chromium op desktop en met mobiele viewport 390 × 844.
+
+- Ajax–FC Twente uitgespeeld tot 2–2. Na het eindsignaal verscheen Transferpost met drie biedingen. De eigen kas was 131.420; elk tegenstanderbudget ging van 120.000 naar 128.000. Vooraf kwam geen bod of betaling binnen.
+- Het bod van PSV op Steven Berghuis (110.925) geopend. Het verkoopoverzicht toonde toekomstige kas 242.345, salarissen 11.130 per speeldag, besparing 450 en resterende selectie 26. Annuleren en herladen behielden de drie biedingen, spelers en kas.
+- Mobiel de verkoop bevestigd. Na herladen was de eigen kas 242.345; PSV had 17.075 transferbudget en 29 spelers. De eigen boekhouding bevatte één verkoopregel van +110.925 en de PSV-budgetkaart één aankoopregel van −110.925 naast de bijdrage van +8.000.
+- Het bod van Feyenoord op Maarten Paes afgewezen zonder transfer of geldbeweging. De historie onderscheidde Verkocht en Afgewezen. De mobiele pagina bleef binnen de breedte (scrollWidth = clientWidth = 375); voorwaarden, knoppen en budgetmutaties waren leesbaar.
+- De volgende wedstrijd gestart en gepauzeerd op minuut nul. Het resterende AZ-bod op Oscar Gloukh stond daarna op Verlopen; de inbox was leeg. Er kwam nog geen nieuwe budgetbijdrage of bieding.
+- Geen fouten of waarschuwingen in de opgevraagde testconsole. Tijdelijke viewport hersteld, bewijsbeeld opgeslagen en testtab gesloten.
+- Hoofdcarrière herladen en de nieuwe lege inbox geopend. Overzicht en tactiekscherm waren inhoudelijk gelijk voor en na herladen; clubkas en bestaande voortgang bleven behouden. Tegenstanders kregen beginbudgetten zonder historische boekingen. De hoofdtab blijft beschikbaar.
+
+Alle **117 automatische tests** slagen. De veertien nieuwe tests controleren onder andere oude saves en lopende wedstrijden, eenmalige budgetbijdragen, reproduceerbare betaalbare biedingen, verkoop na herladen, salaris en selectieherstel, geldbehoud tussen beide clubs, afwijzing, ontoereikend budget, selectielimieten, uitval en historie, verloop en begrensde opslag, ongeldige imports en de nieuwe schermbediening. Bestaande selectielimiettests gebruiken expliciete testbudgetten om de selectiegrens onafhankelijk van de nieuwe budgetgrens te blijven controleren. De 52-seizoenentest blijft slagen.
+
+Beperkingen: vaste lokale biedingsregels en afzonderlijke transferbudgetten. Geen transfers tussen tegenstanders onderling, volledige tegenstanderboekhouding, online markt of fysieke mobiele apparaten getest.

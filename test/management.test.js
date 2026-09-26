@@ -1,3 +1,4 @@
+import {recordClubBudget} from '../public/club-market-state.js';
 import {unavailableSelection,applyRecommendedSquad} from '../public/fitness.js';
 function playRound(game){if(unavailableSelection(game).length)applyRecommendedSquad(game);return playRoundWithoutRotation(game);}
 import test from 'node:test';
@@ -66,7 +67,7 @@ test('individual development is bounded, costs condition and renews only after a
   assert.equal(developPlayer(game,p.id,'composure'),true);
 });
 test('selling a starter moves the same player, repairs selection, and pays exactly once',()=>{
-  const game=newGame();playRound(game);
+  const game=newGame();playRound(game);recordClubBudget(game,1,3000000,'Synthetic budget for roster limit test');
   const id=game.lineupIds[2],p=game.clubs[0].players.find(p=>p.id===id),history=structuredClone(game.management.playerStats[id]);
   const offer=saleOffer(game,id,1),before=game.credits;
   assert.equal(sellPlayer(game,id,1),true);assert.equal(game.credits,before+offer.price);

@@ -3,7 +3,7 @@ function playRound(game){if(unavailableSelection(game).length)applyRecommendedSq
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {KEY,newGame,playRound as playRoundWithoutRotation,newSeason,beginMatch,advanceMatch} from '../public/game.js';
-import {recordCash} from '../public/management.js';
+import {recordCash,saleOffer} from '../public/management.js';
 import {clubTransferQuote,releaseReason} from '../public/transfers.js';
 
 let instance=0;
@@ -26,6 +26,23 @@ test('club transfer UI can withdraw without payment and retains access to scouti
   assert.equal(h.state().credits,cash);assert.equal(h.state().transferDesk.offers[0].status,'withdrawn');
   h.click({transferSection:'scouting'});assert.match(h.app.innerHTML,/STUUR SCOUTS/);h.click({action:'scout'});assert.equal(h.state().market.length,4);
 });
+test('received bid UI previews without changes, cancels and confirms one sale after reload',async t=>{
+  const game=newGame();playRound(game);game.reportOpen=false;const h=await boot(t,game),original=h.state(),offer=original.clubMarket.offers[0];
+  assert.match(h.app.innerHTML,/TRANSFERPOST/);h.click({transferInbox:'true'});assert.match(h.app.innerHTML,/Transferbudgetten/);
+  h.click({confirmIncoming:String(offer.id)});assert.deepEqual(h.state(),original,'confirmation requires a preview');
+  h.click({reviewIncoming:String(offer.id)});assert.match(h.app.innerHTML,/Ontvangen bod bevestigen/);assert.deepEqual(h.state(),original);
+  h.click({incomingAction:'cancel'});assert.deepEqual(h.state(),original);assert.doesNotMatch(h.app.innerHTML,/Ontvangen bod bevestigen/);
+  h.click({reviewIncoming:String(offer.id)});h.click({confirmIncoming:String(offer.id)});
+  const sold=h.state();assert.equal(sold.credits,original.credits+offer.price);assert.equal(sold.clubMarket.offers[0].status,'completed');
+  assert.equal(sold.clubMarket.clubs[offer.buyer-1].balance,original.clubMarket.clubs[offer.buyer-1].balance-offer.price);
+  assert.ok(!sold.clubs[0].players.some(p=>p.id===offer.playerId));h.click({confirmIncoming:String(offer.id)});assert.deepEqual(h.state(),sold);
+});
+test('received bid UI rejects without moving money and keeps incoming, purchase and scouting tabs accessible',async t=>{
+  const game=newGame();playRound(game);game.reportOpen=false;const h=await boot(t,game),before=h.state(),offer=before.clubMarket.offers[0];
+  h.click({tab:'transfers'});h.click({transferSection:'incoming'});h.click({rejectIncoming:String(offer.id)});
+  const after=h.state();assert.equal(after.clubMarket.offers[0].status,'rejected');assert.equal(after.credits,before.credits);assert.deepEqual(after.clubs,before.clubs);assert.deepEqual(after.clubMarket.clubs,before.clubMarket.clubs);
+  h.click({transferSection:'clubs'});assert.match(h.app.innerHTML,/Spelers bij andere clubs/);h.click({transferSection:'scouting'});assert.match(h.app.innerHTML,/STUUR SCOUTS/);
+});
 async function boot(t,game=newGame('PSV')){
   const handlers={},entries=new Map([[KEY,JSON.stringify(game)]]),app={innerHTML:'',addEventListener:(type,fn)=>handlers[type]=fn};
   const old={document:globalThis.document,localStorage:globalThis.localStorage,FormData:globalThis.FormData};
@@ -43,7 +60,7 @@ test('office actions keep sale preview separate, then book a confirmed transfer 
   h.click({office:'sponsors'});h.click({sponsor:'steady'});assert.equal(h.state().management.sponsor.kind,'steady');
   h.click({office:'facilities'});h.click({upgrade:'training',group:'facilities'});
   assert.equal(h.state().management.facilities.training,2);assert.equal(h.state().credits,initial.credits-28000);
-  h.click({office:'contracts'});const id=h.state().lineupIds[2],before=h.state();
+  h.click({office:'contracts'});const id=h.state().lineupIds.find(id=>saleOffer(h.state(),id,1)),before=h.state();
   h.click({sell:id});assert.match(h.app.innerHTML,/Verkoopvoorstel/);assert.deepEqual(h.state(),before);
   h.click({management:'cancel-sale'});assert.deepEqual(h.state(),before);
   h.click({sell:id});h.click({management:'confirm-sale'});assert.ok(!h.state().clubs[0].players.some(p=>p.id===id));

@@ -1,6 +1,6 @@
 # Project Touchline
 
-Versie **0.9.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
+Versie **0.10.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
@@ -10,7 +10,15 @@ Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als
 
 Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers gebruiken spelcredits. Verwijderde browsergegevens wissen je voortgang. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
 
-## Nieuw: bieden op spelers van andere clubs
+## Nieuw: andere clubs bieden op jouw spelers
+
+Open **Scouting & transfers → Ontvangen biedingen**. Na een gespeelde wedstrijd kunnen maximaal drie clubs op verschillende spelers uit jouw selectie bieden, op basis van hun bezetting, spelerskwaliteit en beschikbare transferbudget. Je ziet nieuwe belangstelling ook op Overzicht. Kies **Bekijk verkoop** voor het bedrag, de salarisbesparing en gevolgen voor je selectie. **Annuleren** behoudt het bod; **Wijs bod af** sluit het zonder transfer. Alleen **Bevestig verkoop** laat de speler verhuizen en verwerkt de betaling.
+
+De vijf tegenstanders hebben ieder een eigen transferbudget: 120.000 spelcredits bij de start van dit systeem, plus 8.000 per daarna afgeronde speeldag. Aankopen gaan eraf, verkoopopbrengsten komen erbij. Ook bestaande directe verkopen via Clubzaken en jouw aankopen via Clubtransfers gebruiken deze budgetten. De budgetten en recente mutaties staan onder de ontvangen biedingen. Dit zijn spelregels, geen echte clubfinanciën.
+
+Bestaande saves krijgen een lege inbox en startbudgetten voor de tegenstanders; jouw credits, selecties, tactiek en resultaten blijven behouden. Er worden geen oude biedingen of betalingen achteraf toegevoegd. Herladen verandert een open bod niet. Bij de volgende aftrap, een nieuw seizoen of expliciete selectie-update vervalt het. Lees [de transferregels](docs/transfers.md).
+
+## Bieden op spelers van andere clubs
 
 Onder **Scouting & transfers → Clubtransfers** kun je spelers uit de andere vijf clubs zoeken en een bod doen. De club accepteert, wijst af of doet een tegenbod. Een bod schrijft niets af: bekijk eerst het transferbedrag, salaris en contract, en kies daarna **Bevestig aankoop**. Intrekken kost niets. Openstaande aanbiedingen blijven na herladen bewaard en vervallen bij het starten van een wedstrijd of nieuw seizoen.
 
@@ -72,7 +80,7 @@ De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare 
 
 ## Interfacecontrole
 
-De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 103 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, automatische instructies en 52 opeenvolgende seizoenen.
+De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 117 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, automatische instructies en 52 opeenvolgende seizoenen.
 
 Zie [het controleverslag](docs/browser-check.md) voor de geteste flows en beperkingen. Gebruik voor bestaande saves dezelfde browser en hetzelfde adres als voorheen: `localhost` en `127.0.0.1` hebben elk hun eigen browseropslag.
 

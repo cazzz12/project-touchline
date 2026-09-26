@@ -1,5 +1,6 @@
 import {ensureFitness,injuryFor,availablePlayers,unavailablePlayer} from './fitness.js';
-import {ensureTransferDesk} from './transfer-state.js';
+import {ensureClubMarket,clubBudget,recordClubBudget,closePlayerOffers} from './club-market-state.js';
+import {ensureTransferDesk,releaseReason} from './transfer-state.js';
 import {ensureDiscipline,doubleForfeit} from './discipline.js';
 import {ensureKeeperSkills,keeperSkills,keeperAttributes} from './keepers.js';
 // Local career systems. Amounts and contracts are game rules, never real club data.
@@ -43,7 +44,7 @@ export function ensureManagement(game){
   if(m.schema!==1||!m.contracts||typeof m.contracts!=='object')return game;
   if(Array.isArray(m.ledger)&&m.ledger.length===0)m.ledgerOpening=game.credits;
   for(const p of game.clubs[0].players)if(!Object.hasOwn(m.contracts,p.id))m.contracts[p.id]={salary:Math.max(100,(overall(p)-40)*15),untilSeason:(game.season||1)+2};
-  return ensureTransferDesk(ensureDiscipline(ensureKeeperSkills(ensureFitness(game))));
+  return ensureClubMarket(ensureTransferDesk(ensureDiscipline(ensureKeeperSkills(ensureFitness(game)))));
 }
 export function recordCash(game,amount,category,label){
   ensureManagement(game);const m=game.management;
@@ -98,23 +99,34 @@ export function developPlayer(game,id,attribute){
   p.fitness=clamp(p.fitness-3,0,100);game.management.developmentUsed=true;
   game.news.unshift(`${p.name} heeft individueel getraind. −3 conditie.`);return true;
 }
+export function saleReason(game,id,buyerIndex,price){
+  if(game.pending)return 'Rond eerst de lopende wedstrijd af.';
+  if(!Number.isInteger(buyerIndex)||buyerIndex<1||buyerIndex>=game.clubs.length)return 'Deze club is niet beschikbaar.';
+  if(!Number.isSafeInteger(price)||price<1||price>1e9)return 'Dit transferbedrag is ongeldig.';
+  if(game.clubs[buyerIndex].players.length>=55)return 'De selectie van de koper zit vol (55 spelers).';
+  if(clubBudget(game,buyerIndex)<price)return 'De koper heeft onvoldoende transferbudget.';
+  return releaseReason(game,0,id);
+}
 export function saleOffer(game,id,buyerIndex){
-  const club=game.clubs[0],p=club.players.find(p=>p.id===id),buyer=game.clubs[buyerIndex];
-  if(game.pending||!p||!Number.isInteger(buyerIndex)||buyerIndex<1||!buyer||buyer.players.length>=55||club.players.length<=18)return null;
-  if(p.position==='GK'&&club.players.filter(p=>p.position==='GK').length<=2)return null;
-  const healthy=availablePlayers(game);
-  if(!unavailablePlayer(game,id)&&(healthy.length<=18||(p.position==='GK'&&healthy.filter(p=>p.position==='GK').length<=2)))return null;
-  return {player:p,buyer,price:Math.floor(transferValue(p)*.65)};
+  const p=game.clubs[0].players.find(p=>p.id===id);if(!p)return null;
+  const price=Math.max(1,Math.floor(transferValue(p)*.65));
+  if(saleReason(game,id,buyerIndex,price))return null;
+  return {player:p,buyer:game.clubs[buyerIndex],price};
+}
+export function completePlayerSale(game,id,buyerIndex,price){
+  if(saleReason(game,id,buyerIndex,price))return false;
+  const player=game.clubs[0].players.find(p=>p.id===id),buyer=game.clubs[buyerIndex];
+  game.clubs[0].players=game.clubs[0].players.filter(p=>p.id!==id);
+  const moved={...player};delete moved.number;buyer.players.push(moved);
+  delete game.management.contracts[id];
+  recordClubBudget(game,buyerIndex,-price,`${player.name} gekocht van ${game.clubs[0].name}`);
+  recordCash(game,price,'transfer',`${player.name} naar ${buyer.name}`);
+  closePlayerOffers(game,id);
+  game.news.unshift(`${player.name} verkocht aan ${buyer.name} voor ${price.toLocaleString('nl-NL')} credits.`);
+  return true;
 }
 export function sellPlayer(game,id,buyerIndex){
-  const offer=saleOffer(game,id,buyerIndex);if(!offer)return false;
-  game.clubs[0].players=game.clubs[0].players.filter(p=>p.id!==id);
-  // Keep a stable player identity; his career totals move with him.
-  const moved={...offer.player};delete moved.number;offer.buyer.players.push(moved);
-  delete game.management.contracts[id];
-  recordCash(game,offer.price,'transfer',`${offer.player.name} naar ${offer.buyer.name}`);
-  game.news.unshift(`${offer.player.name} verkocht aan ${offer.buyer.name} voor ${offer.price.toLocaleString('nl-NL')} credits.`);
-  return true;
+  const offer=saleOffer(game,id,buyerIndex);return offer?completePlayerSale(game,id,buyerIndex,offer.price):false;
 }
 export function recordPlayerMatch(game,detail,home,away,pending){
   const m=game.management;

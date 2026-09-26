@@ -1,18 +1,9 @@
 import {overall,transferValue,recordCash} from './management.js';
-import {availablePlayers,injuryFor,unavailablePlayer,recommendedSquad} from './fitness.js';
-import {ensureTransferDesk,openOffer} from './transfer-state.js';
+import {recommendedSquad} from './fitness.js';
+import {ensureTransferDesk,openOffer,releaseReason} from './transfer-state.js';
+export {releaseReason} from './transfer-state.js';
+import {clubBudget,recordClubBudget,MAX_CLUB_BUDGET} from './club-market-state.js';
 
-export function releaseReason(game,index,id){
-  const club=game.clubs[index],p=club?.players.find(p=>p.id===id);
-  if(!p)return 'Deze speler speelt hier niet meer.';
-  if(club.players.length<=18)return 'De club wil minimaal achttien spelers houden.';
-  if(p.position==='GK'&&club.players.filter(p=>p.position==='GK').length<=2)return 'De club wil minimaal twee keepers houden.';
-  const healthy=club.players.filter(p=>!injuryFor(game,p.id));
-  if(!injuryFor(game,id)&&(healthy.length<=18||(p.position==='GK'&&healthy.filter(p=>p.position==='GK').length<=2)))return 'De club heeft te weinig fitte vervangers.';
-  const available=availablePlayers(game,index);
-  if(!unavailablePlayer(game,id)&&(available.length<=18||(p.position==='GK'&&available.filter(p=>p.position==='GK').length<=2)))return 'De club heeft te weinig inzetbare vervangers.';
-  return '';
-}
 export function clubTransferQuote(game,seller,id){
   if(!Number.isInteger(seller)||seller<1||seller>=game.clubs.length)return null;
   const club=game.clubs[seller],player=club.players.find(p=>p.id===id);if(!player)return null;
@@ -47,6 +38,7 @@ export function purchaseReason(game,offer){
   const q=clubTransferQuote(game,offer.seller,offer.playerId);
   if(!q)return 'De speler is niet meer beschikbaar.';
   if(q.reason)return q.reason;
+  if(clubBudget(game,offer.seller)+offer.price>MAX_CLUB_BUDGET)return 'Het transferbudget van de verkoper zit aan de limiet.';
   if(game.credits<offer.price)return 'Je hebt onvoldoende credits voor deze aankoop.';
   return '';
 }
@@ -56,6 +48,7 @@ export function confirmClubPurchase(game,id){
   const seller=game.clubs[offer.seller],player=seller.players.find(p=>p.id===offer.playerId);
   const moved={...player};delete moved.number;
   recordCash(game,-offer.price,'transfer',`${player.name} gekocht van ${seller.name}`);
+  recordClubBudget(game,offer.seller,offer.price,`${player.name} verkocht aan ${game.clubs[0].name}`);
   seller.players=seller.players.filter(p=>p.id!==player.id);game.clubs[0].players.push(moved);
   game.management.contracts[player.id]={salary:offer.salary,untilSeason:offer.untilSeason};
   offer.status='completed';

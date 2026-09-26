@@ -1,4 +1,4 @@
-# Clubtransfers — 0.9.0
+# Clubtransfers — 0.10.0
 
 Dit systeem simuleert onderhandelingen binnen de lokale minicompetitie. Vraagprijzen, salarissen en reacties zijn spelwaarden, geen werkelijke transfergegevens. Er worden geen biedingen naar echte clubs gestuurd.
 
@@ -34,8 +34,32 @@ Het salaris is `max(100, (rating − 40) × 15)` credits per speeldag; het contr
 - Ook een nieuw seizoen en de expliciete selectie-update sluiten open aanbiedingen. Afgesloten onderhandelingen blijven als korte historie staan.
 - Bevestigen controleert opnieuw eigenaarschap, inzetbaarheid bij de verkoper, selectieomvang en credits. Als een andere aankoop of uitgave de ruimte heeft verkleind, gaat deze aankoop niet door. Een herhaalde bevestiging betaalt niet opnieuw.
 
-De bestaande scoutingpool en directe verkoop via Clubzaken blijven beschikbaar. Tegenstanders hebben nog geen eigen transferbudget of zelfstandige transferplannen. Het aankoopbedrag wordt daarom nog niet in een afzonderlijke boekhouding van de verkoper verwerkt. Leningen, veilingen, clausules en transfers tussen online managers zijn latere uitbreidingen.
+De bestaande scoutingpool en directe verkoop via Clubzaken blijven beschikbaar. Een bevestigde aankoop van een andere club verhoogt ook het transferbudget van die verkoper. Een directe verkoop via Clubzaken kost de koper 65% van de spelwaarde; zonder voldoende budget is die koper niet beschikbaar. Leningen, veilingen, clausules, transfers tussen tegenstanders onderling en online managers zijn latere uitbreidingen.
+
+## Ontvangen biedingen
+
+Na iedere volledig afgehandelde speeldag bekijken de vijf tegenstanders jouw spelers. Er komen maximaal drie biedingen: maximaal één per koper en één per speler. Open **Ontvangen biedingen** via Scouting & transfers of de melding op Overzicht.
+
+- **Bekijk verkoop** toont de prijs, jouw kas en totale salarissen na verkoop, het resterende aantal spelers en of de speler in je basis, op je bank of aanvoerder is. Bekijken en annuleren veranderen geen spelgegevens.
+- **Wijs bod af** houdt je speler en credits bij jouw club. Het gesloten bod blijft in de historie.
+- **Bevestig verkoop** controleert de voorwaarden opnieuw. De koper betaalt het vaste bedrag, jij ontvangt datzelfde bedrag en het spelerscontract bij jouw club vervalt. De speler verhuist met zijn ID en historie; zijn oude rugnummer vervalt. Je opstelling, bank en aanvoerder worden opnieuw gecontroleerd, zoals bij directe verkoop. Bekijk je selectie daarna.
+- Het bod blijft na herladen en export/import gelijk. Het vervalt bij de volgende succesvolle aftrap (ook op minuut nul), een nieuw seizoen of expliciete selectie-update. Een geblokkeerde aftrap laat het staan. Tijdens wedstrijden zijn verkoop en afwijzen geblokkeerd.
+- Verkoop via een andere route sluit het ontvangen bod op die speler. Herhaald bevestigen geeft nooit nogmaals geld of een speler.
+
+Clubs zoeken extra diepte bij minder dan drie keepers, acht verdedigers, zeven middenvelders of vijf aanvallers. Bij voldoende bezetting moet de speler minstens één ratingpunt boven het gemiddelde voor zijn brede positie liggen. Kandidaten worden beoordeeld op dat verschil, met twintig extra punten voor een onderbezette positie; lagere prijs en speler-ID breken gelijke scores. De eerste club die mag kiezen rouleert per speeldag. Geblesseerde en geschorste spelers krijgen geen nieuw bod; een eerder geboden speler kan later wel verhuizen met zijn uitval, mits je selectie voldoende vervangers houdt.
+
+Een ontvangen bod is 85% van de spelwaarde op dat moment, naar beneden afgerond, met een waardebasis van minimaal 1.000 credits. Alleen betaalbare spelers komen in aanmerking. Een lager bod terugsturen of een persoonlijk contract uitonderhandelen is nog niet mogelijk. De gekozen belangstelling staat vast; herladen of het scherm opnieuw openen trekt geen andere biedingen. Dit gebruikt lokale spelregels, geen externe AI-dienst.
+
+## Transferbudgetten
+
+Iedere tegenstander begint bij activering van dit systeem met 120.000 credits. Na elke daarna afgeronde speeldag komt 8.000 bij het transferbudget, precies één keer. Oude speeldagen worden niet ingehaald. Bij een nieuw seizoen blijven budgetten staan; er is geen extra seizoensreset of bijdrage. Het maximum is 1 biljoen credits.
+
+Alle transfers tussen jouw club en een tegenstander boeken bij beide clubs hetzelfde bedrag met tegengesteld teken. Een bod reserveert geen credits. Bij de uiteindelijke verkoop controleert het spel opnieuw het budget en de limiet van 55 spelers. Een ontvangen bod kan dus tijdelijk niet uitvoerbaar zijn na een andere aankoop door die club. Er zijn geen negatieve tegenstanderbudgetten en transfers lenen geen geld.
+
+Dit is een afzonderlijk transferbudget, geen volledige simulatie van salarissen, sponsors of stadioninkomsten van de tegenstanders. De laatste honderd mutaties per club blijven opgeslagen; oudere bedragen schuiven naar het beginsaldo. Het scherm toont de laatste vijf. De inbox bewaart maximaal 25 biedingen en toont maximaal twintig gesloten biedingen.
 
 ## Bestaande saves
 
 De opslagsleutel en interne saveversie blijven gelijk. Oudere saves krijgen een lege onderhandelingslijst zonder wijziging van spelers, credits, uitslagen of lopende wedstrijden. Open aanbiedingen worden bewaard bij herladen en export/import. Import controleert status, bedragen, speler, verkopende club, geldigheid en unieke onderhandelingsnummers. Afgesloten historie mag verwijzen naar spelers die inmiddels van club zijn veranderd.
+
+Versie 0.10.0 voegt afzonderlijk de tegenstanderbudgetten en een lege inbox toe. Er worden geen oude transfers opnieuw geboekt en er ontstaan pas nieuwe biedingen na een volgende afgeronde speeldag. Lopende wedstrijden blijven intact. Import controleert ook budgetsaldi, doorlopende boekingen, clubvolgorde, biedingsprijs, status, geldigheid en unieke biedingsnummers. Ongeldige data wordt niet stilzwijgend hersteld of over de actieve carrière geschreven.

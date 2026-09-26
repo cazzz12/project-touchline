@@ -1,3 +1,4 @@
+import {recordClubBudget} from '../public/club-market-state.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -62,7 +63,7 @@ test('one missed round reduces injury time once; reloading and medical upgrades 
  assert.equal(injuryDuration('ankle',1),3);assert.equal(injuryDuration('ankle',3),2);assert.equal(injuryDuration('ankle',5),1);
 });
 test('injuries follow transfers and selling cannot leave fewer than eighteen fit players',()=>{
- const g=newGame(),id=g.lineupIds[2];injure(g,id);
+ const g=newGame(),id=g.lineupIds[2];recordClubBudget(g,1,3000000,'Synthetic budget for roster limit test');injure(g,id);
  assert.ok(saleOffer(g,id,1));assert.equal(sellPlayer(g,id,1),true);assert.ok(injuryFor(g,id));assert.ok(g.clubs[1].players.some(p=>p.id===id));
  while(availablePlayers(g).length>18){const p=availablePlayers(g).find(p=>saleOffer(g,p.id,1));assert.ok(p);sellPlayer(g,p.id,1);}
  assert.equal(availablePlayers(g).length,18);assert.ok(availablePlayers(g).every(p=>saleOffer(g,p.id,1)===null));assert.ok(parseBackup(exportBackup(g)));

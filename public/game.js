@@ -1,3 +1,4 @@
+import {settleClubMarket,completeIncomingSale} from './club-market.js';
 import { formations, lineUp, positionFit, rng, simulate } from './engine.js';
 import { realPlayers } from './real-players.js';
 import { clubData, playerIdentity, ROSTER_VERSION } from './clubs.js';
@@ -157,6 +158,7 @@ export function signPlayer(game,id) {
   recordCash(game,-price,'transfer',`${p.name} aangetrokken`);game.clubs[0].players.push(p);game.market.splice(index,1);ensureManagement(game);
   game.news.unshift(`${p.name} tekent bij ${game.clubs[0].name} voor ${price.toLocaleString('nl-NL')} credits.`);return true;
 }
+export function acceptIncomingOffer(game,id){if(!completeIncomingSale(game,id))return false;prepareSquad(game);return true;}
 export function sellPlayer(game,id,buyerIndex){if(!completeSale(game,id,buyerIndex))return false;prepareSquad(game);return true;}
 const statKeys=['goals','shots','onTarget','xg','passes','completed','possessions','fouls'];
 const emptyStats=()=>Object.fromEntries([...statKeys,'possession','passAccuracy'].map(key=>[key,0]));
@@ -247,7 +249,7 @@ export function finishMatch(game){
   if(p.medicalRules===1)own.medicalReport=settleFitness(game,minutesByClub);
   else for(const player of game.clubs[0].players)player.fitness=p.played[player.id]?matchFitness(player,p.played[player.id]):Math.min(player.fitness+3,100);
   own.reward=reward;game.news.unshift(`Speeldag ${game.round+1}: ${game.clubs[own.home].name} ${own.goals[0]}–${own.goals[1]} ${game.clubs[own.away].name}. +${reward.toLocaleString('nl-NL')} credits.`);
-  game.round++;game.trainingUsed=false;game.scout=null;game.market=[];game.pending=null;game.lastMatch=own;game.reportOpen=true;return own;
+  game.round++;game.trainingUsed=false;game.scout=null;game.market=[];game.pending=null;game.lastMatch=own;game.reportOpen=true;settleClubMarket(game);return own;
 }
 export function playRound(game){if(!beginMatch(game))return null;while(game.pending){game.pending.paused=false;advanceMatch(game);}return game.lastMatch;}
 export function newSeason(game) {
