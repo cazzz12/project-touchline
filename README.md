@@ -1,20 +1,32 @@
 # Project Touchline
 
-Versie **0.18.0** — een speelbaar **offline voetbalmanager-prototype** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
+Versie **0.19.0** — een speelbaar **voetbalmanager-prototype met lokale carrière en een eerste multiplayerproef** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
 ```
 
-Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als `npm.ps1` wordt geblokkeerd. Run `npm test` voor controles van de simulatie en seizoensvoortgang. Node.js 20+ is vereist; externe pakketten zijn niet nodig.
+Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als `npm.ps1` wordt geblokkeerd. Run `npm test` voor controles van de simulatie en seizoensvoortgang. Node.js 24.4+ is vereist; externe pakketten zijn niet nodig.
 
-Dit is een lokale singleplayer game. Browseropslag bevat je club en seizoen; er zijn geen accounts, online multiplayer, echte transacties, wallet of SOL rewards. Training, scouting en transfers gebruiken spelcredits. Verwijderde browsergegevens wissen je voortgang. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
+De bestaande carrièremodus blijft lokale singleplayer. Browseropslag bevat je club en seizoen. Daarnaast is er nu een aparte servergestuurde multiplayerproef met accounts en een database; er zijn geen echte transacties of SOL rewards. Training, scouting en transfers gebruiken spelcredits. Verwijderde browsergegevens wissen je lokale carrière; servercompetities blijven bewaard. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
 
-## Nieuw: blessurewissels door de computercoach
+## Nieuw: accounts en samen spelen
+
+Open **Samen spelen** in het menu of `http://127.0.0.1:3000/online`. Maak een competitie, laat een tweede manager via de competitiecode deelnemen en speel samen tien speeldagen. De server bewaart accounts, unieke clubkeuzes, opstellingen, tactiek, training, onderlinge biedingen, credits en uitslagen in SQLite. Zodra alle managers klaar zijn, rekent hij de speeldag één keer af. Herladen en een serverherstart behouden de voortgang.
+
+Standaard draait dit **uitsluitend als lokale test**. Gebruik een `.test`-adres, bijvoorbeeld `manager@touchline.test`; de testcode verschijnt in het scherm. Er worden geen echte e-mails verstuurd. De walletflow controleert een ondertekend Phantom-bericht en ondersteunt koppelen aan een account; echte walletbediening moet nog worden beproefd. Voor aanmelden via echte e-mail en spelen met vrienden via internet moeten hosting, HTTPS en de maildienst nog worden ingesteld.
+
+De multiplayerproef heeft een beperktere spelomvang dan de lokale carrière: volledige serverwedstrijden, voorbereiding, training en transfers. Live coaching en de uitgebreide clubsystemen blijven voorlopig in de lokale variant. **Bestaande lokale saves blijven behouden en worden niet naar online credits omgezet.** Lees [startinstructies, regels en beperkingen](docs/online.md), of maak een serverbackup met `npm.cmd run backup:db`.
+
+## Lokale carrière
+
+De onderstaande systemen horen bij de uitgebreide lokale spelvariant.
+
+## Blessurewissels door de computercoach
 
 Je tegenstander krijgt bij de aftrap maximaal zeven reserves en kan bij een lichte tik zelf wisselen. De klok loopt door. Een passende, fittere reserve neemt het vanaf de volgende minuut over; zonder geschikte reserve blijft de speler staan. De limiet van drie wissels geldt ook voor de computer. Keeperwissels, gespeelde minuten en hersteltijd blijven na herladen en in het eindverslag correct. Lees [de computercoachregels](docs/opponent-coach.md).
 
-Bekijk [wat er nog te doen is en in welke volgorde](docs/next-steps.md). De eerstvolgende grote stap is de server- en databasebasis voor online spelen.
+Bekijk [wat er nog te doen is en in welke volgorde](docs/next-steps.md). De server- en databasebasis is nu aanwezig voor de aparte multiplayerproef. Externe bereikbaarheid en uitbreiding naar de volledige game volgen daarna.
 
 ## Lichte blessures tijdens wedstrijden
 
@@ -46,7 +58,7 @@ Open **Scouting & transfers → Gericht zoeken**. Bewaar een gewenste positiegro
 
 Bewaar maximaal twintig kandidaten op je **Shortlist** en vergelijk hun vaardigheden, conditie, prijs en salaris met een eigen speler uit dezelfde positiegroep. Je ziet de berekening van de rolscore; die voorspelt geen wedstrijdwinst. Vergelijken wijzigt je opstelling niet en doet geen aankoop. Je shortlist en zoekprofiel blijven na herladen en over seizoenen bewaard. Oudere saves en bestaande rapporten blijven bruikbaar. Lees [de scoutingregels](docs/scouting.md).
 
-De [roadmap](docs/roadmap.md) legt ook de bevestigde productrichting vast: online spelen met e-mail- of walletaanmelding, distributie via de Solana dApp Store en koopbare packs als onderdeel van het verdienmodel. Deze onderdelen zijn nog niet gebouwd; packinhoud, prijzen en economische regels worden later uitgewerkt.
+De [roadmap](docs/roadmap.md) legt ook de bevestigde productrichting vast: online spelen met e-mail- of walletaanmelding, distributie via de Solana dApp Store en koopbare packs als onderdeel van het verdienmodel. De eerste account- en multiplayerbasis is aanwezig. Solana dApp Store, packinhoud, prijzen en economische regels worden later uitgewerkt.
 
 ## Clubreputatie en nieuwe sponsors
 
@@ -136,7 +148,7 @@ De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare 
 
 ## Interfacecontrole
 
-De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 228 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, medische coachpauzes, blessurewissels door de computercoach, hervatten en wisselen bij lichte klachten, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden, gerichte scouting, shortlist, spelersvergelijking, onderlinge clubtransfers, postvakfilters, leesstatus, veilige doorklikroutes, stadionprijzen, bezoekersaantallen, ticketafrekening en 52 opeenvolgende seizoenen.
+De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 247 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, medische coachpauzes, blessurewissels door de computercoach, hervatten en wisselen bij lichte klachten, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden, gerichte scouting, shortlist, spelersvergelijking, onderlinge clubtransfers, postvakfilters, leesstatus, veilige doorklikroutes, stadionprijzen, bezoekersaantallen, ticketafrekening en 52 opeenvolgende seizoenen.
 
 Zie [het controleverslag](docs/browser-check.md) voor de geteste flows en beperkingen. Gebruik voor bestaande saves dezelfde browser en hetzelfde adres als voorheen: `localhost` en `127.0.0.1` hebben elk hun eigen browseropslag.
 

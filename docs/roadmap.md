@@ -2,7 +2,7 @@
 
 De aangeleverde concepttekst en `docs/concept.md` zijn inhoudelijk gelijk. Het oorspronkelijke document blijft intact. De latere keuzes van de gebruiker zijn leidend: in de gewone competitie alleen echte clubs en echte spelersnamen; eigen clubs pas in een toekomstige privéruimte met vrienden. Geen fictieve regens in de gewone competitie.
 
-## Uitgewerkt in de lokale versie 0.18.0
+## Lokale carrière en multiplayerproef in 0.19.0
 
 | Conceptonderdelen | Huidige invulling |
 | --- | --- |
@@ -18,6 +18,8 @@ De aangeleverde concepttekst en `docs/concept.md` zijn inhoudelijk gelijk. Het o
 | 117: meldingen | Lokaal postvak met actuele aandachtspunten, filters, leesstatus en links naar beslisschermen; nog geen pushmeldingen |
 | 76–79: korte en lange speelloop | Voorbereiden, spelen, inkomsten/kosten, ontwikkelen, nieuw seizoen en blijvende historie |
 
+Nieuw in 0.19.0: een aparte multiplayerproef met accounts, serveropslag, gezamenlijke speeldagen en menselijke transferbiedingen. Zie [de actuele omvang en grenzen](online.md). De tabel hierboven beschrijft vooral de uitgebreide lokale carrière.
+
 Dit zijn compacte spelmechanieken. Ze vormen nog geen volledige uitvoering van ieder detail uit de visie.
 
 ## Vastgelegde productrichting — bevestigd op 26 september 2026
@@ -28,20 +30,20 @@ Dit zijn compacte spelmechanieken. Ze vormen nog geen volledige uitvoering van i
 - **Het spel moet inkomsten verdienen.** Koopbare packs zijn expliciet onderdeel van het geplande verdienmodel, naast mogelijke cosmetische items en andere premiumproducten. Inhoud, prijs, eventuele kansen, betaalroute en verdeling van inkomsten worden vóór implementatie uitgewerkt. Er zijn nu nog geen aankopen.
 - **Eerlijke competitie blijft het uitgangspunt uit het concept.** Zeldzaamheid is niet hetzelfde als voetbalsterkte; betalen mag niet automatisch wedstrijden winnen. Packinhoud moet ook passen bij echte clubs en spelers in de gewone competitie. Eigen clubs horen bij latere privéruimtes.
 
-Voor die online fase scheiden we spelregels van schermbediening. Wallets en e-mail koppelen aan een account, niet rechtstreeks aan losse browser-saves. Aankopen krijgen servercontrole, eenmalige verwerking en herstel; een lokaal bericht dat een pack is gekocht mag nooit voldoende zijn. Dit beschrijft de toekomstige architectuur en is nog niet gebouwd.
+Voor die online fase scheiden we spelregels van schermbediening. Wallets en e-mail koppelen aan een account, niet rechtstreeks aan losse browser-saves. Aankopen krijgen servercontrole, eenmalige verwerking en herstel; een lokaal bericht dat een pack is gekocht mag nooit voldoende zijn. De servergestuurde basis en accounts zijn vanaf 0.19.0 aanwezig voor een aparte, beperktere multiplayerproef. Productiehosting, betalingen en de volledige spelomvang zijn nog niet gerealiseerd.
 
 ## Wat doen we hierna?
 
-De eerstvolgende prioriteit is de online server- en opslaglaag. Daarna volgen accounts, multiplayer, packs en mobiele distributie. Zie [het concrete overzicht met volgorde, open keuzes en gereedcriteria](next-steps.md). Verdere verfijning van de simulatie blijft mogelijk naast deze route.
+De eerste server-, account- en multiplayerbasis is gebouwd. De volgende prioriteit is afwezigheid/lobbybeheer, een besloten externe testomgeving en testen op echte apparaten. Daarna volgen uitbreiding van de spelomvang, packs en mobiele distributie. Zie [het concrete overzicht met volgorde, open keuzes en gereedcriteria](next-steps.md). Verdere verfijning van de simulatie blijft mogelijk naast deze route.
 
 ## Nog uit te werken
 
 1. **Spelkwaliteit en data:** spelbalans over veel carrières, fijnere posities en betrouwbare leeftijdsdata, uitgebreidere keeperacties, zware wedstrijdblessures met gedwongen uitval, een langetermijnmodel voor leeftijd en potentieel, karaktertrekken, teamchemie en meer tactische instructies. Jeugdontwikkeling moet passen bij de keuze voor echte spelersnamen.
 2. **Dieper clubbeheer:** uitgebreidere onderhandelingen met spelers, uitgebreidere transferstrategieën en langetermijnplanning voor de computerclubs, stafspecialisaties, verdere supportersinteractie en invloed van reputatie op scouting en transfers. Stadioncapaciteit, ticketprijzen en reputatiegestuurde bezoekers zijn vanaf 0.15.0 aanwezig.
-3. **Online basis:** accounts met e-mail- en walletaanmelding, centrale database, servergestuurde wedstrijden en transfers, saveconflicten, herstel, beveiliging en bescherming tegen manipulatie. Browseropslag is hiervoor geen autoriteit.
-4. **Samen spelen:** vrienden, privéruimtes en eigen clubs binnen die ruimtes, online competities en optionele pushmeldingen. Het lokale postvak is vanaf 0.16.0 aanwezig. De gewone competitie behoudt de echte clubs.
+3. **Online basis:** server, SQLite-database, accountflows, versienummers, herhaalbare opdrachten, serverwedstrijden en transfers zijn aanwezig in de 0.19.0-proef. Echte mailbezorging, walletbediening, hosting, beheer, privacy, beveiligingsaudit en schaaltests staan nog open. Browseropslag is geen autoriteit.
+4. **Samen spelen:** een eerste competitie met twee tot zes accounts en echte clubs is gebouwd en lokaal getest. Externe bereikbaarheid, regels bij afwezigheid en deelnemersbeheer volgen nog, evenals vrienden, privéruimtes en eigen clubs binnen die ruimtes, openbare competities en optionele pushmeldingen. Het lokale postvak is vanaf 0.16.0 aanwezig. De gewone competitie behoudt de echte clubs.
 5. **Latere productfases:** media/events, uitgebreide prestaties, audio, mobiele app en distributie via de Solana dApp Store, en het overige sociale spel.
-6. **Solana en verdienmodel:** koopbare packs, andere premiumproducten, walletbetalingen, SOL, reward points, treasury, assets en marketplace. Eerst volgen de online basis en uitgewerkte product- en economische regels; betalingen worden vóór productie in een testomgeving beproefd. Er is nu geen betaling, walletverbinding, NFT of rewardclaim.
+6. **Solana en verdienmodel:** koopbare packs, andere premiumproducten, walletbetalingen, SOL, reward points, treasury, assets en marketplace. Eerst volgen de online basis en uitgewerkte product- en economische regels; betalingen worden vóór productie in een testomgeving beproefd. Er is nu geen betaling, NFT of rewardclaim. Er bestaat wel een eerste desktop-walletaanmelding met eigendomscontrole.
 
 Packs zijn een bevestigde toekomstige productkeuze; hun precieze inhoud en werking staan nog open. Jeugdregens, een managerpass en verkoopbare spelersvoordelen worden niet automatisch uit het oorspronkelijke concept overgenomen. Eerst moet duidelijk zijn hoe ze passen bij echte namen en eerlijke competitie. Er zijn nu geen pay-to-win aankopen.
 

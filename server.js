@@ -1,13 +1,5 @@
-import { createServer } from 'node:http';
-import { readFile } from 'node:fs/promises';
-import { extname, join, resolve, sep } from 'node:path';
-
-const root = resolve('public');
-const mime = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg':'image/svg+xml', '.png':'image/png' };
-createServer(async (req, res) => {
-  const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
-  const file = resolve(join(root, pathname === '/' ? 'index.html' : pathname));
-  if (!file.startsWith(root + sep) && file !== root) { res.writeHead(403); return res.end(); }
-  try { const data = await readFile(file); res.writeHead(200, { 'Content-Type': mime[extname(file)] || 'application/octet-stream', 'X-Content-Type-Options': 'nosniff' }); res.end(data); }
-  catch { res.writeHead(404); res.end('Not found'); }
-}).listen(3000, () => console.log('Touchline: http://localhost:3000'));
+import {configuration,createApplication} from './backend/server.js';
+const config=configuration(),app=createApplication(config);
+app.server.listen(config.port,config.host,()=>console.log(`Touchline: ${config.origin}\nSamen spelen: ${config.origin}/online\n${config.dev?'Lokale testaanmelding: alleen .test-adressen; geen echte e-mail.':'Productieaanmelding actief.'}`));
+let stopping=false;
+for(const signal of ['SIGINT','SIGTERM'])process.on(signal,async()=>{if(stopping)return;stopping=true;await app.close();process.exit(0);});
