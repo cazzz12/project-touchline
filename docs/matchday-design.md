@@ -1,4 +1,8 @@
-# Wedstrijdstijl — 0.24.0
+# Wedstrijdstijl — 0.25.0
+
+De tweede afwerking maakt het kleurverschil nadrukkelijk zichtbaar: koningsblauwe/cyaanblauwe kaarten, citroengele knoppen en titels, lichte club- en profielpanelen en een compacte mobiele header. Barlow Condensed Regular is toegevoegd voor de lopende gametekst. De emotiekeuze en emotieweergave zijn verwijderd, met behoud van bestaande profielgegevens. De speelblokkade en de 281 actuele tests staan in [lokale oefenwerelden](local-practice.md).
+
+Onderstaande controles beschrijven de oorspronkelijke 0.24.0-afwerking.
 
 De aangeleverde voetbalmanagerbeelden zijn gebruikt voor sfeer en visuele hiërarchie: een stadion achter donkerblauwe panelen, helderblauwe bediening, geel voor belangrijke labels en compacte sportlettertypes. Touchline houdt eigen beelden, SVG-iconen, lettertypes en spelregels. Er zijn geen personages, advertenties, wachttijden of producten uit de referentie toegevoegd.
 

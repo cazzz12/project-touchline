@@ -1,8 +1,10 @@
 # Wat blijft er te doen?
 
-Stand: **0.24.0, 27 september 2026**. Openbare speelwerelden, de stadionlogin en proefpacks zijn lokaal gebouwd en getest. Er is nog geen publieke release of betaling met echt geld.
+Stand: **0.25.0, 27 september 2026**. Openbare speelwerelden, de stadionlogin en proefpacks zijn lokaal gebouwd en getest. Er is nog geen publieke release of betaling met echt geld.
 
 ## Nu gebouwd
+
+- Een gekozen club direct lokaal starten tegen computerclubs, handmatige speeldagen en nieuwe seizoenen, herstel van de geopende wereld na herladen. Zie [oefenwerelden](local-practice.md).
 
 - E-mailcodes, Phantom en Solflare; koppelen van wallet/e-mail, serveropslag en herstartbehoud.
 - Twintig competities, 351 clubs, 9.636 huidige spelers; zestien speelbare leagues. FC 26-ratings met gemarkeerde FC 27-aanvullingen.
@@ -10,9 +12,9 @@ Stand: **0.24.0, 27 september 2026**. Openbare speelwerelden, de stadionlogin en
 - Elftal, tactiek, training, transfers, ranglijst, verslagen en volgende seizoenen onder servercontrole.
 - Scout- en Spotlight-packs met spelcredits, zichtbare kansen en elf echte oud-spelers. Eenmalige afschrijving/levering; geen dubbele speler in één selectie. Klassieke werelden zonder packs.
 - Mobiele login, wereldkeuze, elftal en packs; grote knoppen, vast ondermenu en originele stadionachtergrond.
-- Behoud van lokale saves en oude competities, database-upgrade en backup. **276 automatische tests slagen.**
+- Behoud van lokale saves en oude competities, database-upgrade en backup. **281 automatische tests slagen.**
 
-De [wedstrijdstijl](matchday-design.md) brengt beide clublogo’s, een lokale voorbereidingstakenlijst, blauwe trainingskaarten en kleurrijke packs samen. Profielen gebruiken voetbalbadges; AI-portretten zijn verwijderd.
+De [wedstrijdstijl](matchday-design.md) brengt beide clublogo’s, een lokale voorbereidingstakenlijst, blauwe trainingskaarten en kleurrijke packs samen. Profielen gebruiken voetbalbadges; AI-portretten en de emotiekeuze zijn verwijderd. Helderblauwe vlakken, gele acties en lichte club-/profielpanelen maken het verschil duidelijker.
 
 Directe lokale toegang zonder handmatig ingevulde code is beschikbaar via de login. De hele app gebruikt de [stadionstijl](stadium-design.md).
 

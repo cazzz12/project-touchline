@@ -20,6 +20,12 @@ test('invalid profiles fail atomically and tutorial progress stays isolated per 
  const db=dbFor(t),before=readManager(db,'a');for(const input of [{name:'Valid',avatar:7},{name:'x'},{mood:'__proto__'},{motto:'<img onerror=alert(1)>'},{motto:'x'.repeat(81)},{credits:999999},{avatar:'2'}])assert.throws(()=>saveManager(db,'a',input));
  for(const input of [{stage:'admin'},{onboarding:'false'},{lesson:'reward'},{learned:lessons.map(l=>l.id)},{}])assert.throws(()=>saveGuide(db,'a',input));assert.deepEqual(readManager(db,'a'),before);assert.equal(db.prepare("SELECT name FROM accounts WHERE id='a'").get().name,'a');saveGuide(db,'a',{lesson:'sell'});assert.deepEqual(readManager(db,'b'),before);
 });
+test('profile without emotion keeps old stored preferences while removing all emotion controls',t=>{
+ const db=dbFor(t);saveManager(db,'a',{name:'Coach',avatar:4,mood:'heart',motto:'Samen winnen'});saveGuide(db,'a',{lesson:'training'});
+ saveManager(db,'a',{name:'Coach Nova',avatar:3,motto:'Altijd vooruit'});const profile=readManager(db,'a');assert.equal(profile.mood,'heart');assert.deepEqual(profile.learned,['training']);assert.equal(profile.avatar,3);
+ const html=profileForm({name:'Coach Nova',profile},esc);assert.doesNotMatch(html,/emotie|name="mood"|mood-picker/);assert.match(html,/name="avatar" value="3" checked/);
+});
+
 test('all lessons have one correct choice and invalid exercises cannot finish a lesson',()=>{
  for(const l of lessons){for(let i=0;i<l.choices.length;i++)assert.equal(lessonResult(l.id,i).correct,i===l.answer);assert.ok(lessonResult(l.id,l.answer).text.length>20);}for(const [id,choice] of [['unknown',0],['training',-1],['training',20],['sell',NaN]])assert.throws(()=>lessonResult(id,choice));
 });

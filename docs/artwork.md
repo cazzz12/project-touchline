@@ -20,7 +20,7 @@ Exacte prompt:
 
 ## Lettertypes
 
-`public/assets/fonts/Barlow-Regular.ttf`, `Barlow-SemiBold.ttf` en `BarlowCondensed-Bold.ttf` zijn ongewijzigde Google Fonts-bestanden, met de licentie in `OFL-Barlow.txt`. Bronmappen: https://github.com/google/fonts/tree/main/ofl/barlow en https://github.com/google/fonts/tree/main/ofl/barlowcondensed. Er worden geen fonts van een ander voetbalspel gekopieerd.
+`public/assets/fonts/Barlow-Regular.ttf`, `Barlow-SemiBold.ttf` en `BarlowCondensed-Bold.ttf` / `BarlowCondensed-Regular.ttf` zijn ongewijzigde Google Fonts-bestanden, met de licentie in `OFL-Barlow.txt`. Bronmappen: https://github.com/google/fonts/tree/main/ofl/barlow en https://github.com/google/fonts/tree/main/ofl/barlowcondensed. Er worden geen fonts van een ander voetbalspel gekopieerd.
 
 ## 0.24.0 — voetbalbadges
 

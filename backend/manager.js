@@ -9,7 +9,7 @@ function write(db,user,p){db.prepare('INSERT INTO settings(key,value) VALUES (?,
 export function saveManager(db,user,input){
  allowed(input,['name','avatar','mood','motto']);
  if('name' in input&&(typeof input.name!=='string'||input.name.trim().length<2||input.name.trim().length>30||/[<>\x00-\x1f]/.test(input.name)))fail(400,'Gebruik een managernaam van 2 tot 30 tekens.');
- if('avatar' in input&&(!Number.isInteger(input.avatar)||input.avatar<0||input.avatar>=avatarNames.length))fail(400,'Kies een managerportret.');
+ if('avatar' in input&&(!Number.isInteger(input.avatar)||input.avatar<0||input.avatar>=avatarNames.length))fail(400,'Kies een profielbadge.');
  if('mood' in input&&!Object.hasOwn(moods,input.mood))fail(400,'Kies een geldige emotie.');
  if('motto' in input&&(typeof input.motto!=='string'||input.motto.trim().length>80||/[<>\x00-\x1f]/.test(input.motto)))fail(400,'Gebruik een motto van maximaal 80 tekens, zonder HTML.');
  return transaction(db,()=>{const p=readManager(db,user);for(const k of ['avatar','mood','motto'])if(k in input)p[k]=typeof input[k]==='string'?input[k].trim():input[k];if('name' in input)db.prepare('UPDATE accounts SET name=? WHERE id=?').run(input.name.trim(),user);return write(db,user,p);});

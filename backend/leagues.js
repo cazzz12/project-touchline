@@ -29,7 +29,7 @@ function settleRound(s){
   s.round++;s.managers.forEach(m=>{m.ready=false;});if(s.round===schedule(s.clubs.length).length)s.phase='complete';
 }
 
-export function leagueService(db,{now=Date.now,world=worldRepository(),worldLobbyMs=30*60000,worldRoundMs=24*3600000,packDraw,packPool}={}){
+export function leagueService(db,{now=Date.now,world=worldRepository(),worldLobbyMs=30*60000,worldRoundMs=24*3600000,packDraw,packPool,dev=false}={}){
   const packs=packService({draw:packDraw,pool:packPool});
   const regions=['eu','asia','americas'],rules=['collection','classic'];
   const room=id=>db.prepare('SELECT * FROM worlds WHERE league=?').get(id)||null;
@@ -39,7 +39,7 @@ export function leagueService(db,{now=Date.now,world=worldRepository(),worldLobb
   function view(id,user){
     tick();
     const i=member(id,user),r=get(id),s=r.data,people=members(id),worldRoom=room(id);
-    return {id:r.id,code:r.code,version:r.version,owner:!worldRoom&&r.owner===user,world:worldRoom,...worldRoom?{serverTime:now()}:{},myClub:i,title:s.title,phase:s.phase,season:s.season,round:s.round,totalRounds:schedule(s.clubs.length).length,catalog:s.catalog||null,clubs:s.clubs,
+    return {id:r.id,code:r.code,version:r.version,owner:!worldRoom&&r.owner===user,world:worldRoom,...worldRoom?{serverTime:now()}:{},practice:!!s.practice,myClub:i,title:s.title,phase:s.phase,season:s.season,round:s.round,totalRounds:schedule(s.clubs.length).length,catalog:s.catalog||null,clubs:s.clubs,
       members:people.map(p=>({club:p.club,name:p.name,ready:s.managers[p.club].ready})),my:s.managers[i],table:standings(s),fixtures:schedule(s.clubs.length)[s.round]||[],results:s.results,reports:s.reports,history:s.history,
       offers:s.offers.filter(o=>o.buyer===i||o.seller===i)};
   }
@@ -75,7 +75,24 @@ export function leagueService(db,{now=Date.now,world=worldRepository(),worldLobb
     return once(user,{...input,leagueId},()=>{
       const i=member(leagueId,user),r=get(leagueId),s=r.data,m=s.managers[i],people=members(leagueId);
       if(!integer(input.version,1,1e12)||input.version!==r.version)fail(409,'De competitie is veranderd. Vernieuw en probeer opnieuw.');
-      if(input.type==='start'){
+      if(typeof input.type==='string'&&input.type.startsWith('practice-')){
+        if(!dev)fail(403,'Oefenwedstrijden zijn alleen beschikbaar in de lokale test.');
+        if(!room(leagueId)||people.length!==1)fail(409,'Gebruik een eigen wachtkamer zonder andere managers.');
+        if(input.type==='practice-start'){
+          if(s.phase!=='lobby'||s.practice)fail(409,'Deze oefenwereld is al gestart.');
+          s.practice={owner:user};s.phase='active';
+        }else{
+          if(s.practice?.owner!==user)fail(403,'Dit is niet jouw lokale oefenwereld.');
+          if(input.type==='practice-round'){
+            if(s.phase!=='active')fail(409,'Rond dit seizoen af voordat je verder speelt.');
+            settleRound(s);
+          }else if(input.type==='practice-season'){
+            if(s.phase!=='complete')fail(409,'Rond eerst het seizoen af.');
+            s.history.push({season:s.season,table:standings(s)});s.history=s.history.slice(-20);s.season++;s.round=0;s.results=[];s.reports=[];s.offers=[];s.phase='active';s.managers.forEach(m=>{m.trainedRound=-1;m.ready=false;});
+          }else fail(400,'Onbekende oefenactie.');
+        }
+        db.prepare('UPDATE worlds SET phase=?,deadline=0 WHERE league=?').run(s.phase,leagueId);
+      }else if(input.type==='start'){
         if(room(leagueId))fail(403,'De openbare wereld start automatisch.');
         if(r.owner!==user)fail(403,'Alleen de organisator kan starten.');if(s.phase!=='lobby'||people.length<2)fail(409,'Er moeten minimaal twee managers in de lobby zitten.');s.phase='active';
       }else if(input.type==='season'){
@@ -132,6 +149,7 @@ export function leagueService(db,{now=Date.now,world=worldRepository(),worldLobb
     const time=now(),due=db.prepare("SELECT league FROM worlds WHERE (phase='lobby' AND starts<=?) OR (phase IN ('active','complete') AND deadline<=?)").all(time,time);
     if(!due.length)return;
     transaction(db,()=>{for(const {league:id} of due){const w=room(id),r=get(id),s=r.data;
+      if(s.practice)continue;
       if(w.phase==='lobby'){
         if(members(id).length<2)continue;startWorld(id,s,time);
       }else if(w.phase==='active'){
@@ -146,7 +164,7 @@ export function leagueService(db,{now=Date.now,world=worldRepository(),worldLobb
     tick();const selected=filter.catalog||'',region=filter.region||'eu',rule=filter.rules||'collection';
     if(selected&&!world.index?.leagues.some(l=>l.id===selected)||!regions.includes(region)||!rules.includes(rule))fail(400,'Kies een geldige competitie en speelregio.');
     const rows=db.prepare('SELECT l.id,l.state,w.* FROM worlds w JOIN leagues l ON l.id=w.league WHERE (? = ? OR w.catalog=?) AND w.region=? AND w.rules=? ORDER BY w.starts DESC LIMIT 60').all(selected,'',selected,region,rule);
-    return {region,rules:rule,roundHours:worldRoundMs/3600000,lobbyMinutes:worldLobbyMs/60000,rooms:rows.map(r=>{const s=JSON.parse(r.state),people=members(r.id);return {id:r.id,title:s.title,catalog:r.catalog,region:r.region,rules:r.rules,phase:s.phase,starts:r.starts,deadline:r.deadline,season:s.season,round:s.round,capacity:s.clubs.length,managers:people.length,joined:people.some(p=>p.account===user),clubs:s.clubs.map((c,i)=>({index:i,name:c.name,logo:c.logo,occupied:people.some(p=>p.club===i)}))};})};
+    return {region,rules:rule,roundHours:worldRoundMs/3600000,lobbyMinutes:worldLobbyMs/60000,rooms:rows.filter(r=>!JSON.parse(r.state).practice).map(r=>{const s=JSON.parse(r.state),people=members(r.id);return {id:r.id,title:s.title,catalog:r.catalog,region:r.region,rules:r.rules,phase:s.phase,starts:r.starts,deadline:r.deadline,season:s.season,round:s.round,capacity:s.clubs.length,managers:people.length,joined:people.some(p=>p.account===user),clubs:s.clubs.map((c,i)=>({index:i,name:c.name,logo:c.logo,occupied:people.some(p=>p.club===i)}))};})};
   }
   function enterWorld(user,input){
     tick();fields(input,['id','catalogId','catalogSnapshot','region','rules','worldId','club']);
@@ -171,6 +189,6 @@ export function leagueService(db,{now=Date.now,world=worldRepository(),worldLobb
     });
   }
   function leaveWorld(user,input){fields(input,['id','worldId']);tick();return once(user,input,()=>{const w=room(input.worldId);if(!w)fail(404,'Wereld niet gevonden.');member(w.league,user);if(w.phase!=='lobby')fail(409,'Je kunt een openbare wereld alleen vóór de start verlaten.');db.prepare('DELETE FROM members WHERE league=? AND account=?').run(w.league,user);db.prepare('UPDATE leagues SET version=version+1 WHERE id=?').run(w.league);return {left:true};});}
-  return {create,join,act,view,lobby,tick,discover,enterWorld,leaveWorld,catalog:()=>world.index,list:user=>db.prepare('SELECT l.id,l.state,m.club FROM leagues l JOIN members m ON m.league=l.id WHERE m.account=?').all(user).map(r=>{const s=JSON.parse(r.state);return {id:r.id,title:s.title,phase:s.phase,world:room(r.id),club:s.clubs[r.club].name,round:s.round,totalRounds:schedule(s.clubs.length).length,season:s.season};}),
+  return {create,join,act,view,lobby,tick,discover,enterWorld,leaveWorld,catalog:()=>world.index,list:user=>db.prepare('SELECT l.id,l.state,m.club FROM leagues l JOIN members m ON m.league=l.id WHERE m.account=?').all(user).map(r=>{const s=JSON.parse(r.state);return {id:r.id,title:s.title,phase:s.phase,practice:!!s.practice,world:room(r.id),club:s.clubs[r.club].name,round:s.round,totalRounds:schedule(s.clubs.length).length,season:s.season};}),
     rename:(user,name)=>{if(!label(name,30))fail(400,'Gebruik een managernaam van 2 tot 30 tekens.');db.prepare('UPDATE accounts SET name=? WHERE id=?').run(name.trim(),user);}};
 }

@@ -23,6 +23,26 @@ function setup(t,extra={}){
  const act=(user,id,type,values={})=>service.act(user,id,{id:randomUUID(),version:service.view(id,user).version,type,...values});
  return {db,service,world,enter,act,advance(ms){time+=ms;service.tick();}};
 }
+test('local practice starts a selected club, settles once, survives service restart and keeps its own clock',t=>{
+ const h=setup(t,{dev:true}),a=h.enter('a',0),before=h.service.view(a.id,'a');
+ const start={id:randomUUID(),version:before.version,type:'practice-start'};h.service.act('a',a.id,start);assert.deepEqual(h.service.act('a',a.id,start),{id:a.id});
+ let s=h.service.view(a.id,'a');assert.equal(s.phase,'active');assert.ok(s.practice);assert.deepEqual(s.clubs,before.clubs);assert.equal(s.my.credits,before.my.credits);
+ assert.equal(h.service.discover('b').rooms.length,0);assert.equal(h.service.list('a')[0].practice,true);assert.throws(()=>h.enter('b',1,{worldId:a.id}),/gestart/);
+ const p=s.clubs[0].players[0],skill='passing';h.act('a',a.id,'train',{playerId:p.id,skill});s=h.service.view(a.id,'a');assert.equal(s.clubs[0].players[0][skill],p[skill]+1);assert.equal(s.my.credits,119000);
+ const round={id:randomUUID(),version:s.version,type:'practice-round'};h.service.act('a',a.id,round);s=h.service.view(a.id,'a');assert.equal(s.round,1);assert.equal(s.results.length,3);const credits=s.my.credits;
+ assert.deepEqual(h.service.act('a',a.id,round),{id:a.id});h.advance(1000000);assert.equal(h.service.view(a.id,'a').round,1);assert.equal(h.service.view(a.id,'a').my.credits,credits);
+ const restarted=leagueService(h.db,{dev:true,world:h.world,now:()=>5000000});assert.deepEqual(restarted.view(a.id,'a').results,s.results);assert.equal(restarted.view(a.id,'a').my.credits,credits);
+ assert.throws(()=>h.act('a',a.id,'practice-season'),/Rond eerst/);for(let n=1;n<10;n++)h.act('a',a.id,'practice-round');s=h.service.view(a.id,'a');assert.equal(s.phase,'complete');assert.equal(s.results.length,30);
+ assert.throws(()=>h.act('a',a.id,'practice-round'),/Rond dit seizoen/);h.act('a',a.id,'practice-season');s=h.service.view(a.id,'a');assert.equal(s.season,2);assert.equal(s.round,0);assert.equal(s.history.length,1);assert.equal(s.my.trainedRound,-1);assert.ok(s.practice);
+});
+
+test('practice is restricted to a local world with exactly one participating manager',t=>{
+ const production=setup(t),a=production.enter('a',0);assert.throws(()=>production.act('a',a.id,'practice-start'),/lokale test/);assert.equal(production.service.view(a.id,'a').phase,'lobby');
+ const h=setup(t,{dev:true}),one=h.enter('a',0);assert.throws(()=>h.act('b',one.id,'practice-start'),/geen deelnemer/);assert.throws(()=>h.act('a',one.id,'practice-round'),/niet jouw/);
+ const before=h.service.view(one.id,'a');h.enter('b',1);assert.throws(()=>h.service.act('a',one.id,{id:randomUUID(),version:before.version,type:'practice-start'}),/veranderd/);assert.throws(()=>h.act('a',one.id,'practice-start'),/zonder andere managers/);assert.equal(h.service.view(one.id,'a').practice,false);
+ const old=h.service.create('c',{id:randomUUID(),title:'Legacy',club:0});assert.throws(()=>h.act('c',old.id,'practice-start'),/eigen wachtkamer/);
+});
+
 test('public matchmaking groups strangers, splits occupied club claims and isolates regions and rules',t=>{
  const h=setup(t),a=h.enter('a',0),b=h.enter('b',1),c=h.enter('c',0);assert.equal(a.id,b.id);assert.notEqual(a.id,c.id);
  const asia=h.enter('d',0,{region:'asia'}),classic=h.enter('e',0,{rules:'classic'});assert.notEqual(asia.id,a.id);assert.notEqual(classic.id,a.id);
