@@ -1,10 +1,10 @@
-# De eerste stappen — 0.23.0
+# De eerste stappen — 0.24.0
 
 De app krijgt eerst meer spelgemak en een volledige instap. Publieke hosting en samenvoegen met de uitgebreidere online game wachten tot de spelervaring voldoende klaar is. Dit is de door de gebruiker gekozen volgorde.
 
 ## Van manager naar club
 
-Na de lokale proefaanmelding begint de begeleide start. Kies een managernaam, één van zes originele portretten, een emotie en eventueel een motto. Daarna kies je een league, speelregio/spelregels, een bestaande wachtkamer of automatisch zoeken, en een vrije echte club. Clubkaarten tonen de bestaande logo's. Er wordt niets geclaimd totdat je **Bevestig mijn club** kiest. Bezetting blijft door de server gecontroleerd.
+Na de lokale proefaanmelding begint de begeleide start. Kies een managernaam, één van zes originele voetbalbadges, een emotie en eventueel een motto. Daarna kies je een league, speelregio/spelregels, een bestaande wachtkamer of automatisch zoeken, en een vrije echte club. Clubkaarten tonen de bestaande logo's. Er wordt niets geclaimd totdat je **Bevestig mijn club** kiest. Bezetting blijft door de server gecontroleerd.
 
 De vijf stappen hebben een voortgangsbalk. **Vorige stap** wijzigt alleen de keuze; **Later verdergaan** opent het gewone clubhuis. De knop **Tutorial** hervat de instap of de lessen. De gekozen league, regio, spelregel en wereld blijven in de pagina-URL staan. Als een oude wereld niet meer beschikbaar is, verschijnt opnieuw de wereldkeuze.
 
@@ -18,9 +18,9 @@ Een goed antwoord bewaart de les als geleerd. Opnieuw oefenen levert niets extra
 
 ## Eigen managerprofiel
 
-**Mijn profiel** toont naam, motto, portret, emotie, het aantal eigen speelwerelden en de lesvoortgang. Alle keuzes zijn later aanpasbaar. De voetbaliconen en emoties zijn eigen SVG-tekeningen; de zes portretten en het trainingscomplex zijn originele gegenereerde beelden. Herkomst en exacte prompts staan in [artwork.md](artwork.md).
+**Mijn profiel** toont naam, motto, voetbalbadge, emotie, het aantal eigen speelwerelden en de lesvoortgang. Alle keuzes zijn later aanpasbaar. De voetbaliconen en emoties zijn eigen SVG-tekeningen; ook de zes profielbadges gebruiken eigen SVG-iconen. Het trainingscomplex is een origineel gegenereerd beeld. Herkomst en exacte prompts staan in [artwork.md](artwork.md).
 
-De nieuwe endpoints `/api/account/profile` en `/api/account/guide` gebruiken de bestaande sessie, CSRF- en Origin-controles. Alleen toegestane velden en vaste portret-/emotie-/lescodes worden geaccepteerd. Naam en profiel worden samen opgeslagen. Opgeslagen profieltekst wordt als tekst ge-escaped.
+De nieuwe endpoints `/api/account/profile` en `/api/account/guide` gebruiken de bestaande sessie, CSRF- en Origin-controles. Alleen toegestane velden en vaste badge-/emotie-/lescodes worden geaccepteerd. Naam en profiel worden samen opgeslagen. Opgeslagen profieltekst wordt als tekst ge-escaped.
 
 Profielen staan per account onder de sleutel `manager-profile:<account-id>` in de bestaande SQLite-instellingentabel. Dit is uitsluitend cosmetische profiel- en tutorialdata. Databaseschema 3, spelwerelden, identities, auth-secret en lokale saveformaat blijven behouden. De browsercarrière blijft apart; het carrièremenu verwijst naar **Tutorial & profiel**.
 

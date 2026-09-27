@@ -1,4 +1,4 @@
-export const avatarNames=['Noa','Kai','Romy','Idris','Milan','Alex'];
+export const avatarNames=['Clubhart','Spelmaker','Aanvoerder','Tacticus','Winnaar','Clubicoon'];
 export const moods={calm:'Rustig vertrouwen',fire:'Vol voor de winst',heart:'Hart voor de club',trophy:'Op naar de titel'};
 export const starterStages=['profile','league','world','club','learn'];
 export const lessons=[

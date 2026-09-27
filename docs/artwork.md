@@ -22,15 +22,19 @@ Exacte prompt:
 
 `public/assets/fonts/Barlow-Regular.ttf`, `Barlow-SemiBold.ttf` en `BarlowCondensed-Bold.ttf` zijn ongewijzigde Google Fonts-bestanden, met de licentie in `OFL-Barlow.txt`. Bronmappen: https://github.com/google/fonts/tree/main/ofl/barlow en https://github.com/google/fonts/tree/main/ofl/barlowcondensed. Er worden geen fonts van een ander voetbalspel gekopieerd.
 
-## 0.23.0 — managerportretten en Academy
+## 0.24.0 — voetbalbadges
+
+Op verzoek zijn alle AI-managerportretten verwijderd. De oude portretatlas is uit de app verwijderd; profiel en assistent gebruiken nu de eigen voetbaliconen in kleurige CSS-badges. Er is geen nieuw portret gegenereerd. De zes opgeslagen avatarcodes blijven gelijk, zodat oude profielen blijven werken. De stadion- en trainingsachtergronden blijven behouden.
+
+## 0.23.0 — Academy en historische portretproef
 
 Modus: ingebouwde ImageGen, generate, nieuwe originele beelden; de gebruikersreferenties zijn gebruikt als inspiratie voor de sfeer, niet als overgenomen pixels of personages.
 
-- `public/assets/touchline-managers.png`: atlas met zes portretten, 3 × 2 gelijke panelen. De interface toont elk portret met CSS-background-position; het originele beeld is ongewijzigd.
+- De toenmalige atlas `touchline-managers.png` met zes portretten is in 0.24.0 verwijderd. De prompt hieronder is alleen historische herkomstinformatie.
 - `public/assets/touchline-academy.png`: trainingscomplex voor de start en lessen.
 - Voetbaliconen en vier profiel-emoties: eigen SVG-paden in `public/football-icons.js`.
 
-### Prompt managerportretten
+### Historische prompt van de verwijderde portretten
 
 Use case: stylized-concept. Asset type: one 3 by 2 portrait atlas for selectable manager avatars in Project Touchline, an original football manager game. Create exactly six separate square portrait panels in a perfectly even 3-column 2-row grid, no gaps, each equal size, total image landscape 3:2. Each panel is a centered head and shoulders portrait with ample headroom, facing camera, on identical dark midnight-navy studio gradient. Sophisticated stylized 3D collectible game art, detailed fabric and skin shading, believable adult proportions with gently expressive features, soft cyan rim lighting and warm stadium fill. Top row left: friendly woman coach with brown skin, dark curly hair tied high, navy sports jacket with turquoise trim. Top middle: East Asian man, short straight black hair, navy crewneck coach top. Top right: light skinned woman, short copper hair, navy tracksuit. Bottom left: dark skinned man with close-cropped hair and a neat beard, navy technical polo. Bottom middle: olive skinned man with wavy dark hair and subtle round glasses, navy coach jacket. Bottom right: older light skinned woman with silver short hair, navy sport jacket. All are unique fictional adults. Keep faces and shoulders within their own square, same camera distance and eye level. Clear friendly confident expressions. Palette midnight blue, turquoise, small gold details. No text, no numbers, no logos, no borders, no football club branding, no watermarks. Do not reproduce characters from any existing football game. This is an asset atlas, not a mockup.
 

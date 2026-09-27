@@ -1,4 +1,5 @@
 const shapes={
+ ball:'<circle cx="12" cy="12" r="9"/><path d="m12 7 5 4-2 5H9l-2-5 5-4ZM12 3v4M3 9l4 2M21 9l-4 2M7 20l2-4M17 20l-2-4"/>',
  shirt:'<path d="m8 4-5 4 3 4 2-2v10h8V10l2 2 3-4-5-4c-1 3-7 3-8 0Z"/>',
  cone:'<path d="M9 3h6l4 16H5L9 3Z"/><path d="M7 11h10M6 15h12M3 21h18"/>',
  transfer:'<path d="M3 7h17l-4-4M21 17H4l4 4M20 7l-4 4M4 17l4-4"/>',
@@ -14,4 +15,4 @@ const shapes={
  check:'<path d="m4 12 5 5L20 6"/>',
  book:'<path d="M12 5C8 2 3 3 2 4v16c4-2 7-1 10 1 3-2 6-3 10-1V4c-1-1-6-2-10 1ZM12 5v16"/>'
 };
-export function footballIcon(name){return `<svg class="football-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${shapes[name]||shapes.shield}</svg>`;}
+export function footballIcon(name){return `<svg class="football-icon" data-icon="${Object.hasOwn(shapes,name)?name:'shield'}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${shapes[name]||shapes.shield}</svg>`;}

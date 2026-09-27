@@ -1,6 +1,10 @@
+# Nieuw in 0.24.0 — voetbalbadges en wedstrijdstijl
+
+Alle AI-managerportretten vervangen door voetbalbadges met behoud van bestaande avatarcodes en saves. Cyaanblauwe knoppen, gele accenten, compact sportlettertype, horizontaal carrièremenu, centraal wedstrijdblok, voorbereidingstakenlijst en vernieuwde training/packkaarten. Zie [ontwerp en controles](matchday-design.md). Dit is een afwerking van de lokale app; publieke online integratie volgt later.
+
 # Nieuw in 0.23.0 — begeleide start
 
-Eerst de app afwerken; publieke hosting en verdere online integratie volgen daarna. De startersroute bevat profielkeuze, league-/wereld-/clubkaarten, assistent Noa en zes oefenlessen. Eigen portretten, emoties, motto en cosmetische startersbadge blijven per account bewaard. De oefeningen wijzigen geen spelcredits of spelers. Zie [details en controles](starter-guide.md).
+Eerst de app afwerken; publieke hosting en verdere online integratie volgen daarna. De startersroute bevat profielkeuze, league-/wereld-/clubkaarten, assistent Noa en zes oefenlessen. Eigen profielkeuzes, emoties, motto en cosmetische startersbadge blijven per account bewaard. De oefeningen wijzigen geen spelcredits of spelers. Zie [details en controles](starter-guide.md).
 
 # Concept en huidige stand
 
