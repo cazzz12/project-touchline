@@ -63,6 +63,8 @@ test('the root presents login and the original browser career remains reachable 
  const env=await setup(t),base='http://127.0.0.1:'+env.app.server.address().port;
  const home=await (await fetch(base+'/')).text(),career=await (await fetch(base+'/career')).text();assert.match(home,/arena\.css/);assert.match(home,/viewport-fit=cover/);assert.match(home,/\/career/);assert.match(career,/app\.js/);assert.doesNotMatch(career,/online\.js/);
  const health=await (await fetch(base+'/healthz')).json();assert.deepEqual(health,{ok:true});
+ const font=await fetch(base+'/assets/fonts/BarlowCondensed-Bold.ttf');assert.equal(font.status,200);assert.equal(font.headers.get('content-type'),'font/ttf');assert.equal(font.headers.get('cache-control'),'public, max-age=86400');
+ const theme=await fetch(base+'/stadium-theme.css');assert.equal(theme.headers.get('cache-control'),'no-cache');assert.match(await theme.text(),/prefers-reduced-motion/);
 });
 test('codes expire, wrong-code attempts are limited and development cannot send real email',async t=>{
   let now=10000;const env=await setup(t,{now:()=>now}),a=env.client();assert.equal((await a.call('/api/auth/challenge',{kind:'email',identifier:'test@example.com'})).status,400);

@@ -2,6 +2,10 @@
 
 De aangeleverde concepttekst en `docs/concept.md` zijn inhoudelijk gelijk. Het oorspronkelijke document blijft intact. De latere keuzes van de gebruiker zijn leidend: in de gewone competitie alleen echte clubs en echte spelersnamen; eigen clubs pas in een toekomstige privéruimte met vrienden. Geen fictieve regens in de gewone competitie.
 
+## Stadionstijl in 0.22.0
+
+Directe lokale testtoegang en één voetbalstijl voor carrière, online spel, packs en catalogus. Zelf gehoste sportlettertypes, originele tunnelillustratie, mobiele schermcorrecties en ongewijzigde saves. Zie [ontwerp en controles](stadium-design.md).
+
 ## Openbare werelden en packs in 0.21.0
 
 Nieuwe stadionlogin, e-mail/Phantom/Solflare, zestien speelbare leagues, openbare werelden per regio en spelregel, vrije clubclaims, verlaten vóór start en automatische speeldagen bij afwezigheid. Proefpacks leveren huidige spelers of elf echte oud-spelers; zichtbare kansen, credits en levering onder servercontrole. USDC én SOL op Solana zijn op 27 september bevestigd. Echte betalingen, publieke hosting, native mobiele walletintegratie en storepublicatie zijn nog niet actief. Zie [arenaregels](arena.md).

@@ -9,7 +9,7 @@ import {leagueService,fields} from './leagues.js';
 import {packTypes,packRulesVersion,packLimitPerRound} from '../public/pack-rules.js';
 
 const root=fileURLToPath(new URL('../public/',import.meta.url));
-const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.ico':'image/x-icon'};
+const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.ico':'image/x-icon','.ttf':'font/ttf'};
 const loopback=host=>['localhost','127.0.0.1','[::1]'].includes(host);
 export function configuration(env=process.env){
   const port=Number(env.PORT||3000),host=env.HOST||'127.0.0.1',origin=env.TOUCHLINE_ORIGIN||`http://127.0.0.1:${port}`,dev=env.TOUCHLINE_AUTH_MODE!=='production';
@@ -70,7 +70,7 @@ export function createApplication(config){
       if(!['GET','HEAD'].includes(req.method))fail(405,'Deze methode is niet toegestaan.');
       const relative=pathname==='/'||pathname==='/online'?'online.html':pathname==='/career'?'index.html':pathname==='/world'?'world.html':pathname.slice(1);
       const file=resolve(root,relative);if(!file.startsWith(resolve(root)+sep))fail(403,'Geen toegang.');
-      try{const data=await readFile(file);res.writeHead(200,{'Content-Type':mime[extname(file)]||'application/octet-stream','Cache-Control':'no-cache'});res.end(req.method==='HEAD'?undefined:data);}catch{fail(404,'Bestand niet gevonden.');}
+      try{const data=await readFile(file);res.writeHead(200,{'Content-Type':mime[extname(file)]||'application/octet-stream','Cache-Control':relative.startsWith('assets/')?'public, max-age=86400':'no-cache'});res.end(req.method==='HEAD'?undefined:data);}catch{fail(404,'Bestand niet gevonden.');}
     }catch(error){if(!res.headersSent)respond(error.status||500,{error:error.status?error.message:'Er ging iets mis op de server. Probeer opnieuw.'});else res.end();}
   });
   server.requestTimeout=15000;server.headersTimeout=10000;

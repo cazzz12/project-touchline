@@ -5,6 +5,7 @@ import {safeClubLogo} from './world-model.js';
 import {loginView,arenaHub,publicLobby,packView} from './arena-ui.js';
 import {signInWithWallet} from './wallet-login.js';
 import {packRulesVersion} from './pack-rules.js';
+import {previewLogin} from './preview-login.js';
 const app=document.querySelector('#online-app'),notice=document.querySelector('#notice');
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>Number(n).toLocaleString('nl-NL');
@@ -38,7 +39,7 @@ async function refresh(){
     if(!league)await loadDirectory();
   }render();
 }
-const mode=()=>session?.mode==='local-test'?'<div class="test-banner"><b>Lokale testmodus.</b> Gebruik een .test-adres. De inlogcode verschijnt hier; er wordt geen echte e-mail verstuurd. Deze server is alleen op deze computer bereikbaar.</div>':'';
+const mode=()=>session?.mode==='local-test'?'<div class="test-banner"><b>Lokale testmodus.</b> Je speelt op deze computer. Snelle toegang is beschikbaar; packs gebruiken alleen spelcredits.</div>':'';
 function render(){
   document.body?.classList?.toggle('signed-out',!session?.account);
   document.body?.classList?.toggle('in-league',!!league);
@@ -46,7 +47,7 @@ function render(){
   if(pending)app.insertAdjacentHTML('afterbegin','<div class="pending-notice"><b>Het antwoord is niet ontvangen.</b><p>De actie kan al verwerkt zijn. Vraag het resultaat opnieuw op; dezelfde opdracht wordt niet dubbel uitgevoerd.</p><button data-action="retry">CONTROLEER DEZELFDE ACTIE</button></div>');
   app.querySelectorAll('button').forEach(b=>{if(busy||pending&&b.dataset.action!=='retry')b.disabled=true;});
 }
-function login(){return loginView({esc,emailForm,challenge,origin:typeof location==='undefined'?'http://localhost':location.origin});}
+function login(){return loginView({esc,emailForm,challenge,localTest:session?.mode==='local-test',origin:typeof location==='undefined'?'http://localhost':location.origin});}
 function emailForm(link){return challenge?.kind==='email'?`<form id="verify" class="stack"><p>Vul de code in voor <b>${esc(challenge.identifier)}</b>.</p>${challenge.testCode?`<p>Lokale testcode: <code>${esc(challenge.testCode)}</code></p>`:'<p class="muted">De code is tien minuten geldig. Controleer ook je spammap.</p>'}<label>Inlogcode<input name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required></label><button>${link?'KOPPEL E-MAIL':'AANMELDEN'}</button><button type="button" class="secondary" data-action="reset-login">ANDER ADRES / NIEUWE CODE</button></form>`:`<form id="email" class="stack"><label>${link?'E-mailadres koppelen':'E-mailadres'}<input name="email" type="email" autocomplete="email" placeholder="${session?.mode==='local-test'?'manager@touchline.test':'jij@voorbeeld.nl'}" required maxlength="254"></label><button>${session?.mode==='local-test'?'VRAAG TESTCODE AAN':'STUUR INLOGCODE'}</button></form>`;}
 function dashboard(){return `<div class="hero"><div><p class="kicker">${league?'SEIZOEN '+league.season+' · SPEELDAG '+Math.min(league.round+1,league.totalRounds||10)+'/'+(league.totalRounds||10):'JOUW CLUBHUIS'}</p><h1>${esc(league?.title||'Klaar voor de aftrap?')}</h1><p class="muted">${esc(session.account.name)}${league?' · '+esc(league.clubs[league.myClub].name):' · kies een league en vind je tegenstanders.'}</p></div>${league?`<div class="balance"><small>JOUW CLUBKAS</small><span class="amount">${money(league.my.credits)}</span><small>spelcredits</small></div>`:''}</div><nav class="manager-nav" aria-label="Manager"><button class="secondary" data-action="home">◎ Speelwerelden</button><button class="secondary" data-action="account">◉ Account</button><button class="secondary" data-action="refresh">↻ Vernieuwen</button><button class="secondary signout" data-action="logout">Uitloggen</button></nav>${section==='account'?account():league?leagueView():hub()}${league?`<nav class="mobile-dock" aria-label="Snelmenu"><button data-action="home">◎<span>Werelden</span></button><button data-section="overview">▤<span>Competitie</span></button><button data-section="squad">♟<span>Elftal</span></button><button data-section="packs">◇<span>Packs</span></button><button data-section="transfers">⇄<span>Transfers</span></button></nav>`:''}`;}
 function hub(){return arenaHub({esc,catalog,selectedCatalog,directory,region:worldRegion,rules:worldRules,selectedRoom,leagueList,privateHub:hubView({esc,options,clubs,catalog,selectedCatalog,joinLobby,leagueList:[]})});}
@@ -98,6 +99,7 @@ app.addEventListener('click',event=>{const button=event.target.closest('button')
     else if(d.action==='home'){league=null;section='overview';challenge=null;await refresh();scrollTarget='.hero';}
     else if(d.action==='account'){section='account';challenge=null;}
     else if(d.action==='reset-login')challenge=null;
+    else if(d.action==='preview-login'){await previewLogin(session,api);challenge=null;await refresh();say('Je bent binnen. Kies je league en stap het veld op.');scrollTarget='.hero';}
     else if(d.action==='logout'||d.action==='logout-all'){await api('/logout',{all:d.action==='logout-all'});league=null;challenge=null;section='overview';await refresh();say('Uitgelogd.');}
     else if(d.action==='retry'&&pending)await mutation(pending.path,pending.body);
     else if(d.action==='wallet'){

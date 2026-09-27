@@ -1,6 +1,6 @@
 # Project Touchline
 
-Versie **0.21.0** — een speelbaar **voetbalmanager-prototype met lokale carrière en een eerste multiplayerproef** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
+Versie **0.22.0** — een speelbaar **voetbalmanager-prototype met lokale carrière en een eerste multiplayerproef** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
@@ -9,6 +9,12 @@ npm start
 Open http://127.0.0.1:3000 voor aanmelden en speelwerelden. Je bestaande lokale carrière staat op http://127.0.0.1:3000/career. Op Windows PowerShell gebruik je `npm.cmd start` als `npm.ps1` wordt geblokkeerd. Run `npm test` voor controles van de simulatie en seizoensvoortgang. Node.js 24.4+ is vereist; externe pakketten zijn niet nodig.
 
 De bestaande carrièremodus blijft lokale singleplayer. Browseropslag bevat je club en seizoen. Daarnaast is er nu een aparte servergestuurde multiplayerproef met accounts en een database; er zijn geen echte transacties of SOL rewards. Training, scouting en transfers gebruiken spelcredits. Verwijderde browsergegevens wissen je lokale carrière; servercompetities blijven bewaard. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
+
+## Nieuw: overal stadionsfeer en directe testtoegang
+
+Klik bij de lokale login op **Direct naar het clubhuis** om zonder handmatig ingevulde code of wallet verder te gaan. Dit gebruikt het vaste lokale proefaccount en de bestaande e-mailverificatie. De knop bestaat niet in productiemodus. Je eigen testadres blijft beschikbaar onder **Of gebruik een eigen testaccount**.
+
+De hele interface deelt nu de nieuwe stadionstijl: carrière, online werelden, packs en wereldcatalogus. Nachtblauw, turquoise lichtaccenten, groene speelvelden, gelaagde panelen en een originele spelerstunnel. De sportieve Barlow Condensed-koppen en leesbare Barlow-tekst worden lokaal meegeleverd. Menu's, invoervelden, tabellen en wedstrijdschermen zijn aangepast; bestaande saves en spelregels blijven intact. Zie [ontwerp en controles](docs/stadium-design.md).
 
 ## Nieuw: openbare werelden, packs en een mobiele instap
 
@@ -164,7 +170,7 @@ De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare 
 
 ## Interfacecontrole
 
-De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 269 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, medische coachpauzes, blessurewissels door de computercoach, hervatten en wisselen bij lichte klachten, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden, gerichte scouting, shortlist, spelersvergelijking, onderlinge clubtransfers, postvakfilters, leesstatus, veilige doorklikroutes, stadionprijzen, bezoekersaantallen, ticketafrekening en 52 opeenvolgende seizoenen.
+De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 270 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, medische coachpauzes, blessurewissels door de computercoach, hervatten en wisselen bij lichte klachten, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden, gerichte scouting, shortlist, spelersvergelijking, onderlinge clubtransfers, postvakfilters, leesstatus, veilige doorklikroutes, stadionprijzen, bezoekersaantallen, ticketafrekening en 52 opeenvolgende seizoenen.
 
 Zie [het controleverslag](docs/browser-check.md) voor de geteste flows en beperkingen. Gebruik voor bestaande saves dezelfde browser en hetzelfde adres als voorheen: `localhost` en `127.0.0.1` hebben elk hun eigen browseropslag.
 
