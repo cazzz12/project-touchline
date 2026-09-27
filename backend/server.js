@@ -42,7 +42,7 @@ export function createApplication(config){
         if(req.method!=='GET'&&req.method!=='POST')fail(405,'Deze methode is niet toegestaan.');
         if(req.method==='POST'&&req.headers.origin!==config.origin)fail(403,'Deze opdracht komt niet van Touchline.');
         const jar=cookies(req),session=auth.getSession(jar[cookieName]),ip=req.socket.remoteAddress||'unknown';
-        if(req.method==='GET'&&pathname==='/api/session')return respond(200,{mode:config.dev?'local-test':'production',account:session?auth.accountView(session):null,csrf:session?.csrf||null});
+        if(req.method==='GET'&&pathname==='/api/session')return respond(200,{mode:config.dev?'local-test':'production',account:session?{...auth.accountView(session),profile:readManager(db,session.account)}:null,csrf:session?.csrf||null});
         const input=req.method==='POST'?await jsonBody(req):null;
         if(pathname==='/api/auth/challenge'&&input){
           fields(input,['kind','identifier','link']);if(input.link&&(!session||req.headers['x-csrf-token']!==session.csrf))fail(403,'Meld je opnieuw aan.');
@@ -54,6 +54,8 @@ export function createApplication(config){
         if(input){if(req.headers['x-csrf-token']!==session.csrf)fail(403,'Je sessie is veranderd. Vernieuw de pagina.');auth.rate('actions:'+session.account,180,60000);}
         if(pathname==='/api/logout'&&input){fields(input,['all']);auth.logout(session,input.all===true);res.setHeader('Set-Cookie',cookie(cookieName,'',0));return respond(200,{ok:true});}
         if(pathname==='/api/account/name'&&input){fields(input,['name']);leagues.rename(session.account,input.name);return respond(200,{ok:true});}
+        if(pathname==='/api/account/profile'&&input)return respond(200,{profile:saveManager(db,session.account,input)});
+        if(pathname==='/api/account/guide'&&input)return respond(200,{profile:saveGuide(db,session.account,input)});
         if(pathname==='/api/leagues'&&req.method==='GET')return respond(200,{leagues:leagues.list(session.account)});
         if(pathname==='/api/catalog'&&req.method==='GET')return respond(200,leagues.catalog());
         if(pathname==='/api/worlds'&&req.method==='GET')return respond(200,leagues.discover(session.account,Object.fromEntries(url.searchParams)));
@@ -77,3 +79,4 @@ export function createApplication(config){
   const clock=setInterval(()=>{try{leagues.tick();}catch(error){console.error('Openbare speelplanning kon niet worden verwerkt:',error.message);}},15000);clock.unref();
   return {server,db,close:()=>new Promise(resolve=>{clearInterval(clock);server.close(()=>{db.close();resolve();});server.closeIdleConnections();})};
 }
+import {readManager,saveManager,saveGuide} from './manager.js';

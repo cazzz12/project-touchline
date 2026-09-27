@@ -6,6 +6,9 @@ import {loginView,arenaHub,publicLobby,packView} from './arena-ui.js';
 import {signInWithWallet} from './wallet-login.js';
 import {packRulesVersion} from './pack-rules.js';
 import {previewLogin} from './preview-login.js';
+import {defaultProfile,lessonResult} from './manager-model.js';
+import {starterView,academyView,profileForm,profileCard,managerIdentity,guideReminder} from './manager-ui.js';
+import {footballIcon} from './football-icons.js';
 const app=document.querySelector('#online-app'),notice=document.querySelector('#notice');
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>Number(n).toLocaleString('nl-NL');
@@ -14,9 +17,14 @@ const options=(rows,selected)=>rows.map(([id,name])=>`<option value="${esc(id)}"
 const clubs=()=>options((catalog?.leagues.find(l=>l.id===selectedCatalog)?.clubs||clubData).map((c,i)=>[i,c.name]));
 let session=null,league=null,leagueList=[],challenge=null,section='overview',busy=false,pending=null,catalog=null,joinLobby=null;
 let directory=null,worldRegion='eu',worldRules='collection',selectedRoom='',reveal=null,lastDiscovery=0,scrollTarget='';
+let guideLesson='',guideAnswer=null;
+const guided=()=>!!session?.account?.profile?.onboarding;
+async function guidePatch(body){const result=await api('/account/guide',body);session.account.profile=result.profile;}
+
 function focusContent(selector){app.querySelector?.(selector)?.scrollIntoView?.({block:'start',behavior:'auto'});}
-function rememberCatalog(){if(typeof history==='undefined'||typeof location==='undefined')return;const url=new URL(location.href);if(selectedCatalog)url.searchParams.set('catalog',selectedCatalog);else url.searchParams.delete('catalog');history.replaceState(null,'',url);}
+function rememberCatalog(){if(typeof history==='undefined'||typeof location==='undefined')return;const url=new URL(location.href);if(selectedCatalog)url.searchParams.set('catalog',selectedCatalog);else url.searchParams.delete('catalog');for(const [k,v] of Object.entries({region:worldRegion,rules:worldRules,room:selectedRoom})){if(v)url.searchParams.set(k,v);else url.searchParams.delete(k);}history.replaceState(null,'',url);}
 let selectedCatalog=typeof location==='undefined'?'':new URLSearchParams(location.search).get('catalog')||'';
+if(typeof location!=='undefined'){const q=new URLSearchParams(location.search);worldRegion=['eu','asia','americas'].includes(q.get('region'))?q.get('region'):'eu';worldRules=q.get('rules')==='classic'?'classic':'collection';selectedRoom=q.get('room')||'';}
 const pendingKey='touchline-online-pending-v1';
 try{pending=JSON.parse(sessionStorage.getItem(pendingKey)||'null');}catch{}
 function remember(value){pending=value;try{if(value)sessionStorage.setItem(pendingKey,JSON.stringify(value));else sessionStorage.removeItem(pendingKey);}catch{}}
@@ -37,6 +45,7 @@ async function refresh(){
     if(!catalog)try{const response=await fetch('/api/catalog');if(response.ok){const data=await response.json();if(Array.isArray(data.leagues))catalog=data;}}catch{}
     if(!catalog?.leagues.some(l=>l.id===selectedCatalog&&l.playable))selectedCatalog='';
     if(!league)await loadDirectory();
+    if(guided()&&session.account.profile.stage==='learn'&&!league&&leagueList.length===1)league=await api('/leagues/'+leagueList[0].id);
   }render();
 }
 const mode=()=>session?.mode==='local-test'?'<div class="test-banner"><b>Lokale testmodus.</b> Je speelt op deze computer. Snelle toegang is beschikbaar; packs gebruiken alleen spelcredits.</div>':'';
@@ -49,10 +58,14 @@ function render(){
 }
 function login(){return loginView({esc,emailForm,challenge,localTest:session?.mode==='local-test',origin:typeof location==='undefined'?'http://localhost':location.origin});}
 function emailForm(link){return challenge?.kind==='email'?`<form id="verify" class="stack"><p>Vul de code in voor <b>${esc(challenge.identifier)}</b>.</p>${challenge.testCode?`<p>Lokale testcode: <code>${esc(challenge.testCode)}</code></p>`:'<p class="muted">De code is tien minuten geldig. Controleer ook je spammap.</p>'}<label>Inlogcode<input name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required></label><button>${link?'KOPPEL E-MAIL':'AANMELDEN'}</button><button type="button" class="secondary" data-action="reset-login">ANDER ADRES / NIEUWE CODE</button></form>`:`<form id="email" class="stack"><label>${link?'E-mailadres koppelen':'E-mailadres'}<input name="email" type="email" autocomplete="email" placeholder="${session?.mode==='local-test'?'manager@touchline.test':'jij@voorbeeld.nl'}" required maxlength="254"></label><button>${session?.mode==='local-test'?'VRAAG TESTCODE AAN':'STUUR INLOGCODE'}</button></form>`;}
-function dashboard(){return `<div class="hero"><div><p class="kicker">${league?'SEIZOEN '+league.season+' · SPEELDAG '+Math.min(league.round+1,league.totalRounds||10)+'/'+(league.totalRounds||10):'JOUW CLUBHUIS'}</p><h1>${esc(league?.title||'Klaar voor de aftrap?')}</h1><p class="muted">${esc(session.account.name)}${league?' · '+esc(league.clubs[league.myClub].name):' · kies een league en vind je tegenstanders.'}</p></div>${league?`<div class="balance"><small>JOUW CLUBKAS</small><span class="amount">${money(league.my.credits)}</span><small>spelcredits</small></div>`:''}</div><nav class="manager-nav" aria-label="Manager"><button class="secondary" data-action="home">◎ Speelwerelden</button><button class="secondary" data-action="account">◉ Account</button><button class="secondary" data-action="refresh">↻ Vernieuwen</button><button class="secondary signout" data-action="logout">Uitloggen</button></nav>${section==='account'?account():league?leagueView():hub()}${league?`<nav class="mobile-dock" aria-label="Snelmenu"><button data-action="home">◎<span>Werelden</span></button><button data-section="overview">▤<span>Competitie</span></button><button data-section="squad">♟<span>Elftal</span></button><button data-section="packs">◇<span>Packs</span></button><button data-section="transfers">⇄<span>Transfers</span></button></nav>`:''}`;}
+function dashboard(){
+ const p=session.account.profile||defaultProfile();
+ const content=section==='account'?account():section==='guide'||guided()&&p.stage==='learn'?academyView({account:session.account,esc,league,lessonId:guideLesson,answer:guideAnswer}):guided()?starterView({account:session.account,esc,catalog,selectedCatalog,directory,region:worldRegion,rules:worldRules,selectedRoom,stage:p.stage}):(league?guideReminder(session.account,esc)+leagueView():guideReminder(session.account,esc)+hub());
+ return `<div class="hero manager-header"><div><p class="kicker">${league?'SEIZOEN '+league.season+' · SPEELDAG '+Math.min(league.round+1,league.totalRounds||10)+'/'+(league.totalRounds||10):'JOUW CLUBHUIS'}</p><h1>${esc(league?.title||'Klaar voor de aftrap?')}</h1><p class="muted">${league?esc(league.clubs[league.myClub].name):'Kies jouw club. Schrijf jouw verhaal.'}</p></div>${managerIdentity(session.account,esc)}${league?`<div class="balance"><small>JOUW CLUBKAS</small><span class="amount">${money(league.my.credits)}</span><small>spelcredits</small></div>`:''}</div><nav class="manager-nav" aria-label="Manager"><button class="secondary" data-action="home">${footballIcon('world')} Speelwerelden</button><button class="secondary" data-action="account">${footballIcon('shield')} Mijn profiel</button><button class="secondary" data-action="guide">${footballIcon('book')} Tutorial</button><button class="secondary" data-action="refresh">↻ Vernieuwen</button><button class="secondary signout" data-action="logout">Uitloggen</button></nav>${content}${league&&!guided()&&section!=='guide'?`<nav class="mobile-dock" aria-label="Snelmenu"><button data-action="home">${footballIcon('world')}<span>Werelden</span></button><button data-section="overview">${footballIcon('whistle')}<span>Competitie</span></button><button data-section="squad">${footballIcon('shirt')}<span>Elftal</span></button><button data-section="packs">${footballIcon('pack')}<span>Packs</span></button><button data-section="transfers">${footballIcon('transfer')}<span>Transfers</span></button></nav>`:''}`;
+}
 function hub(){return arenaHub({esc,catalog,selectedCatalog,directory,region:worldRegion,rules:worldRules,selectedRoom,leagueList,privateHub:hubView({esc,options,clubs,catalog,selectedCatalog,joinLobby,leagueList:[]})});}
 function packs(){return packView({league,esc,money,reveal});}
-function account(){return `<div class="grid"><section class="card"><h2>Jouw manager</h2><form id="name" class="stack"><label>Managernaam<input name="name" value="${esc(session.account.name)}" required minlength="2" maxlength="30"></label><button>NAAM OPSLAAN</button></form><h3>Inlogmethoden</h3>${session.account.identities.map(i=>`<p class="identity"><small>${i.kind==='email'?'E-MAIL':'SOLANA-WALLET'}</small>${esc(i.identifier)}</p>`).join('')}<button class="secondary" data-action="logout-all">UITLOGGEN OP ALLE APPARATEN</button></section><section class="card"><h2>Koppel een inlogmethode</h2><p class="muted">E-mail en wallet geven toegang tot hetzelfde account. Koppelen vraagt een recente aanmelding en een nieuwe code of handtekening. Accounts worden niet automatisch samengevoegd.</p>${emailForm(true)}<div class="actions"><button class="secondary" data-action="wallet">KOPPEL PHANTOM-WALLET</button></div></section></div>`;}
+function account(){return `<div class="profile-layout">${profileCard(session.account,esc,leagueList)}<section class="card"><h2>Maak het jouw profiel</h2>${profileForm(session.account,esc)}<h3>Inlogmethoden</h3>${session.account.identities.map(i=>`<p class="identity"><small>${i.kind==='email'?'E-MAIL':'SOLANA-WALLET'}</small>${esc(i.identifier)}</p>`).join('')}<button class="secondary" data-action="logout-all">UITLOGGEN OP ALLE APPARATEN</button></section><section class="card"><h2>Koppel een inlogmethode</h2><p class="muted">E-mail en wallet geven toegang tot hetzelfde account. Koppelen vraagt een recente aanmelding en een nieuwe code of handtekening. Accounts worden niet automatisch samengevoegd.</p>${emailForm(true)}<div class="actions"><button class="secondary" data-action="wallet">KOPPEL PHANTOM-WALLET</button></div></section></div>`;}
 function seats(){return `<div class="seats">${league.clubs.map((c,i)=>{const member=league.members.find(m=>m.club===i);return `<div class="seat ${i===league.myClub?'mine':''}"><div class="club">${logo(c.name)}<div><b>${esc(c.name)}</b><small>${member?esc(member.name):'Computerclub'}</small></div></div><span class="tag">${member?(member.ready?'Klaar voor de speeldag':i===league.myClub?'Jouw club':'Manager aanwezig'):'Vult een vrije plek'}</span></div>`;}).join('')}</div>`;}
 function leagueView(){
   if(league.world&&league.phase==='lobby')return publicLobby({league,esc,seats});
@@ -72,25 +85,26 @@ async function run(fn){if(busy)return;busy=true;app.querySelectorAll('button').f
 app.addEventListener('submit',event=>{event.preventDefault();const form=event.target,data=new FormData(form);run(async()=>{
   if(form.id==='email'){const identifier=String(data.get('email')).trim();challenge={...await api('/auth/challenge',{kind:'email',identifier,link:!!session?.account}),kind:'email',identifier};say(challenge.testCode?'Testcode klaar.':'Inlogcode verstuurd.');}
   else if(form.id==='verify'){await api('/auth/verify',{id:challenge.id,code:data.get('code')});challenge=null;await refresh();say('Je bent aangemeld.');}
-  else if(form.id==='world-join'){section='overview';scrollTarget='.hero';await mutation('/worlds/join',{id:crypto.randomUUID(),catalogId:selectedCatalog,catalogSnapshot:catalog.id,region:worldRegion,rules:worldRules,club:Number(data.get('club')),...selectedRoom?{worldId:selectedRoom}:{}});}
+  else if(form.id==='world-join'){if(data.get('club')===null)throw new Error('Kies eerst een vrije club.');section='overview';scrollTarget='.hero';await mutation('/worlds/join',{id:crypto.randomUUID(),catalogId:selectedCatalog,catalogSnapshot:catalog.id,region:worldRegion,rules:worldRules,club:Number(data.get('club')),...selectedRoom?{worldId:selectedRoom}:{}});if(guided()){await guidePatch({stage:'learn'});guideLesson='squad';guideAnswer=null;say('Welkom bij je club. Noa helpt je met de eerste stappen.');}}
   else if(form.id==='create'){section='overview';await mutation('/leagues',{id:crypto.randomUUID(),title:data.get('title'),club:Number(data.get('club')),...selectedCatalog?{catalogId:selectedCatalog,catalogSnapshot:catalog.id}:{}});}
   else if(form.id==='lookup-join'){joinLobby=await api('/leagues/lobby',{code:String(data.get('code')).trim()});say('Kies een vrije club uit deze competitie.');}
   else if(form.id==='join'){section='overview';await mutation('/leagues/join',{id:crypto.randomUUID(),code:String(data.get('code')).trim(),club:Number(data.get('club'))});}
+  else if(form.id==='manager-profile'){await api('/account/profile',{name:data.get('name'),avatar:Number(data.get('avatar')),mood:data.get('mood'),motto:data.get('motto')});if(data.get('starter')==='yes'){await guidePatch({stage:'league',onboarding:true});section='overview';scrollTarget='.starter';}await refresh();say('Je managerprofiel is bewaard.');}
   else if(form.id==='name'){await api('/account/name',{name:data.get('name')});await refresh();say('Managernaam bewaard.');}
   else if(form.id==='tactics')await command('tactics',{tactics:{formation:data.get('formation'),mentality:Number(data.get('mentality')),pressing:Number(data.get('pressing')),tempo:Number(data.get('tempo'))},lineupIds:Array.from({length:11},(_,i)=>data.get('slot'+i))});
   else if(form.id==='train')await command('train',{playerId:data.get('playerId'),skill:data.get('skill')});
   else if(form.id==='offer'){const [seller,playerId]=String(data.get('target')).split('|');await command('offer',{seller:Number(seller),playerId,amount:Number(data.get('amount'))});}
 });});
 app.addEventListener('input',event=>{if(event.target.name==='code'&&event.target.form?.id==='lookup-join'){joinLobby=null;app.querySelector('#join')?.remove();}});
-app.addEventListener('change',event=>{if(['worldRegion','worldRules'].includes(event.target.name)){if(event.target.name==='worldRegion')worldRegion=event.target.value;else worldRules=event.target.value;selectedRoom='';directory=null;run(loadDirectory);return;}if(event.target.name==='catalog'){selectedCatalog=event.target.value;const form=event.target.closest('form');form.querySelector('[name="club"]').innerHTML=clubs();const note=form.querySelector('[data-catalog-note]');if(note)note.textContent=selectedCatalog?'Nieuwere EA-clubindeling met FC 26-basisratings. Alleen waar die ontbreken gebruiken we gemarkeerde FC 27-ratings.':'De bestaande minicompetitie met zes clubs en gegenereerde spelwaarden.';}});
+app.addEventListener('change',event=>{if(['worldRegion','worldRules'].includes(event.target.name)){if(event.target.name==='worldRegion')worldRegion=event.target.value;else worldRules=event.target.value;selectedRoom='';directory=null;rememberCatalog();run(loadDirectory);return;}if(event.target.name==='catalog'){selectedCatalog=event.target.value;const form=event.target.closest('form');form.querySelector('[name="club"]').innerHTML=clubs();const note=form.querySelector('[data-catalog-note]');if(note)note.textContent=selectedCatalog?'Nieuwere EA-clubindeling met FC 26-basisratings. Alleen waar die ontbreken gebruiken we gemarkeerde FC 27-ratings.':'De bestaande minicompetitie met zes clubs en gegenereerde spelwaarden.';}});
 app.addEventListener('click',event=>{const button=event.target.closest('button');if(!button||button.disabled)return;const d=button.dataset;
-  if(!d.action&&!d.command&&!d.open&&!d.section&&!d.catalog&&!d.room&&!d.pack)return;
-  if(d.section){section=d.section;render();focusContent('.tabs');return;}
+  if(!d.action&&!d.command&&!d.open&&!d.section&&!d.catalog&&!d.room&&!d.pack&&!d.starterBack&&!d.lesson&&d.answer===undefined)return;
+  if(d.section){run(async()=>{if(guided())await guidePatch({onboarding:false});section=d.section;scrollTarget='.tabs';});return;}
   run(async()=>{
-    if(d.catalog){selectedCatalog=d.catalog;selectedRoom='';directory=null;rememberCatalog();await loadDirectory();scrollTarget='.world-chooser';}
-    else if(d.room){selectedRoom=d.room;scrollTarget='.join-world';}
+    if(d.catalog){selectedCatalog=d.catalog;selectedRoom='';directory=null;rememberCatalog();await loadDirectory();if(guided())await guidePatch({stage:'world'});scrollTarget=guided()?'.starter':'.world-chooser';}
+    else if(d.room){selectedRoom=d.room;rememberCatalog();if(guided())await guidePatch({stage:'club'});scrollTarget=guided()?'.starter':'.join-world';}
     else if(d.pack){await command('pack',{packId:d.pack,packVersion:packRulesVersion});scrollTarget='.pack-reveal';}
-    else if(d.action==='auto-world'){selectedRoom='';scrollTarget='.join-world';}
+    else if(d.action==='auto-world'){selectedRoom='';rememberCatalog();if(guided())await guidePatch({stage:'club'});scrollTarget=guided()?'.starter':'.join-world';}
     else if(d.action==='choose-league'){selectedCatalog='';selectedRoom='';directory=null;rememberCatalog();scrollTarget='.league-picker';}
     else if(d.action==='leave-world'){await mutation('/worlds/leave',{id:crypto.randomUUID(),worldId:league.id});}
     else if(d.open){league=await api('/leagues/'+d.open);section='overview';scrollTarget='.hero';}
@@ -98,6 +112,11 @@ app.addEventListener('click',event=>{const button=event.target.closest('button')
     else if(d.action==='refresh')await refresh();
     else if(d.action==='home'){league=null;section='overview';challenge=null;await refresh();scrollTarget='.hero';}
     else if(d.action==='account'){section='account';challenge=null;}
+    else if(d.starterBack){await guidePatch({stage:d.starterBack});scrollTarget='.starter';}
+    else if(d.lesson){guideLesson=d.lesson;guideAnswer=null;section='guide';scrollTarget='.lesson-card';}
+    else if(d.answer!==undefined){const result=lessonResult(d.answerLesson,Number(d.answer));guideLesson=d.answerLesson;if(result.correct)await guidePatch({lesson:d.answerLesson});guideAnswer=result;section='guide';scrollTarget='.lesson-feedback';}
+    else if(d.action==='guide'){guideAnswer=null;if(!league&&!leagueList.length&&session.account.profile?.stage!=='learn'){await guidePatch({onboarding:true});section='overview';scrollTarget='.starter';}else{section='guide';scrollTarget='.academy';}}
+    else if(d.action==='skip-guide'||d.action==='finish-guide'){await guidePatch({onboarding:false});section='overview';scrollTarget='.hero';say(d.action==='finish-guide'?'Je lessen staan klaar op je profiel. Veel succes, manager.':'Tutorial gepauzeerd. Je kunt later verder via Tutorial.');}
     else if(d.action==='reset-login')challenge=null;
     else if(d.action==='preview-login'){await previewLogin(session,api);challenge=null;await refresh();say('Je bent binnen. Kies je league en stap het veld op.');scrollTarget='.hero';}
     else if(d.action==='logout'||d.action==='logout-all'){await api('/logout',{all:d.action==='logout-all'});league=null;challenge=null;section='overview';await refresh();say('Uitgelogd.');}

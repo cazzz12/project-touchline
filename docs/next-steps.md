@@ -1,6 +1,6 @@
 # Wat blijft er te doen?
 
-Stand: **0.22.0, 27 september 2026**. Openbare speelwerelden, de stadionlogin en proefpacks zijn lokaal gebouwd en getest. Er is nog geen publieke release of betaling met echt geld.
+Stand: **0.23.0, 27 september 2026**. Openbare speelwerelden, de stadionlogin en proefpacks zijn lokaal gebouwd en getest. Er is nog geen publieke release of betaling met echt geld.
 
 ## Nu gebouwd
 
@@ -10,13 +10,17 @@ Stand: **0.22.0, 27 september 2026**. Openbare speelwerelden, de stadionlogin en
 - Elftal, tactiek, training, transfers, ranglijst, verslagen en volgende seizoenen onder servercontrole.
 - Scout- en Spotlight-packs met spelcredits, zichtbare kansen en elf echte oud-spelers. Eenmalige afschrijving/levering; geen dubbele speler in één selectie. Klassieke werelden zonder packs.
 - Mobiele login, wereldkeuze, elftal en packs; grote knoppen, vast ondermenu en originele stadionachtergrond.
-- Behoud van lokale saves en oude competities, database-upgrade en backup. **270 automatische tests slagen.**
+- Behoud van lokale saves en oude competities, database-upgrade en backup. **276 automatische tests slagen.**
 
 Directe lokale toegang zonder handmatig ingevulde code is beschikbaar via de login. De hele app gebruikt de [stadionstijl](stadium-design.md).
 
 Zie [arenaregels](arena.md) en [online-inrichting](online.md).
 
-## Volgende stappen in volgorde
+## Eerst de app afwerken
+
+De gebruiker wil eerst een betere en complete spelervaring, en pas daarna publieke online integratie. De [startersroute en managerprofielen](starter-guide.md) zijn toegevoegd: profiel → league → speelwereld → club → zes oefenlessen. Volgende appwerk: gebruikerstest van de hele dagelijkse spelronde, lokale en toekomstige online spelregels duidelijk houden, kleine schermen en alle vervolgschermen afwerken, ontbrekende voetbaldata aanvullen. De onderstaande internetroute begint pas daarna.
+
+## Online stappen na de appfase
 
 | Stap | Wat ontbreekt | Gereed wanneer |
 | --- | --- | --- |

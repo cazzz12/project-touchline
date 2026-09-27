@@ -1,3 +1,7 @@
+# Nieuw in 0.23.0 — begeleide start
+
+Eerst de app afwerken; publieke hosting en verdere online integratie volgen daarna. De startersroute bevat profielkeuze, league-/wereld-/clubkaarten, assistent Noa en zes oefenlessen. Eigen portretten, emoties, motto en cosmetische startersbadge blijven per account bewaard. De oefeningen wijzigen geen spelcredits of spelers. Zie [details en controles](starter-guide.md).
+
 # Concept en huidige stand
 
 De aangeleverde concepttekst en `docs/concept.md` zijn inhoudelijk gelijk. Het oorspronkelijke document blijft intact. De latere keuzes van de gebruiker zijn leidend: in de gewone competitie alleen echte clubs en echte spelersnamen; eigen clubs pas in een toekomstige privéruimte met vrienden. Geen fictieve regens in de gewone competitie.

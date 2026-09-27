@@ -134,3 +134,10 @@ test('a failed league mutation rolls back every write and does not consume its o
   const {a,id}=await pair(t);await a.act(id,'start');const before=await a.state(id),request={id:randomUUID(),version:before.version,type:'tactics',tactics:{formation:'4-4-2',mentality:90,pressing:30,tempo:75},lineupIds:['invalid']};
   assert.equal((await a.call('/api/leagues/'+id+'/actions',request)).status,400);assert.deepEqual(await a.state(id),before);request.lineupIds=before.my.lineupIds;assert.equal((await a.call('/api/leagues/'+id+'/actions',request)).status,200);
 });
+test('profile and tutorial endpoints require the current account and preserve progress across restart',async t=>{
+ const env=await setup(t),a=env.client(),b=env.client();assert.equal((await a.call('/api/account/profile',{avatar:1})).status,401);await a.login('profile@touchline.test');await b.login('other-profile@touchline.test');
+ assert.equal((await a.call('/api/account/profile',{name:'Noa Fan',avatar:3,mood:'fire',motto:'Vol naar voren'},{'X-CSRF-Token':'wrong'})).status,403);
+ assert.equal((await a.call('/api/account/profile',{name:'Noa Fan',avatar:3,mood:'fire',motto:'Vol naar voren'})).status,200);assert.equal((await a.call('/api/account/guide',{stage:'learn',lesson:'training'})).status,200);
+ assert.equal((await a.call('/api/account/guide',{lesson:'training'})).status,200);assert.equal((await a.call('/api/account/profile',{account:'other-profile',avatar:0})).status,400);
+ await env.restart();const current=(await a.call('/api/session')).body.account;assert.equal(current.name,'Noa Fan');assert.equal(current.profile.avatar,3);assert.deepEqual(current.profile.learned,['training']);assert.deepEqual((await b.call('/api/session')).body.account.profile.learned,[]);assert.equal((await a.call('/api/leagues')).body.leagues.length,0,'practice creates no game or club');
+});
