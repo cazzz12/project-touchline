@@ -45,6 +45,25 @@ test('email login uses a browser-bound single-use code, HttpOnly cookie and revo
   const session=(await a.call('/api/session')).body;assert.equal(session.account.identities[0].identifier,'a@touchline.test');
   assert.equal((await a.call('/api/logout',{})).status,200);assert.equal((await a.call('/api/leagues')).status,401);
 });
+
+test('public worlds and pack APIs require login, protect club claims and expose no active crypto checkout',async t=>{
+ const env=await setup(t),a=env.client(),b=env.client(),c=env.client();assert.equal((await a.call('/api/worlds')).status,401);assert.equal((await a.call('/api/commerce')).status,401);
+ await a.login('arena-a@touchline.test');await b.login('arena-b@touchline.test');await c.login('arena-c@touchline.test');const catalog=(await a.call('/api/catalog')).body;
+ const base={catalogId:'eredivisie',catalogSnapshot:catalog.id,region:'eu',rules:'collection',club:0};
+ assert.equal((await a.call('/api/worlds/join',{id:randomUUID(),...base},{'X-CSRF-Token':'wrong'})).status,403);
+ const body={id:randomUUID(),...base},first=await a.call('/api/worlds/join',body);assert.equal(first.status,200);assert.deepEqual((await a.call('/api/worlds/join',body)).body,first.body);const id=first.body.id;
+ const racers=await Promise.all([b,c].map(client=>client.call('/api/worlds/join',{id:randomUUID(),...base,club:1,worldId:id})));assert.deepEqual(racers.map(r=>r.status).sort(),[200,409]);
+ const found=await a.call('/api/worlds?catalog=eredivisie&region=eu&rules=collection');assert.equal(found.status,200);assert.equal(found.body.rooms[0].managers,2);assert.equal(found.body.rooms[0].clubs[0].players,undefined);
+ const commerce=await a.call('/api/commerce');assert.equal(commerce.body.payments.enabled,false);assert.deepEqual(commerce.body.payments.currencies,['USDC','SOL']);
+ assert.equal((await a.act(id,'pack',{packId:'scout',packVersion:commerce.body.version})).status,409,'no pack before active season');
+ assert.equal((await a.call('/api/worlds/leave',{id:randomUUID(),worldId:id})).status,200);assert.equal((await a.call('/api/leagues/'+id)).status,403);
+});
+
+test('the root presents login and the original browser career remains reachable on the same origin',async t=>{
+ const env=await setup(t),base='http://127.0.0.1:'+env.app.server.address().port;
+ const home=await (await fetch(base+'/')).text(),career=await (await fetch(base+'/career')).text();assert.match(home,/arena\.css/);assert.match(home,/viewport-fit=cover/);assert.match(home,/\/career/);assert.match(career,/app\.js/);assert.doesNotMatch(career,/online\.js/);
+ const health=await (await fetch(base+'/healthz')).json();assert.deepEqual(health,{ok:true});
+});
 test('codes expire, wrong-code attempts are limited and development cannot send real email',async t=>{
   let now=10000;const env=await setup(t,{now:()=>now}),a=env.client();assert.equal((await a.call('/api/auth/challenge',{kind:'email',identifier:'test@example.com'})).status,400);
   let c=(await a.call('/api/auth/challenge',{kind:'email',identifier:'a@touchline.test'})).body;for(let i=0;i<5;i++)assert.equal((await a.call('/api/auth/verify',{id:c.id,code:'000000'})).status,400);assert.equal((await a.call('/api/auth/verify',{id:c.id,code:c.testCode})).status,400);

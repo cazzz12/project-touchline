@@ -1,6 +1,6 @@
-# Accounts en multiplayer — 0.20.0
+# Accounts en multiplayer — 0.21.0
 
-Deze versie voegt een afzonderlijke servergestuurde multiplayerproef toe aan het lokale spel. Open **Samen spelen** in het menu, of `/online`. De bestaande lokale carrière blijft op `/` staan. Browser-saves, lokale credits en backups worden niet naar de online economie geïmporteerd.
+Deze versie voegt een afzonderlijke servergestuurde multiplayerproef toe aan het lokale spel. Open **Samen spelen** in het menu, of `/online`. De nieuwe login staat op `/` en `/online`; de bestaande lokale carrière staat op `/career` met dezelfde browseropslag. Openbare speelwerelden en proefpacks staan beschreven in [de arenaregels](arena.md). Browser-saves, lokale credits en backups worden niet naar de online economie geïmporteerd.
 
 ## Lokaal proberen op Windows
 
@@ -9,17 +9,17 @@ Node.js **24.4 of nieuwer** is vereist voor de ingebouwde SQLite-API; er zijn ge
 1. Stop een oude server met Ctrl+C en start vanuit de projectmap met `npm.cmd start`.
 2. Open `http://127.0.0.1:3000/online`.
 3. Gebruik bijvoorbeeld `ajax@touchline.test`. Klik **Vraag testcode aan**, voer de getoonde code in en meld je aan.
-4. Kies een spelcompetitie, maak een competitie en kies je club. Voor de oorspronkelijke minicompetitie kun je Ajax kiezen. Bewaar de competitiecode.
+4. Kies een league, speelregio, wereld en vrije club. Automatisch aansluiten opent zo nodig een nieuwe wachtkamer. Voor een klassieke uitnodigingscompetitie gebruik je **Met een competitiecode spelen**.
 5. Open een andere browser of een privévenster voor `psv@touchline.test`. Twee gewone tabs delen cookies en zijn dus hetzelfde account. Dezelfde browser uitloggen en wisselen tussen testaccounts kan ook.
-6. Vul de code in, klik **Controleer code** en kies een beschikbare club, bijvoorbeeld PSV in de minicompetitie. De organisator kan nu het seizoen starten.
-7. Beide managers kiezen hun elftal en tactiek en klikken **Klaar voor de speeldag**. De laatste gereedmelding verwerkt alle wedstrijden van die speeldag één keer.
+6. Kies als tweede account dezelfde league, regio en regels. Open de bestaande wereld en kies een vrije club. Na dertig minuten start een wereld met minimaal twee managers; een volle wereld start direct.
+7. Bereid elftal en tactiek voor. Openbare werelden spelen elke 24 uur automatisch. Bij competities met een code start de organisator en blijft de laatste gereedmelding de speeldag verwerken.
 
 De standaardserver luistert alleen op `127.0.0.1`. De getoonde testcodes bewijzen geen eigendom van een echte mailbox en werken uitsluitend met adressen die eindigen op `.test`. Dit is geen publieke online release en geen manier om vrienden op internet uit te nodigen. Er worden geen echte e-mails of wallettransacties uitgevoerd door de tests.
 
 ## Wat werkt?
 
 - Accounts met eenmalige e-mailcodes, sessies, uitloggen, uitloggen op alle apparaten en managernaam.
-- Phantom-aanmelding via een cryptografisch gecontroleerd Solana-bericht. Een wallet en e-mailadres kunnen na een nieuwe bewijsstap aan hetzelfde account worden gekoppeld. Er is geen automatische samenvoeging van bestaande accounts.
+- Phantom- en Solflare-aanmelding via een cryptografisch gecontroleerd Solana-bericht. Een wallet en e-mailadres kunnen na een nieuwe bewijsstap aan hetzelfde account worden gekoppeld. Er is geen automatische samenvoeging van bestaande accounts.
 - Herstel via een nieuwe e-mailcode voor een gekoppeld adres. Een wallet-only account zonder gekoppelde e-mail kan niet worden hersteld als de wallet verloren gaat.
 - Competities vanaf twee menselijke managers, tot het aantal clubs in de gekozen competitie; overige clubs zijn computerclubs. Iedere manager heeft één unieke club per competitie. Maximaal tien competities per account.
 - Keuze uit de oorspronkelijke zes clubs of zestien complete wereldcompetities uit de nieuwe catalogus. De catalogus bevat twintig competities; vier blijven alleen te bekijken wegens onvolledige bronselecties. Wereldcompetities gebruiken FC 26-basisratings en herkenbare FC 27-aanvullingen. Zie [bronnen en dekking](world-data.md).
@@ -31,17 +31,17 @@ De standaardserver luistert alleen op `127.0.0.1`. De getoonde testcodes bewijze
 
 ## Bewuste grenzen van deze eerste versie
 
-Dit is een aparte, kleinere spelvariant. Wedstrijden worden volledig door de server berekend zodra alle managers klaar zijn. Live coaching, reserves/wissels, aanvoerder, blessures, schorsingen, scouting, sponsors, stadion en andere uitgebreide carrièresystemen zijn nog niet allemaal naar multiplayer overgezet. De lokale versie behoudt die functies. Het bestaan van de serverproef betekent dus niet dat de volledige offline game al online is.
+Dit is een aparte, kleinere spelvariant. Wedstrijden worden volledig door de server berekend: op de deadline in openbare werelden, bij de laatste gereedmelding in codecompetities. Live coaching, reserves/wissels, aanvoerder, blessures, schorsingen, scouting, sponsors, stadion en andere uitgebreide carrièresystemen zijn nog niet allemaal naar multiplayer overgezet. De lokale versie behoudt die functies. Het bestaan van de serverproef betekent dus niet dat de volledige offline game al online is.
 
-Deelnemers liggen na de start vast. Er is nog geen deadline, vervangende manager, lobbybeheer met verwijderen/verlaten of afhandeling van een langdurig afwezige organisator. De competitie wacht dan. Deze regels moeten vóór een publieke test worden uitgewerkt. Eigen clubs, aparte sociale vriendenlijsten, openbare matchmaking en pushmeldingen ontbreken nog. De huidige competitiecode geeft toegang tot een lobby met echte clubs; dit is niet de toekomstige privéruimte met eigen clubs.
+Deelnemers liggen na de start vast. Openbare werelden hebben deadlines, openbare matchmaking en verlaten vóór start. Langdurig afwezige managers worden nog niet vervangen. Bestaande codecompetities wachten nog op alle deelnemers; hun regels veranderen niet achteraf. Eigen clubs, aparte sociale vriendenlijsten en pushmeldingen ontbreken nog. De huidige competitiecode geeft toegang tot een lobby met echte clubs; dit is niet de toekomstige privéruimte met eigen clubs.
 
-De economie is een testmodel: een startbudget van 120.000 spelcredits, wedstrijdbonussen van 26.000/18.000/10.000 bij winst/gelijk/verlies en eenvoudige individuele training. Geen betalingen, packs, verhandelbare waarde of rewards. De browser stuurt nooit een nieuw saldo, spelersobject of wedstrijduitslag naar de server.
+De economie is een testmodel: een startbudget van 120.000 spelcredits, wedstrijdbonussen van 26.000/18.000/10.000 bij winst/gelijk/verlies en eenvoudige individuele training. Openbare verzamelwerelden bieden proefpacks met spelcredits; geen echte betalingen, verhandelbare waarde of rewards. De browser stuurt nooit een nieuw saldo, spelersobject of wedstrijduitslag naar de server.
 
 ## Opslag, herstart en backup
 
 De database staat standaard in `data/touchline.sqlite`, buiten `public`. SQLite-transacties, WAL en volledige synchronisatie bewaren accounts, identiteiten, sessies, limieten, competities en verwerkte opdrachtcodes. Een herstart behoudt dezelfde gegevens. Schemawijzigingen gebruiken `PRAGMA user_version`; een onbekende nieuwere versie wordt geweigerd.
 
-Versie 0.20 gebruikt databaseschema 2. De automatische migratie verruimt de clubindex voor grotere competities en bewaart bestaande accounts, lidmaatschappen en competitiegegevens. Maak voor een update een backup. Bestaande competities houden hun opgeslagen selecties, ratings en uitslagen; de wereldcatalogus wordt alleen bij het maken van een nieuwe competitie gekopieerd. De lokale browsercarrière wordt niet omgezet. Catalogusbestanden staan in een versiegebonden map; het formulier stuurt de bekeken catalogusversie mee zodat een catalogusupdate niet ongemerkt een andere club kiest.
+Versie 0.21 gebruikt databaseschema 3. De migratie voegt de wereldindeling en deadlines toe en bewaart bestaande accounts, lidmaatschappen en competitiegegevens. Bestaande competities worden niet automatisch openbare werelden. Maak voor een update een backup. Bestaande competities houden hun opgeslagen selecties, ratings en uitslagen; de wereldcatalogus wordt alleen bij het maken van een nieuwe competitie gekopieerd. De lokale browsercarrière wordt niet omgezet. Catalogusbestanden staan in een versiegebonden map; het formulier stuurt de bekeken catalogusversie mee zodat een catalogusupdate niet ongemerkt een andere club kiest.
 
 Maak een consistente backup, ook terwijl de server draait:
 
@@ -78,7 +78,7 @@ De code bevat een Resend-transport. Voor een externe test moeten eerst een hosti
 
 De proxy moet de oorspronkelijke `Host` behouden. Er wordt niet op willekeurige doorgestuurde IP-headers vertrouwd; achter één proxy deelt verkeer zonder verdere inrichting een IP-limiet. Configureer dit gericht voor de gekozen hostingopzet. Productiemodus weigert te starten zonder HTTPS-oorsprong en mailconfiguratie. Testmodus weigert een niet-lokaal luisteradres. Een typfout of ontbrekende productiemodus is dus geen route om testcodes publiek beschikbaar te maken.
 
-Er is nog geen hosting, domein, geverifieerde afzender of echte mailtest ingericht. Geen kosten of publieke toegang zijn geactiveerd. De cryptografische walletflow is automatisch getest met tijdelijke sleutels; de interactie met een echte Phantom-wallet moet nog op een geschikt toestel/browser worden beproefd. De ingebouwde browser heeft geen Phantom-provider. Mobiele walletadapters en Solana dApp Store-publicatie zijn afzonderlijke latere stappen.
+Er is nog geen hosting, domein, geverifieerde afzender of echte mailtest ingericht. Geen kosten of publieke toegang zijn geactiveerd. De cryptografische walletflow is automatisch getest met tijdelijke sleutels; de interactie met een echte Phantom- of Solflare-wallet moet nog op een geschikt toestel/browser worden beproefd. De ingebouwde browser heeft geen Phantom-provider. De login heeft een Phantom-browserlink voor een publiek HTTPS-adres. Native mobiele walletadapters en Solana dApp Store-publicatie zijn afzonderlijke latere stappen.
 
 ## Beveiliging en verificatie
 

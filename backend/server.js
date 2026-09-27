@@ -6,6 +6,7 @@ import {randomBytes} from 'node:crypto';
 import {openDatabase} from './database.js';
 import {authService,resendMailer,fail} from './auth.js';
 import {leagueService,fields} from './leagues.js';
+import {packTypes,packRulesVersion,packLimitPerRound} from '../public/pack-rules.js';
 
 const root=fileURLToPath(new URL('../public/',import.meta.url));
 const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.ico':'image/x-icon'};
@@ -34,6 +35,7 @@ export function createApplication(config){
     res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://drop-assets.ea.com https://media-sdp.legaseriea.it; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
     try{
       const url=new URL(req.url,config.origin),pathname=decodeURIComponent(url.pathname);
+      if(pathname==='/healthz'&&req.method==='GET')return respond(200,{ok:true});
       if(pathname.startsWith('/api/')){
         res.setHeader('Cache-Control','no-store');
         if(req.headers.host!==allowedHost)fail(403,'Open Touchline via het ingestelde adres.');
@@ -54,6 +56,10 @@ export function createApplication(config){
         if(pathname==='/api/account/name'&&input){fields(input,['name']);leagues.rename(session.account,input.name);return respond(200,{ok:true});}
         if(pathname==='/api/leagues'&&req.method==='GET')return respond(200,{leagues:leagues.list(session.account)});
         if(pathname==='/api/catalog'&&req.method==='GET')return respond(200,leagues.catalog());
+        if(pathname==='/api/worlds'&&req.method==='GET')return respond(200,leagues.discover(session.account,Object.fromEntries(url.searchParams)));
+        if(pathname==='/api/worlds/join'&&input)return respond(200,leagues.enterWorld(session.account,input));
+        if(pathname==='/api/worlds/leave'&&input)return respond(200,leagues.leaveWorld(session.account,input));
+        if(pathname==='/api/commerce'&&req.method==='GET')return respond(200,{version:packRulesVersion,packs:packTypes,limitPerRound:packLimitPerRound,payments:{enabled:false,currencies:['USDC','SOL'],chain:'Solana',reason:'Echte betalingen zijn nog niet geactiveerd. Packs gebruiken alleen spelcredits.'}});
         if(pathname==='/api/leagues'&&input)return respond(200,leagues.create(session.account,input));
         if(pathname==='/api/leagues/join'&&input)return respond(200,leagues.join(session.account,input));
         if(pathname==='/api/leagues/lobby'&&input){fields(input,['code']);return respond(200,leagues.lobby(input.code));}
@@ -62,11 +68,12 @@ export function createApplication(config){
         fail(404,'Deze API-route bestaat niet.');
       }
       if(!['GET','HEAD'].includes(req.method))fail(405,'Deze methode is niet toegestaan.');
-      const relative=pathname==='/'?'index.html':pathname==='/online'?'online.html':pathname==='/world'?'world.html':pathname.slice(1);
+      const relative=pathname==='/'||pathname==='/online'?'online.html':pathname==='/career'?'index.html':pathname==='/world'?'world.html':pathname.slice(1);
       const file=resolve(root,relative);if(!file.startsWith(resolve(root)+sep))fail(403,'Geen toegang.');
       try{const data=await readFile(file);res.writeHead(200,{'Content-Type':mime[extname(file)]||'application/octet-stream','Cache-Control':'no-cache'});res.end(req.method==='HEAD'?undefined:data);}catch{fail(404,'Bestand niet gevonden.');}
     }catch(error){if(!res.headersSent)respond(error.status||500,{error:error.status?error.message:'Er ging iets mis op de server. Probeer opnieuw.'});else res.end();}
   });
   server.requestTimeout=15000;server.headersTimeout=10000;
-  return {server,db,close:()=>new Promise(resolve=>{server.close(()=>{db.close();resolve();});server.closeIdleConnections();})};
+  const clock=setInterval(()=>{try{leagues.tick();}catch(error){console.error('Openbare speelplanning kon niet worden verwerkt:',error.message);}},15000);clock.unref();
+  return {server,db,close:()=>new Promise(resolve=>{clearInterval(clock);server.close(()=>{db.close();resolve();});server.closeIdleConnections();})};
 }

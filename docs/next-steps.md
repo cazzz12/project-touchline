@@ -1,48 +1,38 @@
 # Wat blijft er te doen?
 
-Stand: **0.20.0, 26 september 2026**. De lokale manager blijft beschikbaar. Daarnaast is de eerste servergestuurde multiplayerproef gebouwd en met afzonderlijke accounts getest. De proef draait lokaal; er is nog geen publieke online release.
+Stand: **0.21.0, 27 september 2026**. Openbare speelwerelden, de stadionlogin en proefpacks zijn lokaal gebouwd en getest. Er is nog geen publieke release of betaling met echt geld.
 
-## Werelddata
+## Nu gebouwd
 
-Gebouwd: catalogus met 20 competities, 351 clubs en 9.636 spelers; FC 26-ratings met expliciete FC 27-aanvulling; zestien speelbare online competities met volledige heen-en-terugschema’s. Bestaande saves veranderen niet.
+- E-mailcodes, Phantom en Solflare; koppelen van wallet/e-mail, serveropslag en herstartbehoud.
+- Twintig competities, 351 clubs, 9.636 huidige spelers; zestien speelbare leagues. FC 26-ratings met gemarkeerde FC 27-aanvullingen.
+- Openbare werelden per league/regio/spelregels, vrije echte clubs, automatisch aansluiten, vertrekken vóór start en iedere 24 uur een speeldag.
+- Elftal, tactiek, training, transfers, ranglijst, verslagen en volgende seizoenen onder servercontrole.
+- Scout- en Spotlight-packs met spelcredits, zichtbare kansen en elf echte oud-spelers. Eenmalige afschrijving/levering; geen dubbele speler in één selectie. Klassieke werelden zonder packs.
+- Mobiele login, wereldkeuze, elftal en packs; grote knoppen, vast ondermenu en originele stadionachtergrond.
+- Behoud van lokale saves en oude competities, database-upgrade en backup. **269 automatische tests slagen.**
 
-Nog open: alle selecties tegen officiële clubbronnen controleren, ontbrekende spelers aanvullen, Portugal/Turkije/China/A-League speelbaar maken, Japan/Brazilië/Qatar/VAE aansluiten en de uitgebreide lokale carrière geschikt maken voor andere competities. Lees [de precieze dekking](world-data.md).
+Zie [arenaregels](arena.md) en [online-inrichting](online.md).
 
-## Tot en met multiplayer bereikt
+## Volgende stappen in volgorde
 
-| Stap | Nu gebouwd | Wat staat nog open? |
+| Stap | Wat ontbreekt | Gereed wanneer |
 | --- | --- | --- |
-| Server en database | SQLite, schema-migratie, transacties, eenmalige opdrachten, versienummers, backup, herstartbehoud en servercontrole over credits, spelers, transfers en wedstrijden. | Productiehosting, automatische/offsite-backups, monitoring, databeheer en schaaltests. De uitgebreide lokale carrière is nog niet volledig naar de server overgezet. |
-| Accounts | E-mailcodes met sessies, uitloggen op alle apparaten, managernaam, cryptografische Phantom-aanmelding en koppelen van wallet/e-mail aan hetzelfde account. | Een echte maildienst en geverifieerde afzender activeren en beproeven; echte Phantom-bediening en accountbeheer/privacy afronden. Lokale testcodes bewijzen geen mailboxeigendom. |
-| Eerste multiplayer | Lobbycode, twee tot zes managers met unieke echte clubs, computerclubs op vrije plaatsen, handmatige basiself/tactiek/training, menselijke transferbiedingen, gezamenlijke speeldagen, ranglijst en volgende seizoenen. | Externe bereikbaarheid, meerdere apparaten, regels voor afwezigheid, verlaten/vervangen van deelnemers, openbare competities en verdere spelpariteit. |
+| 1. Besloten internettest | Hosting met blijvende schijf, HTTPS, echte maildienst/afzender, backups en monitoring. | Twee mensen op verschillende apparaten kunnen samen spelen en na herstart doorgaan. Kosten en publieke toegang worden vooraf concreet gemaakt. |
+| 2. Wallets en telefoon | Phantom/Solflare op echte toestellen, Android Mobile Wallet Adapter/Seed Vault waar passend, herstel en toegankelijkheid. | E-mail en wallet werken op de gekozen Android/iOS-browsers. Formaatproeven zijn geen toesteltests. |
+| 3. USDC én SOL | Ontvangende wallet, netwerk/RPC, echte prijzen, serveroffertes, walletgoedkeuring, on-chain verificatie en orderherstel. | Testbetalingen leveren exact eenmaal; een fout bedrag, mint, ontvanger of hergebruikte transactie levert niets. Daarna afzonderlijke productiebeoordeling. |
+| 4. Beheer en economie | Packbalans, verdienroutes, aankoopgrenzen, voorwaarden/rechten, accountexport/verwijdering, antifraude en beveiligings-/belastingtests. | Een spelerstest en herstelproef slagen; kosten en inkomsten zijn beheersbaar. |
+| 5. Meer online spel | Reserves, coachen, blessures, schorsingen, scouting, contracten, sponsors, stadion; vervanging van afwezige managers en archivering. | De gekozen lokale systemen werken met servercontrole zonder oude werelden te beschadigen. |
+| 6. Solana dApp Store | Android-app, distributie, actuele store-eisen, toesteltests, support en releaseproces. | Een geteste build voldoet aan de gekozen publicatieroute. |
 
-Start via **Samen spelen**, of lees de [eenvoudige testinstructies](online.md). De oude browsercarrière blijft apart en wordt niet omgezet in online credits. Geen packs, aankopen of verhandelbare waarde zijn geactiveerd.
+De servers in het spel zijn afzonderlijke speelwerelden op één proces. Regio's verdelen spelersgroepen; ze zijn nog geen fysieke hosting in Europa/Azië/Amerika. Meerdere fysieke servers vragen een gedeelde database en verdeelde, exclusieve wedstrijdverwerking.
 
-## Eerstvolgende prioriteit: multiplayer bruikbaar maken voor een kleine vriendengroep
+## Voetbaldata
 
-1. **Afwezigheid en lobbybeheer:** verlaten vóór start, organisator overdragen, gereedmeldingen en een afgesproken deadline of automatische voorbereiding. Niemand mag door een verdwenen manager permanent vastlopen. Deze productkeuze moet expliciet worden gemaakt.
-2. **Een besloten externe testomgeving:** hosting en duurzaam databasepad, HTTPS, maildienst en een geverifieerde afzender kiezen. De lokale testmodus blijft ontoegankelijk vanaf het netwerk. Pas na een concrete kostenraming worden betaalde diensten geactiveerd.
-3. **Twee echte apparaten:** aanmelden en herstel, een wallet koppelen, samen een seizoen, onderlinge transfers, netwerkverlies en serverherstart testen. Dezelfde accountgegevens en competitie moeten overal terugkomen.
-4. **Beheer voor de test:** privacy-informatie, accountgegevens exporteren/verwijderen, automatische backups en herstelproef, monitoring en foutafhandeling. De huidige veiligheidscontroles vervangen geen onafhankelijke audit.
-5. **Spelomvang uitbreiden:** de gekozen lokale systemen naar multiplayer overzetten, waaronder reserves, live coaching of vooraf ingestelde wissels, blessures, schorsingen, scouting, contracten, sponsors en stadion. Nu is multiplayer een kleinere aparte variant.
+EA is een momentopname, geen garantie op alle huidige officiële selecties. Nog nodig: controle tegen officiële clubbronnen, ontbrekende spelers aanvullen, Portugal/Turkije/China/A-League speelbaar maken en Japan/Brazilië/Qatar/VAE aansluiten. De uitgebreide lokale carrière heeft nog zes clubs. Zie [dekking](world-data.md).
 
-Deze stappen zijn nodig voordat we de proef een bruikbare publieke online voetbalmanager kunnen noemen. Een uitnodiging op localhost is alleen op dezelfde computer bruikbaar.
+## Later
 
-## Daarna: packs, Solana en lancering
+Vriendenlijsten, privéruimtes en eigen clubs uitsluitend binnen die ruimtes, meldingen, media/events en dieper clubbeheer. Marketplace, verhandelbare assets, SOL-beloningen en treasury vragen afzonderlijke keuzes. Lokale saves worden nooit omgezet in ongecontroleerde online waarde.
 
-| Fase | Nog te doen |
-| --- | --- |
-| Packs en inkomsten | Inhoud, prijzen, gratis verdienroutes, eventuele kansen en eerlijke competitie bepalen. Daarna betaalroute, serverbewijzen, eenmalige levering, aankoopoverzicht en herstel testen. Betalen mag geen automatische wedstrijdwinst geven. |
-| Mobiele app en Solana dApp Store | Android-app, mobiele walletintegratie, echte toesteltests, netwerkonderbrekingen, eventuele Solana-testbetalingen en actuele storevereisten. De huidige desktop-walletaanmelding is geen volledige Solana-integratie. |
-| Sociale uitbreiding | Vriendenlijsten, privéruimtes en eigen clubs uitsluitend binnen die ruimtes, plus optionele pushmeldingen. De gewone competitie behoudt echte clubs en echte spelersnamen. |
-| Lancering | Besloten spelerstests, balans, beveiliging, belasting, support, onboarding en productiebeheer. Commercieel gebruik van clubdata/logo's en eventuele beelden laten beoordelen. |
-
-Een marketplace, verhandelbare assets, SOL-beloningen en treasury zijn mogelijke latere productkeuzes; ze zijn niet nodig voor de eerste multiplayerrelease. Packinhoud en prijzen staan nog open. Lokale saves mogen geen oncontroleerbare online waarde opleveren.
-
-## Verder spelwerk
-
-De lokale versie bevat al scouting, shortlist, vergelijken, contracten, clubtransfers, training en groeidoelen, reputatie, sponsors, faciliteiten, stadion en bezoekers, postvak, keepers, kaarten, blessures en computerwissels. Backups en oudere saves blijven ondersteund.
-
-Nog mogelijke verdieping: preciezere posities en leeftijdsdata, leeftijd/potentieel, teamchemie, karaktertrekken, extra tactische instructies, computercoaching op score/vermoeidheid, zware wedstrijdblessures, diepere onderhandelingen, stafspecialisaties, supporters, audio en media/events. Deze onderwerpen staan naast de online prioriteiten. Geen fictieve jeugdregens in de gewone competitie.
-
-De [roadmap](roadmap.md) koppelt de huidige systemen aan het [oorspronkelijke concept](concept.md). De 247 automatische tests controleren verwerking en behoud, niet een volledige economische balans of productiegeschiktheid.
+De [roadmap](roadmap.md) verbindt dit met het [oorspronkelijke concept](concept.md). Tests bewijzen verwerking en behoud, niet productiegeschiktheid of volledige economische balans.

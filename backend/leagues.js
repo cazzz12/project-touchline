@@ -4,6 +4,8 @@ import {formations,lineUp,simulate} from '../public/engine.js';
 import {transaction} from './database.js';
 import {fail,digest} from './auth.js';
 import {worldRepository} from './world.js';
+import {packService} from './packs.js';
+import {packRulesVersion,playerIdentity} from '../public/pack-rules.js';
 
 const integer=(v,min,max)=>Number.isInteger(v)&&v>=min&&v<=max;
 const tactics={formation:'4-3-3',mentality:50,pressing:50,tempo:50};
@@ -27,13 +29,17 @@ function settleRound(s){
   s.round++;s.managers.forEach(m=>{m.ready=false;});if(s.round===schedule(s.clubs.length).length)s.phase='complete';
 }
 
-export function leagueService(db,{now=Date.now,world=worldRepository()}={}){
+export function leagueService(db,{now=Date.now,world=worldRepository(),worldLobbyMs=30*60000,worldRoundMs=24*3600000,packDraw,packPool}={}){
+  const packs=packService({draw:packDraw,pool:packPool});
+  const regions=['eu','asia','americas'],rules=['collection','classic'];
+  const room=id=>db.prepare('SELECT * FROM worlds WHERE league=?').get(id)||null;
   const get=id=>{const row=db.prepare('SELECT * FROM leagues WHERE id=?').get(id);if(!row)fail(404,'Competitie niet gevonden.');return {...row,data:JSON.parse(row.state)};};
   const members=id=>db.prepare('SELECT m.account,m.club,a.name FROM members m JOIN accounts a ON a.id=m.account WHERE league=? ORDER BY club').all(id);
   const member=(id,user)=>{const m=db.prepare('SELECT club FROM members WHERE league=? AND account=?').get(id,user);if(!m)fail(403,'Je bent geen deelnemer aan deze competitie.');return m.club;};
   function view(id,user){
-    const i=member(id,user),r=get(id),s=r.data,people=members(id);
-    return {id:r.id,code:r.code,version:r.version,owner:r.owner===user,myClub:i,title:s.title,phase:s.phase,season:s.season,round:s.round,totalRounds:schedule(s.clubs.length).length,catalog:s.catalog||null,clubs:s.clubs,
+    tick();
+    const i=member(id,user),r=get(id),s=r.data,people=members(id),worldRoom=room(id);
+    return {id:r.id,code:r.code,version:r.version,owner:!worldRoom&&r.owner===user,world:worldRoom,...worldRoom?{serverTime:now()}:{},myClub:i,title:s.title,phase:s.phase,season:s.season,round:s.round,totalRounds:schedule(s.clubs.length).length,catalog:s.catalog||null,clubs:s.clubs,
       members:people.map(p=>({club:p.club,name:p.name,ready:s.managers[p.club].ready})),my:s.managers[i],table:standings(s),fixtures:schedule(s.clubs.length)[s.round]||[],results:s.results,reports:s.reports,history:s.history,
       offers:s.offers.filter(o=>o.buyer===i||o.seller===i)};
   }
@@ -56,6 +62,7 @@ export function leagueService(db,{now=Date.now,world=worldRepository()}={}){
   function join(user,input){fields(input,['id','code','club']);if(typeof input.code!=='string'||!/^[A-F0-9]{12}$/i.test(input.code)||!integer(input.club,0,39))fail(400,'Controleer je competitiecode en club.');
     return once(user,input,()=>{
       const r=db.prepare('SELECT * FROM leagues WHERE code=?').get(input.code.toUpperCase());if(!r)fail(404,'Competitiecode niet gevonden.');
+      if(room(r.id))fail(400,'Kies deze openbare wereld via Speelwerelden.');
       const state=JSON.parse(r.state);if(state.phase!=='lobby')fail(409,'Deze competitie is al gestart.');if(input.club>=state.clubs.length)fail(400,'Kies een club uit deze competitie.');
       if(db.prepare('SELECT 1 FROM members WHERE league=? AND (account=? OR club=?)').get(r.id,user,input.club))fail(409,'Deze club is bezet of je doet al mee.');
       if(db.prepare('SELECT count(*) AS n FROM members WHERE account=?').get(user).n>=10)fail(400,'Je kunt aan maximaal tien competities deelnemen.');
@@ -63,13 +70,16 @@ export function leagueService(db,{now=Date.now,world=worldRepository()}={}){
     });
   }
   function act(user,leagueId,input){
-    fields(input,['id','version','type','tactics','lineupIds','playerId','skill','seller','amount','offerId','name']);
+    tick();
+    fields(input,['id','version','type','tactics','lineupIds','playerId','skill','seller','amount','offerId','name','packId','packVersion']);
     return once(user,{...input,leagueId},()=>{
       const i=member(leagueId,user),r=get(leagueId),s=r.data,m=s.managers[i],people=members(leagueId);
       if(!integer(input.version,1,1e12)||input.version!==r.version)fail(409,'De competitie is veranderd. Vernieuw en probeer opnieuw.');
       if(input.type==='start'){
+        if(room(leagueId))fail(403,'De openbare wereld start automatisch.');
         if(r.owner!==user)fail(403,'Alleen de organisator kan starten.');if(s.phase!=='lobby'||people.length<2)fail(409,'Er moeten minimaal twee managers in de lobby zitten.');s.phase='active';
       }else if(input.type==='season'){
+        if(room(leagueId))fail(403,'De openbare wereld opent het volgende seizoen automatisch.');
         if(r.owner!==user)fail(403,'Alleen de organisator kan het seizoen openen.');if(s.phase!=='complete')fail(409,'Rond eerst het seizoen af.');
         s.history.push({season:s.season,table:standings(s)});s.history=s.history.slice(-20);s.season++;s.round=0;s.results=[];s.reports=[];s.offers=[];s.phase='active';s.managers.forEach(m=>{m.trainedRound=-1;m.ready=false;});
       }else{
@@ -78,7 +88,11 @@ export function leagueService(db,{now=Date.now,world=worldRepository()}={}){
         else{
           if(m.ready)fail(409,'Trek eerst je gereedmelding in.');
           if(input.type==='ready'){
-            m.ready=true;if(people.every(p=>s.managers[p.club].ready))settleRound(s);
+            m.ready=true;if(!room(leagueId)&&people.every(p=>s.managers[p.club].ready))settleRound(s);
+          }else if(input.type==='pack'){
+            if(room(leagueId)?.rules!=='collection')fail(403,'Packs zijn alleen beschikbaar in een wereld met packs.');
+            if(input.packVersion!==packRulesVersion)fail(409,'De packregels zijn veranderd. Vernieuw de pagina.');
+            const receipt=packs.open(s,i,input.packId);cash(s,i,-receipt.price,`${receipt.name}: ${receipt.playerName}`);
           }else if(input.type==='tactics'){
             const t=input.tactics;fields(t,['formation','mentality','pressing','tempo']);if(!Object.hasOwn(formations,t.formation)||!['mentality','pressing','tempo'].every(k=>integer(t[k],0,100)))fail(400,'Ongeldige tactiek.');m.tactics={...t};
             const ids=input.lineupIds;if(!Array.isArray(ids)||ids.length!==11||new Set(ids).size!==11||ids.some(id=>!s.clubs[i].players.some(p=>p.id===id))||s.clubs[i].players.find(p=>p.id===ids[0]).position!=='GK')fail(400,'Kies elf verschillende eigen spelers, met een keeper in het doel.');m.lineupIds=[...ids];
@@ -96,6 +110,7 @@ export function leagueService(db,{now=Date.now,world=worldRepository()}={}){
             if(input.type==='accept'){
               const seller=s.clubs[i],buyer=s.clubs[offer.buyer],p=seller.players.find(p=>p.id===offer.playerId),bm=s.managers[offer.buyer];
               if(!p||bm.ready||bm.credits<offer.amount)fail(409,'De koper is al klaar, heeft onvoldoende credits of de speler is verhuisd.');
+              if(buyer.players.some(other=>playerIdentity(other)===playerIdentity(p)))fail(409,'De koper heeft deze speler al in zijn selectie.');
               if(seller.players.length<=18||(p.position==='GK'&&seller.players.filter(p=>p.position==='GK').length<=2)||buyer.players.length>=40)fail(409,'De transfer past niet binnen de selectiegrenzen.');
               seller.players=seller.players.filter(v=>v.id!==p.id);buyer.players.push(p);cash(s,i,offer.amount,`Verkoop ${p.name}`);cash(s,offer.buyer,-offer.amount,`Aankoop ${p.name}`);lineup(s,i);s.offers=s.offers.filter(o=>o.playerId!==p.id);
             }else s.offers=s.offers.filter(o=>o.id!==offer.id);
@@ -108,9 +123,54 @@ export function leagueService(db,{now=Date.now,world=worldRepository()}={}){
   function lobby(code){
     if(typeof code!=='string'||!/^[A-F0-9]{12}$/i.test(code))fail(400,'Controleer je competitiecode.');
     const r=db.prepare('SELECT * FROM leagues WHERE code=?').get(code.toUpperCase());if(!r)fail(404,'Competitiecode niet gevonden.');const s=JSON.parse(r.state);
+    if(room(r.id))fail(400,'Bekijk deze openbare wereld via Speelwerelden.');
     if(s.phase!=='lobby')fail(409,'Deze competitie is al gestart.');const occupied=new Set(members(r.id).map(m=>m.club));
     return {code:r.code,title:s.title,clubs:s.clubs.map((c,i)=>({index:i,name:c.name,occupied:occupied.has(i)}))};
   }
-  return {create,join,act,view,lobby,catalog:()=>world.index,list:user=>db.prepare('SELECT l.id,l.state,m.club FROM leagues l JOIN members m ON m.league=l.id WHERE m.account=?').all(user).map(r=>{const s=JSON.parse(r.state);return {id:r.id,title:s.title,phase:s.phase,club:s.clubs[r.club].name,round:s.round,totalRounds:schedule(s.clubs.length).length,season:s.season};}),
+  function startWorld(id,s,time){s.phase='active';db.prepare('UPDATE worlds SET phase=?,deadline=? WHERE league=?').run('active',time+worldRoundMs,id);}
+  function tick(){
+    const time=now(),due=db.prepare("SELECT league FROM worlds WHERE (phase='lobby' AND starts<=?) OR (phase IN ('active','complete') AND deadline<=?)").all(time,time);
+    if(!due.length)return;
+    transaction(db,()=>{for(const {league:id} of due){const w=room(id),r=get(id),s=r.data;
+      if(w.phase==='lobby'){
+        if(members(id).length<2)continue;startWorld(id,s,time);
+      }else if(w.phase==='active'){
+        settleRound(s);db.prepare('UPDATE worlds SET phase=?,deadline=? WHERE league=?').run(s.phase,time+worldRoundMs,id);
+      }else{
+        s.history.push({season:s.season,table:standings(s)});s.history=s.history.slice(-20);s.season++;s.round=0;s.results=[];s.reports=[];s.offers=[];s.managers.forEach(m=>{m.trainedRound=-1;m.ready=false;});startWorld(id,s,time);
+      }
+      db.prepare('UPDATE leagues SET state=?,version=version+1 WHERE id=?').run(JSON.stringify(s),id);
+    }});
+  }
+  function discover(user,filter={}){
+    tick();const selected=filter.catalog||'',region=filter.region||'eu',rule=filter.rules||'collection';
+    if(selected&&!world.index?.leagues.some(l=>l.id===selected)||!regions.includes(region)||!rules.includes(rule))fail(400,'Kies een geldige competitie en speelregio.');
+    const rows=db.prepare('SELECT l.id,l.state,w.* FROM worlds w JOIN leagues l ON l.id=w.league WHERE (? = ? OR w.catalog=?) AND w.region=? AND w.rules=? ORDER BY w.starts DESC LIMIT 60').all(selected,'',selected,region,rule);
+    return {region,rules:rule,roundHours:worldRoundMs/3600000,lobbyMinutes:worldLobbyMs/60000,rooms:rows.map(r=>{const s=JSON.parse(r.state),people=members(r.id);return {id:r.id,title:s.title,catalog:r.catalog,region:r.region,rules:r.rules,phase:s.phase,starts:r.starts,deadline:r.deadline,season:s.season,round:s.round,capacity:s.clubs.length,managers:people.length,joined:people.some(p=>p.account===user),clubs:s.clubs.map((c,i)=>({index:i,name:c.name,logo:c.logo,occupied:people.some(p=>p.club===i)}))};})};
+  }
+  function enterWorld(user,input){
+    tick();fields(input,['id','catalogId','catalogSnapshot','region','rules','worldId','club']);
+    return once(user,input,()=>{
+      const entry=world.index?.leagues.find(l=>l.id===input.catalogId&&l.playable);
+      if(!entry||input.catalogSnapshot!==world.index.id||!regions.includes(input.region)||!rules.includes(input.rules)||!integer(input.club,0,entry.clubs.length-1)||input.worldId!==undefined&&(typeof input.worldId!=='string'||!/^[a-f0-9-]{36}$/.test(input.worldId)))fail(400,'Vernieuw de pagina en kies een beschikbare competitie en club.');
+      if(db.prepare('SELECT count(*) AS n FROM members WHERE account=?').get(user).n>=10)fail(400,'Je kunt aan maximaal tien competities deelnemen.');
+      if(db.prepare('SELECT 1 FROM worlds w JOIN members m ON w.league=m.league WHERE m.account=? AND w.catalog=? AND w.region=? AND w.rules=?').get(user,input.catalogId,input.region,input.rules))fail(409,'Je speelt al in deze combinatie van competitie, regio en spelregels. Open die wereld bij Mijn werelden.');
+      const candidates=input.worldId?[room(input.worldId)]:db.prepare("SELECT * FROM worlds WHERE catalog=? AND region=? AND rules=? AND phase='lobby' ORDER BY starts").all(input.catalogId,input.region,input.rules);
+      let w=candidates.find(w=>w&&w.catalog===input.catalogId&&w.region===input.region&&w.rules===input.rules&&w.phase==='lobby'&&!db.prepare('SELECT 1 FROM members WHERE league=? AND club=?').get(w.league,input.club));
+      if(input.worldId&&!w)fail(409,'Deze wereld is gestart of deze club is net gekozen. Vernieuw het overzicht.');
+      if(!w){
+        if(candidates.length>=3||db.prepare('SELECT count(*) AS n FROM worlds').get().n>=200)fail(409,'Er is nu geen ruimte voor een nieuwe wereld. Kies een andere vrije club.');
+        const id=randomUUID(),selected=world.create(input.catalogId),state=fresh(`${entry.name} · ${id.slice(0,6).toUpperCase()}`,selected);
+        db.prepare('INSERT INTO leagues VALUES (?,?,?,?,?)').run(id,user,randomBytes(6).toString('hex').toUpperCase(),1,JSON.stringify(state));
+        db.prepare('INSERT INTO worlds VALUES (?,?,?,?,?,?,?)').run(id,input.catalogId,input.region,input.rules,'lobby',now()+worldLobbyMs,0);w=room(id);
+      }
+      db.prepare('INSERT INTO members VALUES (?,?,?)').run(w.league,user,input.club);
+      const r=get(w.league),s=r.data,n=members(w.league).length;
+      if(n===s.clubs.length||n>=2&&now()>=w.starts)startWorld(w.league,s,now());
+      db.prepare('UPDATE leagues SET state=?,version=version+1 WHERE id=?').run(JSON.stringify(s),w.league);return {id:w.league};
+    });
+  }
+  function leaveWorld(user,input){fields(input,['id','worldId']);tick();return once(user,input,()=>{const w=room(input.worldId);if(!w)fail(404,'Wereld niet gevonden.');member(w.league,user);if(w.phase!=='lobby')fail(409,'Je kunt een openbare wereld alleen vóór de start verlaten.');db.prepare('DELETE FROM members WHERE league=? AND account=?').run(w.league,user);db.prepare('UPDATE leagues SET version=version+1 WHERE id=?').run(w.league);return {left:true};});}
+  return {create,join,act,view,lobby,tick,discover,enterWorld,leaveWorld,catalog:()=>world.index,list:user=>db.prepare('SELECT l.id,l.state,m.club FROM leagues l JOIN members m ON m.league=l.id WHERE m.account=?').all(user).map(r=>{const s=JSON.parse(r.state);return {id:r.id,title:s.title,phase:s.phase,world:room(r.id),club:s.clubs[r.club].name,round:s.round,totalRounds:schedule(s.clubs.length).length,season:s.season};}),
     rename:(user,name)=>{if(!label(name,30))fail(400,'Gebruik een managernaam van 2 tot 30 tekens.');db.prepare('UPDATE accounts SET name=? WHERE id=?').run(name.trim(),user);}};
 }

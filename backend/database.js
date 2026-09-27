@@ -8,7 +8,7 @@ export function openDatabase(path){
   const db=new DatabaseSync(path,{timeout:5000});
   db.exec('PRAGMA foreign_keys=ON; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL;');
   const version=db.prepare('PRAGMA user_version').get().user_version;
-  if(version>2){db.close();throw new Error('Deze database vraagt een nieuwere Touchline-versie.');}
+  if(version>3){db.close();throw new Error('Deze database vraagt een nieuwere Touchline-versie.');}
   if(version===0)transaction(db,()=>{
     db.exec(`
       CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);
@@ -31,6 +31,10 @@ export function openDatabase(path){
       ALTER TABLE members_v2 RENAME TO members;
       PRAGMA user_version=2;`);
   });
+  if(version<3)transaction(db,()=>{db.exec(`CREATE TABLE worlds (league TEXT PRIMARY KEY REFERENCES leagues(id), catalog TEXT NOT NULL, region TEXT NOT NULL, rules TEXT NOT NULL, phase TEXT NOT NULL, starts INTEGER NOT NULL, deadline INTEGER NOT NULL DEFAULT 0);
+    CREATE INDEX worlds_discovery ON worlds(catalog,region,rules,phase);
+    CREATE INDEX worlds_due ON worlds(phase,deadline);
+    PRAGMA user_version=3;`);});
   return db;
 }
 export function transaction(db,fn){db.exec('BEGIN IMMEDIATE');try{const result=fn();db.exec('COMMIT');return result;}catch(error){db.exec('ROLLBACK');throw error;}}

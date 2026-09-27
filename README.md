@@ -1,14 +1,22 @@
 # Project Touchline
 
-Versie **0.20.0** — een speelbaar **voetbalmanager-prototype met lokale carrière en een eerste multiplayerproef** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
+Versie **0.21.0** — een speelbaar **voetbalmanager-prototype met lokale carrière en een eerste multiplayerproef** op basis van het concept in `docs/concept.md`. Kies een bestaande club, beheer je selectie en clubkas, coach wedstrijden per minuut en bouw een carrière over meerdere seizoenen. Resultaten en voortgang worden lokaal in je browser opgeslagen.
 
 ```sh
 npm start
 ```
 
-Open http://127.0.0.1:3000. Op Windows PowerShell gebruik je `npm.cmd start` als `npm.ps1` wordt geblokkeerd. Run `npm test` voor controles van de simulatie en seizoensvoortgang. Node.js 24.4+ is vereist; externe pakketten zijn niet nodig.
+Open http://127.0.0.1:3000 voor aanmelden en speelwerelden. Je bestaande lokale carrière staat op http://127.0.0.1:3000/career. Op Windows PowerShell gebruik je `npm.cmd start` als `npm.ps1` wordt geblokkeerd. Run `npm test` voor controles van de simulatie en seizoensvoortgang. Node.js 24.4+ is vereist; externe pakketten zijn niet nodig.
 
 De bestaande carrièremodus blijft lokale singleplayer. Browseropslag bevat je club en seizoen. Daarnaast is er nu een aparte servergestuurde multiplayerproef met accounts en een database; er zijn geen echte transacties of SOL rewards. Training, scouting en transfers gebruiken spelcredits. Verwijderde browsergegevens wissen je lokale carrière; servercompetities blijven bewaard. Een eigen club maken is bedoeld voor een toekomstige privéruimte met vrienden; die bestaat nog niet.
+
+## Nieuw: openbare werelden, packs en een mobiele instap
+
+Meld je aan met e-mail, Phantom of Solflare en kies je league, speelregio en vrije echte club. Openbare speelwerelden brengen onbekende managers samen, met een eigen competitie en elke 24 uur een automatische speeldag. De oorspronkelijke competities met uitnodigingscode blijven bestaan. Deze proef is nog alleen lokaal bereikbaar.
+
+Open competities hebben Scout- en Spotlight-packs met zichtbare kansen op normale, zeldzame en legendarische spelers, waaronder elf echte oud-spelers. Kosten en levering worden door de server samen verwerkt. Maximaal twee packs per speeldag, uitsluitend met spelcredits. **USDC én SOL op Solana zijn bevestigd voor de toekomstige betaalroute; echte betalingen zijn uitgeschakeld.** Klassieke werelden spelen zonder packs.
+
+Het nieuwe beginscherm gebruikt een originele blauwe stadionachtergrond. Login, leaguekeuze, werelden, elftal en packs hebben een indeling voor telefoons. Echte mobiele walletbediening en de Solana dApp Store volgen nog. De browsercarrière blijft ongewijzigd via **Lokale carrière**. Lees [spelregels, grenzen en serveropzet](docs/arena.md).
 
 ## Wereldvoetbal
 
@@ -22,7 +30,7 @@ Bij **Samen spelen → Maak een competitie** kun je nu uit zestien speelbare wer
 
 Open **Samen spelen** in het menu of `http://127.0.0.1:3000/online`. Maak een competitie, laat een tweede manager via de competitiecode deelnemen en speel samen een seizoen. De oorspronkelijke zesclubvariant heeft tien speeldagen; grotere competities hebben een passend langer schema. De server bewaart accounts, unieke clubkeuzes, opstellingen, tactiek, training, onderlinge biedingen, credits en uitslagen in SQLite. Zodra alle managers klaar zijn, rekent hij de speeldag één keer af. Herladen en een serverherstart behouden de voortgang.
 
-Standaard draait dit **uitsluitend als lokale test**. Gebruik een `.test`-adres, bijvoorbeeld `manager@touchline.test`; de testcode verschijnt in het scherm. Er worden geen echte e-mails verstuurd. De walletflow controleert een ondertekend Phantom-bericht en ondersteunt koppelen aan een account; echte walletbediening moet nog worden beproefd. Voor aanmelden via echte e-mail en spelen met vrienden via internet moeten hosting, HTTPS en de maildienst nog worden ingesteld.
+Standaard draait dit **uitsluitend als lokale test**. Gebruik een `.test`-adres, bijvoorbeeld `manager@touchline.test`; de testcode verschijnt in het scherm. Er worden geen echte e-mails verstuurd. De walletflow controleert een ondertekend Phantom- of Solflare-bericht en ondersteunt koppelen aan een account; echte walletbediening moet nog worden beproefd. Voor aanmelden via echte e-mail en spelen met vrienden via internet moeten hosting, HTTPS en de maildienst nog worden ingesteld.
 
 De multiplayerproef heeft een beperktere spelomvang dan de lokale carrière: volledige serverwedstrijden, voorbereiding, training en transfers. Live coaching en de uitgebreide clubsystemen blijven voorlopig in de lokale variant. **Bestaande lokale saves blijven behouden en worden niet naar online credits omgezet.** Lees [startinstructies, regels en beperkingen](docs/online.md), of maak een serverbackup met `npm.cmd run backup:db`.
 
@@ -66,7 +74,7 @@ Open **Scouting & transfers → Gericht zoeken**. Bewaar een gewenste positiegro
 
 Bewaar maximaal twintig kandidaten op je **Shortlist** en vergelijk hun vaardigheden, conditie, prijs en salaris met een eigen speler uit dezelfde positiegroep. Je ziet de berekening van de rolscore; die voorspelt geen wedstrijdwinst. Vergelijken wijzigt je opstelling niet en doet geen aankoop. Je shortlist en zoekprofiel blijven na herladen en over seizoenen bewaard. Oudere saves en bestaande rapporten blijven bruikbaar. Lees [de scoutingregels](docs/scouting.md).
 
-De [roadmap](docs/roadmap.md) legt ook de bevestigde productrichting vast: online spelen met e-mail- of walletaanmelding, distributie via de Solana dApp Store en koopbare packs als onderdeel van het verdienmodel. De eerste account- en multiplayerbasis is aanwezig. Solana dApp Store, packinhoud, prijzen en economische regels worden later uitgewerkt.
+De [roadmap](docs/roadmap.md) legt ook de bevestigde productrichting vast: online spelen met e-mail- of walletaanmelding, distributie via de Solana dApp Store en koopbare packs als onderdeel van het verdienmodel. De eerste account- en multiplayerbasis is aanwezig. Solana dApp Store, echte packprijzen en betaalverwerking worden later uitgewerkt. De proefpacks gebruiken alleen spelcredits.
 
 ## Clubreputatie en nieuwe sponsors
 
@@ -156,7 +164,7 @@ De engine gebruikt attributen, conditie, moraal, tactiek en een reproduceerbare 
 
 ## Interfacecontrole
 
-De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 257 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, medische coachpauzes, blessurewissels door de computercoach, hervatten en wisselen bij lichte klachten, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden, gerichte scouting, shortlist, spelersvergelijking, onderlinge clubtransfers, postvakfilters, leesstatus, veilige doorklikroutes, stadionprijzen, bezoekersaantallen, ticketafrekening en 52 opeenvolgende seizoenen.
+De interface is handmatig gecontroleerd in een Chromium-browser op desktop- en mobiel formaat. De veldweergaven volgen de gekozen formatie; op mobiel blijft horizontaal scrollen beperkt tot de navigatie en brede tabellen. Tactiekschuiven hebben toegankelijke namen. De 269 automatische tests controleren onder andere savebehoud, geldstromen, contracten, transfers, blessures, medische coachpauzes, blessurewissels door de computercoach, hervatten en wisselen bij lichte klachten, herstel, selectievoorstellen, keeperkwaliteit, keeperwissels, kaarten, ondertal, schorsingen, reglementaire uitslagen, biedingen, tegenbiedingen, eenmalige transferbetalingen, ontvangen biedingen en tegenstanderbudgetten, persoonlijke trainingsplannen, groei door werkelijke speelminuten, automatische instructies, clubreputatie, sponsorvoorwaarden, gerichte scouting, shortlist, spelersvergelijking, onderlinge clubtransfers, postvakfilters, leesstatus, veilige doorklikroutes, stadionprijzen, bezoekersaantallen, ticketafrekening en 52 opeenvolgende seizoenen.
 
 Zie [het controleverslag](docs/browser-check.md) voor de geteste flows en beperkingen. Gebruik voor bestaande saves dezelfde browser en hetzelfde adres als voorheen: `localhost` en `127.0.0.1` hebben elk hun eigen browseropslag.
 

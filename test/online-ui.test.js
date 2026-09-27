@@ -26,3 +26,17 @@ test('an uncertain mutation survives reload and retries the exact same operation
   const h=await boot(t,{request,store});await h.submit('create',{title:'League',club:'0'});assert.equal(sent.length,1);assert.match(h.app.innerHTML,/CONTROLEER DEZELFDE ACTIE/);
   const restored=await boot(t,{request,store});assert.match(restored.app.innerHTML,/CONTROLEER DEZELFDE ACTIE/);await restored.click({action:'retry'});assert.equal(sent.length,2);assert.deepEqual(sent[1],sent[0]);assert.equal(store.size,1);
 });
+
+test('public world selection sends a fixed catalog and refreshes occupied seats after a conflict',async t=>{
+ const clubs=[{name:'Ajax'},{name:'PSV'}],catalog={id:'snapshot',leagues:[{id:'eredivisie',name:'Eredivisie',country:'Nederland',playable:true,clubs}]};let lookups=0,joined;
+ const h=await boot(t,{request:async(path,body)=>{
+  if(path==='/api/session')return {status:200,body:{mode:'local-test',account:{id:'manager-a',name:'A',identities:[]},csrf:'csrf'}};
+  if(path==='/api/catalog')return {status:200,body:catalog};
+  if(path==='/api/leagues')return {status:200,body:{leagues:[]}};
+  if(path.startsWith('/api/worlds?')){lookups++;return {status:200,body:{rooms:[{id:'room',title:'Eredivisie server',region:'eu',rules:'collection',phase:'lobby',starts:Date.now()+10000,managers:lookups>1?1:0,capacity:2,season:1,clubs:clubs.map((c,index)=>({...c,index,occupied:index===0&&lookups>1}))}]}};}
+  if(path==='/api/worlds/join'){joined=body;return {status:409,body:{error:'Deze club is net gekozen.'}};}
+  throw Error('Unexpected request '+path);
+ }});
+ await h.click({catalog:'eredivisie'});assert.match(h.app.innerHTML,/Kies je speelwereld/);await h.click({room:'room'});await h.submit('world-join',{club:'0'});
+ assert.equal(joined.catalogId,'eredivisie');assert.equal(joined.catalogSnapshot,'snapshot');assert.equal(joined.region,'eu');assert.equal(joined.rules,'collection');assert.equal(joined.worldId,'room');assert.equal(joined.club,0);assert.equal(lookups,2);assert.match(h.app.innerHTML,/disabled>Ajax · bezet/);assert.equal(h.store.size,0);assert.match(h.notice.textContent,/net gekozen/);
+});
