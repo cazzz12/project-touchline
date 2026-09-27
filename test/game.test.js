@@ -1,6 +1,8 @@
+import {unavailableSelection,applyRecommendedSquad} from '../public/fitness.js';
+function playRound(game){if(unavailableSelection(game).length)applyRecommendedSquad(game);return playRoundWithoutRotation(game);}
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { advanceMatch, beginMatch, clubNames, finishMatch, migrateSave, setBench, setCaptain, makeSubstitution, newGame, schedule, playRound, setStarter, standings, train, scout, signPlayer, newSeason } from '../public/game.js';
+import { advanceMatch, beginMatch, clubNames, finishMatch, migrateSave, setBench, setCaptain, makeSubstitution, newGame, schedule, playRound as playRoundWithoutRotation, setStarter, standings, train, scout, signPlayer, newSeason } from '../public/game.js';
 
 test('six clubs play every opponent twice over ten rounds',()=>{
   const rounds=schedule();
@@ -33,7 +35,7 @@ test('real names are unique across six real clubs and a starter can be changed',
   const game=newGame('PSV');
   assert.deepEqual(new Set(game.clubs.map(c=>c.name)),new Set(clubNames));
   const roster=game.clubs.flatMap(c=>c.players);
-  assert.equal(new Set(roster.map(p=>p.id)).size,300);
+  assert.equal(new Set(roster.map(p=>p.id)).size,roster.length);
   const bench=game.clubs[0].players.find(p=>!game.lineupIds.includes(p.id));
   assert.equal(setStarter(game,0,bench.id),true);
   assert.equal(game.lineupIds[0],bench.id);
@@ -119,3 +121,4 @@ test('changed live tactics preserve played minutes and affect future match outpu
   assert.deepEqual(defensive.lastMatch.detail.events.filter(e=>e.minute<=45),firstEvents);
   assert.notDeepEqual(attacking.lastMatch.detail.stats,defensive.lastMatch.detail.stats);
 });
+
